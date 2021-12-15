@@ -1,0 +1,5 @@
+In Java, there are many different ways of classifying errors, but they can be boiled down to three categories:
+
+Syntax errors: Errors found by the compiler.
+Run-time errors: Errors that occur when the program is running.
+Logic errors: Errors found by the programmer looking for the causes of erroneous results.
