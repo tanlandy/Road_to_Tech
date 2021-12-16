@@ -2,3 +2,4 @@
  
 - [ ] Array
 - [x] LinkedList
+- [ ] ArrayList
