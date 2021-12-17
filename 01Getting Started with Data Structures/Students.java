@@ -4,7 +4,7 @@ public class Students {
   public static void main(String[] args) {
     
     // create an ArrayList called studentList, which initially holds []
-      ArrayList<String> studentList = new ArrayList<String>();
+    ArrayList<String> studentList = new ArrayList<String>();
     
     // add students to the ArrayList
     studentList.add("John");
