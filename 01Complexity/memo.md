@@ -7,6 +7,7 @@
 - Tree: ~O(logn)
 - Hashmap: O(1)
 
+## Memo:
 we define how efficient a program is by its runtime.
 We need a general way to define a program’s runtime across these variable factors. We do this with Asymptotic Notation.
 In asymptotic notation, we define the size of the input as N. I may be looking through a collection of 10 elements, or 100 elements, but we only need to know how many steps are performed relative to the input so N is used in place of a specific number. If there is a second input, we may define the size of that input as M.
