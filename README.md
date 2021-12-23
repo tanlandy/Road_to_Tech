@@ -1,5 +1,3 @@
 # Road_to_Tech
  
-- [ ] Array
-- [x] LinkedList
-- [ ] ArrayList
+Consider edge case first
