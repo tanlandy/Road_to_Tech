@@ -19,3 +19,8 @@ https://leetcode.com/problems/move-zeroes/
 https://leetcode.com/problems/sort-array-by-parity/
 10. max-consecutive-ones-ii
 https://leetcode.com/problems/max-consecutive-ones-ii/ 
+
+### Two pointer
+* when need to iterate the array from ends to the middle, especially in a sorted array *
+1. Reverse String
+https://leetcode.com/problems/reverse-string/ 
