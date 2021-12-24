@@ -21,3 +21,11 @@ To properly maintain the list when removing a node from the middle of a linked l
 - Have a single head node, which serves as the first node in the list
 - Require some maintenance in order to add or remove nodes
 - The methods we used are an example and depend on the exact use case and/or programming language being used
+
+# List
+## Initiate
+` List<Integer> list = new LinkedList<>();`
+## Methods
+```
+list.add(5) // add
+```
