@@ -1,0 +1,12 @@
+# String
+## Initiate
+`String s1 = "Hello World";`
+## Methods
+```
+return s1.equals("HELLO"); // Compare function
+s1[5] = 'x'; // Error: string in Java is immutable
+s1 += '!'; // concatenate
+s1.indexOf('o'); // find first 'o'; O(n)
+s1.lastIndexOf('o'); // find last 'o'; O(n)
+String s2 = s1.substring(1,5) // get substring; O(n)
+```
