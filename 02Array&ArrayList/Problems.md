@@ -19,7 +19,7 @@
 ### Homework
 1. [Move Zeroes](https://leetcode.com/problems/move-zeroes/)
 2. [Missing number](https://leetcode.com/problems/missing-number/)
-3. **[3 Sum Closest](https://leetcode.com/problems/3sum-closest/)**
+3. *[3 Sum Closest](https://leetcode.com/problems/3sum-closest/)*
 4. Max Consecutive Ones
 5. Rotate Array
 
