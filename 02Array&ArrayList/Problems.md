@@ -36,6 +36,6 @@
 5. [merge-sorted-array](https://leetcode.com/problems/merge-sorted-array/) 
 6. [remove-duplicates-from-sorted-array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
 7. [valid-mountain-array](https://leetcode.com/problems/valid-mountain-array/ )
-8. [move-zeroes]https://leetcode.com/problems/move-zeroes/ 
+8. [move-zeroes](https://leetcode.com/problems/move-zeroes/) 
 9. [sort-array-by-parity](https://leetcode.com/problems/sort-array-by-parity/)
 10. [max-consecutive-ones-ii](https://leetcode.com/problems/max-consecutive-ones-ii/ )
