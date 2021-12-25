@@ -12,3 +12,5 @@ for (int i = 0; i < nums.length; i++) {
     
 }
 ```
+
+**Whenever you're trying to solve an array problem in-place, always consider the possibility of iterating backwards instead of forwards through the array. It can completely change the problem, and make it a lot easier.**
