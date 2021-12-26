@@ -27,7 +27,7 @@ Arrays.sort(nums); // Sort
 ```
 # ArrayList
 ## Initiate
-``
+`ArrayList<Integer> myNumbers = new ArrayList<>();`
 ## Methods
 ```
 // get; O(1)
@@ -35,4 +35,5 @@ Arrays.sort(nums); // Sort
 // add; O(n)
 // remove; O(n)
 // find; O(n)
+Collections.sort(myNumbers); // Sort
 ```
