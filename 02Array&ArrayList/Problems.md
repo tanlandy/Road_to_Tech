@@ -1,3 +1,12 @@
+## To pay attention 
+### communicate before writing codes
+1. size
+2. index range
+3. avaliable results
+
+### while coding
+1. check edge cases
+
 ## Two pointer
 **when need to iterate the array from ends to the middle, especially in a sorted array**
 1. [Reverse String](https://leetcode.com/problems/reverse-string/ )

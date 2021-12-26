@@ -3,5 +3,5 @@
 ` List<Integer> list = new LinkedList<>();`
 ## Methods
 ```
-list.add(5) // add
+list.add(5) // add; O(1)
 ```
