@@ -35,5 +35,6 @@ Arrays.sort(nums); // Sort
 // add; O(n)
 // remove; O(n)
 // find; O(n)
+myNumbers.size() // get length
 Collections.sort(myNumbers); // Sort
 ```
