@@ -21,7 +21,8 @@
 3. [Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/solution/)
 4. *[Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/)*
 5. *[Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)*
-6. [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
+6. *[Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)*
 7. [Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements/)
 8. *[Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list/)*
-9. [ Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+9. *[Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)*
+10. [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
