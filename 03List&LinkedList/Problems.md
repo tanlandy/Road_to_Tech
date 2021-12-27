@@ -28,3 +28,6 @@
 10. [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
 11. *[Add Two Numbers](https://leetcode.com/problems/add-two-numbers/)*
 12. [Flatten a Multilevel Doubly Linked List](https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/)
+13. [Insert into a Sorted Circular Linked List](https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/)
+14. *[Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)*
+15. *[Rotate List](https://leetcode.com/problems/rotate-list/)*
