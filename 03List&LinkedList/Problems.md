@@ -31,11 +31,11 @@
 3. [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
 4. [Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list/)
 ### Homework Optional
-1. [Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/)
-2. [Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
-3. [Reorder List](https://leetcode.com/problems/reorder-list/#/description)
-4. [Rotate List](https://leetcode.com/problems/rotate-list/)
-5. [Partition List](https://leetcode.com/problems/partition-list/#/description)
+1. *[Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/)*
+2. *[Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)*
+3. *[Reorder List](https://leetcode.com/problems/reorder-list/#/description)*
+4. *[Rotate List](https://leetcode.com/problems/rotate-list/)*
+5. *[Partition List](https://leetcode.com/problems/partition-list/#/description)*
 6. [Palindrom Linked List](https://leetcode.com/problems/palindrome-linked-list/?tab=Description)
 7. [Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/#/submissions/1)
 ## OA
