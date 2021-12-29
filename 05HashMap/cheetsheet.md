@@ -40,3 +40,8 @@ numSet.remove(5) // remove 5
 2. Resolve collision:
 - Open hashing 开散列：重复的变链表，在同一个index后
 - Closed hashing 闭散列：重复的往后放
+
+### hashCode & equals
+当equals override时，hashCode也需要override
+override: 子class的方法可以继承自父class，而具体内容有所不同
+overload：方法名字相同，但有多个不同的参数组合方式
