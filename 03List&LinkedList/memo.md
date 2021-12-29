@@ -1,18 +1,3 @@
-# LinkedList
-## initiate
-`LinkedList<Integer> list = new LinkedList<>();`
-## methods
-```
-list.get(index) // get; O(n)
-list.set(index, value) // set value at index; O(n)
-list.add(opt_index, value) // add value at index; O(n)
-list.remove(index/value) // O(n)
-
-
-```
-
-
-
 # Doubly-linkedList
 Each node contains data and two links (or pointers) to the next and previous nodes in the list. The head node is the node at the beginning of the list, and the tail node is the node at the end of the list. The head node’s previous pointer is set to null and the tail node’s next pointer is set to null.
 
