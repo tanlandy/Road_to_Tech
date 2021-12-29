@@ -18,7 +18,7 @@ keySet(); // return Set<key> 输出含有key的数组，同时key都是唯一的
 entrySet(); // return Set<Map.Entry<key, value>> 输出
 size();
 isEmpty();
-containsValue(value);
+containsValue(value); // 不常用
 ```
 
 # HashSet
@@ -32,3 +32,11 @@ size = numSet.size() // get size
 numSet.add(5) // add 5
 numSet.remove(5) // remove 5
 ```
+
+
+## Memo
+### Collision
+1. Avoid collision: Expand the space
+2. Resolve collision:
+- Open hashing 开散列：重复的变链表，在同一个index后
+- Closed hashing 闭散列：重复的往后放
