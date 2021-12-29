@@ -11,8 +11,8 @@
 `Map<Object, Object> map = new HashMap<>(); // <Key, Value>`
 ## Methods
 ```
-put(key, value); // O(1)
-get(key); // O(1)
+put(key, value); //return value;  O(1)
+get(key); // return value; O(1)
 containsKey(key); // O(1)
 remove(key); // O(1)
 keySet(); // return Set<key> 输出含有key的数组，同时key都是唯一的
