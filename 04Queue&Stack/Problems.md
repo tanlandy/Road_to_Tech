@@ -1,9 +1,12 @@
 ## Memo
-### To use Queue
+### When to use Queue
 1. BFS
 2. Priority Queue (Heap)
 3. Multi Task Queue (Design)
 
+
+
+# Queue
 ## Course
 ### Examples
 1. [Max Stack](https://leetcode.com/problems/max-stack/)
@@ -19,3 +22,7 @@
 ## Leetcode Tutorial
 1. *[Design Circular Queue](https://leetcode.com/problems/design-circular-queue/)*再看看array解法
 2. [Moving Average from Data Stream](https://leetcode.com/problems/moving-average-from-data-stream/)
+
+# BFS
+## Leetcode Tutorial
+1. [Walls and Gates](https://leetcode.com/problems/walls-and-gates/)
