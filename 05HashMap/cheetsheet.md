@@ -1,11 +1,12 @@
 # HashMap
-- In computing, a hash table (hash map) is a data structure used to implement an associative array, a structure that can map keys to values.
+- The hash map is one of the implementations of a map data structure to store (key, value) pairs.
 - Mapping relationship (dictionaries)
 - Stores a relationship, both key and value are important
 
 ## When to use
 1. when time-consuming to find something in Array
 2. need to calculate the index by the object
+3. support quick insertion and search.
 
 ## Initiate
 `Map<Object, Object> map = new HashMap<>(); // <Key, Value>`
@@ -23,9 +24,13 @@ containsValue(value); // 不常用
 ```
 
 # HashSet
+- The hash set is one of the implementations of a set data structure to store no repeated values.
 - Only stores values(key) // 存HashMap里面的key
+
+## When to use
 - Primary task is search/contains
 - Sometimes used to deduplicate
+- support quick insertion and search.
 ## Initiate
 ` Set<Integer> numSet = new HashSet<>();`
 ## Methods
@@ -34,8 +39,18 @@ max = Collections.max(numSet) // get max
 min = Collections.min(numSet) // get min
 size = numSet.size() // get size
 numSet.add(5) // add 5
+numSet.add(3)
 numSet.remove(5) // remove 5
-numSet.contains(5) //
+numSet.contains(3) //
+numSet.size() 
+numSet.clear() // clear the hash set
+numSet.isEmpty()
+
+
+// iterate
+for (Integer i : numSet) {
+    System.out.print(i + " ");
+}
 ```
 
 
