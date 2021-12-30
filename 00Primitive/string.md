@@ -12,7 +12,7 @@ String s2 = s1.substring(1,5) // get substring; O(n)
 s1.length(); // get length
 s1.charAt(0); // get char at index 0
 s = s1.trim(; // trim all extra spaces in s1
-String[] words = s1.split(" ") // 按空格分开
+String[] words = s1.split(" ") // 按空格分开，存到array中
 ```
 
 # StringBuilder
