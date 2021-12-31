@@ -23,9 +23,16 @@ for (int i = 1; i < length; i++) {
     int_array[i - 1] = int_array[i];
 }
 length--;
+
+```
+# Arrays
+```
+int[] nums = new int[]{1,2,3,4,5,6,7,8};
 Arrays.sort(nums); // Sort
+Arrays.copyOfRange(nums, 2, 5); // return [3,4,5]; creates a copy of elements nums[2,5)
 Arrays.fill(nums, -1); // fill nums with -1
 ```
+
 # ArrayList
 ## Initiate
 `ArrayList<Integer> myNumbers = new ArrayList<>();`
@@ -40,3 +47,4 @@ myNumbers.size() // get length
 Collections.sort(myNumbers); // Sort
 myNumbers.toArray(new String[myNumbers.size()]); // ArrayList to Array
 ```
+

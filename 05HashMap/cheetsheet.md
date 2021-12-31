@@ -3,6 +3,8 @@
 - Mapping relationship (dictionaries)
 - Stores a relationship, both key and value are important
 - 技巧：心里想着pair，形成一个映射的图形，从而能更好应用函数
+- 用来计数<element, count>
+`map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);`
 
 ## When to use
 1. when time-consuming to find something in Array
