@@ -18,3 +18,18 @@ String[] words = s1.split(" ") // 按空格分开，存到array中
 # StringBuilder
 ## Initiate
 `StringBuilder word = new StringBuilder();`
+## Method
+```
+word.append("4");
+word.append(" ");
+word.toString(); // return String
+
+
+```
+
+# Integer
+## Methods
+```
+Integer.toString(5); // return "5"
+
+```
