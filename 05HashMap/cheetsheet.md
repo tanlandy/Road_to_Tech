@@ -2,6 +2,7 @@
 - The hash map is one of the implementations of a map data structure to store (key, value) pairs.
 - Mapping relationship (dictionaries)
 - Stores a relationship, both key and value are important
+- 技巧：心里想着pair，形成一个映射的图形，从而能更好应用函数
 
 ## When to use
 1. when time-consuming to find something in Array
@@ -19,6 +20,7 @@ map.putIfAbsent(0, 0); // insert a new (key, value) pair
 map.put(1, 1) // insert a new pair
 map.put(1, 2) // update the pair
 map.get(1) // return 2, get the value of specific key
+map.getOrDefault(c, 0) //
 map.remove(0) // remove a key
 map.containsKey(0) // return false, check if a key is in the hash map
 map.size() // get size

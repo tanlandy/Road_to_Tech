@@ -33,3 +33,9 @@ word.toString(); // return String
 Integer.toString(5); // return "5"
 
 ```
+
+# ASCII
+'a'in Java is 97 -> nums['a'] -> nums[97]
+`s.charAt(i) - 'a'` shift the ascii value so that **a-z** have values 0 - 25
+
+`s.charAt(i) - 'A'` shift the ascii value so that **A-Z** have values 0 - 25
