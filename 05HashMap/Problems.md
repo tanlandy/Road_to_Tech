@@ -18,8 +18,8 @@
 
 ### HashMap
 1. [Two Sum](https://leetcode.com/problems/two-sum/)
-2. [Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings/) //再看看
-3. [Minimum Index Sum of Two Lists](https://leetcode.com/problems/minimum-index-sum-of-two-lists/) //再看看
+2. [Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings/) 
+3. [Minimum Index Sum of Two Lists](https://leetcode.com/problems/minimum-index-sum-of-two-lists/) 
 4. [First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string/) //再看看
 5. [Intersection of Two Arrays II])(https://leetcode.com/problems/intersection-of-two-arrays-ii/)
  

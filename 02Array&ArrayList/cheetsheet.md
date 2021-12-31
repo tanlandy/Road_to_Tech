@@ -38,4 +38,5 @@ Arrays.fill(nums, -1); // fill nums with -1
 // find; O(n)
 myNumbers.size() // get length
 Collections.sort(myNumbers); // Sort
+myNumbers.toArray(new String[myNumbers.size()]); // ArrayList to Array
 ```
