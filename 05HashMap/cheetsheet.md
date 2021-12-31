@@ -7,6 +7,7 @@
 1. when time-consuming to find something in Array
 2. need to calculate the index by the object
 3. support quick insertion and search.
+4. need more information rather than only the key.
 
 ## Initiate
 `Map<Integer, Integer> map = new HashMap<>(); // <Key, Value>`
@@ -80,3 +81,25 @@ Only use == when comparing primitive types:
 3. boolean
 Always use euqals for reference types, even for primitive wrapper classes
 Long, Integer, etc
+
+### Template
+```
+/*
+ * Template for using hash map to find duplicates.
+ * Replace ReturnType with the actual type of your return value.
+ */
+ReturnType aggregateByKey_hashmap(List<Type>& keys) {
+    // Replace Type and InfoType with actual type of your key and value
+    Map<Type, InfoType> hashmap = new HashMap<>();
+    for (Type key : keys) {
+        if (hashmap.containsKey(key)) {
+            if (hashmap.get(key) satisfies the requirement) {
+                return needed_information;
+            }
+        }
+        // Value can be any information you needed (e.g. index)
+        hashmap.put(key, value);    
+    }
+    return needed_information;
+}
+```

@@ -9,3 +9,12 @@
 2. [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/#/description)
 3. [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/#/description)
 4. [Brick Wall](https://leetcode.com/problems/brick-wall/#/description)
+
+
+## Leetcode Tutorial
+### HashSet
+
+
+### HashMap
+1. [Two Sum](https://leetcode.com/problems/two-sum/)
+2. [Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings/)
