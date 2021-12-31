@@ -9,18 +9,25 @@
 3. support quick insertion and search.
 
 ## Initiate
-`Map<Object, Object> map = new HashMap<>(); // <Key, Value>`
+`Map<Integer, Integer> map = new HashMap<>(); // <Key, Value>`
 ## Methods
 ```
-put(key, value); //return value;  O(1)
-get(key); // return value; O(1)
-containsKey(key); // O(1)
-remove(key); // O(1)
+map.putIfAbsent(0, 0); // insert a new (key, value) pair
+map.put(1, 1) // insert a new pair
+map.put(1, 2) // update the pair
+map.get(1) // return 2, get the value of specific key
+map.remove(0) // remove a key
+map.containsKey(0) // return false, check if a key is in the hash map
+map.size() // get size
+map.clear() // clear the hash map
+map.isEmpty() 
+
+// iterate
+for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+    System.out.print("(" + entry.getKey() + "," + entry.getValue() + ") ");
+}
+
 keySet(); // return Set<key> 输出含有key的数组，同时key都是唯一的
-entrySet(); // return Set<Map.Entry<key, value>> 输出
-size();
-isEmpty();
-containsValue(value); // 不常用
 ```
 
 # HashSet
