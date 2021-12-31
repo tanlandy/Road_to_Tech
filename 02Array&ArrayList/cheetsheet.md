@@ -24,6 +24,7 @@ for (int i = 1; i < length; i++) {
 }
 length--;
 Arrays.sort(nums); // Sort
+Arrays.fill(nums, -1); // fill nums with -1
 ```
 # ArrayList
 ## Initiate
