@@ -6,6 +6,7 @@
 - 用来计数<element, count>
 `map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);`
 
+
 ## When to use
 1. when time-consuming to find something in Array
 2. need to calculate the index by the object
@@ -40,11 +41,16 @@ keySet(); // return Set<key> 输出含有key的数组，同时key都是唯一的
 # HashSet
 - The hash set is one of the implementations of a set data structure to store no repeated values.
 - Only stores values(key) // 存HashMap里面的key
-
+- 制作sliding window
+```
+set.add(nums[i]);
+if (set.size() > k) set.remove(nums[i - k]);
+```
 ## When to use
 - Primary task is search/contains
 - Sometimes used to deduplicate
 - support quick insertion and search.
+
 ## Initiate
 ` Set<Integer> numSet = new HashSet<>();`
 ## Methods
