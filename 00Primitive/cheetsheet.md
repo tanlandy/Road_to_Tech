@@ -16,6 +16,23 @@ String[] words = s1.split(" ") // 按空格分开，存到array中
 char[] charS = s1.toCharArray(); charS = {'H', 'e', 'l',...,'l', 'd'};  converts the given string into a sequence of characters
 String s2 = String.valueOf(charS); // s2 = "Hello world"; returns the string representation
 
+// 将String排序
+String str = new String("Hefasf");
+char[] charS = str.toCharArray();
+String newStr = String.valueOf(charS);
+
+
+// 将String[]排序
+String[] strs = new String["Hello", "sadfa", "adsfe", "asefa"];
+for (String s : strs) {
+    char[] charS = s.toCharArray(); // string -> char[]
+    Arrays.sort(charS); // sort char[]
+    String newS = String.valueOf(charS); // char[] -> string
+}
+
+
+
+
 ```
 
 # StringBuilder
