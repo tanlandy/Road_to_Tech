@@ -26,3 +26,6 @@
 4. [First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string/) //利用index可以让array天生就形成映射
 5. *[Intersection of Two Arrays II])(https://leetcode.com/problems/intersection-of-two-arrays-ii/)*
 6. [Logger Rate Limiter](https://leetcode.com/problems/logger-rate-limiter/)
+
+### Design the key
+1. 
