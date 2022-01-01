@@ -16,7 +16,7 @@ public class ArrayList {
             System.out.println("Error");
             // throw Exception
         }
-        return date[index];
+        return data[index];
     }
 
     public void set(int index, int value) {

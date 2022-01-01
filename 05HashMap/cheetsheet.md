@@ -29,6 +29,7 @@ map.containsKey(0) // return false, check if a key is in the hash map
 map.size() // get size
 map.clear() // clear the hash map
 map.isEmpty() 
+map.values(); return all values
 
 // iterate
 for (Map.Entry<Integer, Integer> entry : map.entrySet()) {

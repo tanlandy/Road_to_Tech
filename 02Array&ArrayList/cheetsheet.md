@@ -46,5 +46,6 @@ Arrays.fill(nums, -1); // fill nums with -1
 myNumbers.size() // get length
 Collections.sort(myNumbers); // Sort
 myNumbers.toArray(new String[myNumbers.size()]); // ArrayList to Array
+ArrayList(map.values()); // 
 ```
 

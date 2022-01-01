@@ -13,6 +13,9 @@ s1.length(); // get length
 s1.charAt(0); // get char at index 0
 s = s1.trim(); // trim all extra spaces in s1
 String[] words = s1.split(" ") // 按空格分开，存到array中
+char[] charS = s1.toCharArray(); charS = {'H', 'e', 'l',...,'l', 'd'};  converts the given string into a sequence of characters
+String s2 = String.valueOf(charS); // s2 = "Hello world"; returns the string representation
+
 ```
 
 # StringBuilder
