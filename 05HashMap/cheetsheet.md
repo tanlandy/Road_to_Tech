@@ -95,7 +95,7 @@ Only use == when comparing primitive types:
 Always use euqals for reference types, even for primitive wrapper classes
 Long, Integer, etc
 
-### Template
+## Template
 
 1. Using hash map to find duplicates.
 ```
@@ -119,7 +119,7 @@ ReturnType aggregateByKey_hashmap(List<Type>& keys) {
 }
 ```
 
-2. Using HashMap to store and update <String, List<String>> pair
+2. Using HashMap to store and update `<String, List<String>> `pair
 
 ```
 public List<List<String>> groupStrings(String[] strings) {
@@ -134,3 +134,4 @@ public List<List<String>> groupStrings(String[] strings) {
     return new ArrayList<>(map.values());
 }
 ```
+
