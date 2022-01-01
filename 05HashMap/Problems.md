@@ -14,7 +14,10 @@
 
 ## Leetcode Tutorial
 ### HashSet
-
+1. [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
+2. [Single Number](https://leetcode.com/problems/single-number/)
+3. [Intersection of Two Arrays](https://leetcode.com/problems/intersection-of-two-arrays/)
+4. [Happy Number](https://leetcode.com/problems/happy-number/)
 
 ### HashMap
 1. [Two Sum](https://leetcode.com/problems/two-sum/)
