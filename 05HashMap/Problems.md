@@ -4,17 +4,24 @@
 
 ## Course
 ### Examples
+#### Beginner
 1. [Two Sum](https://leetcode.com/problems/two-sum/)
 2. [Word Pattern](https://leetcode.com/problems/word-pattern/)
 3. [Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+#### Advanced
+1. [Word Pattern](https://leetcode.com/problems/word-pattern/)
+2. [Word Pattern II](https://leetcode.com/problems/word-pattern-ii/) // **学过DFS之后再来看**
+3. [Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+4. [Contiguous Array](https://leetcode.com/problems/contiguous-array/#/description)
+5. [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+6. [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/?tab=Description)
 
 ### Optional Homework
 1. [Contiguous Array](https://leetcode.com/problems/contiguous-array/#/description)
 2. [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/#/description) //还没看
 3. [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/#/description) //还没看
 4. [Brick Wall](https://leetcode.com/problems/brick-wall/#/description) //还没看
-
-
+5. [Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/) //还没看
 
 ## Leetcode Tutorial
 ### HashSet

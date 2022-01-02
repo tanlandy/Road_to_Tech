@@ -40,7 +40,7 @@ map.clear() // clear the hash map
 map.isEmpty() 
 map.values(); return all values
 
-// iterate 要什么有什么，就只用这个
+// iterate 要什么有什么，就只用这个来遍历
 for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
     System.out.print("Key: " + entry.getKey() + " Value: " + entry.getValue() + ") ");
 }
