@@ -34,6 +34,7 @@ map.get(1) // return 2, get the value of specific key
 map.getOrDefault(c, 0) //
 map.remove(0) // remove a key
 map.containsKey(0) // return false, check if a key is in the hash map
+map.containsValue(2) // O(n)
 map.size() // get size
 map.clear() // clear the hash map
 map.isEmpty() 
@@ -41,7 +42,7 @@ map.values(); return all values
 
 // iterate
 for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-    System.out.print("(" + entry.getKey() + "," + entry.getValue() + ") ");
+    System.out.print("Key: " + entry.getKey() + " Value: " + entry.getValue() + ") ");
 }
 
 keySet(); // return Set<key> 输出含有key的数组，同时key都是唯一的
@@ -104,7 +105,6 @@ Always use euqals for reference types, even for primitive wrapper classes
 Long, Integer, etc
 
 ## Template
-
 1. Using hash map to find duplicates.
 ```
 /*

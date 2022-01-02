@@ -6,9 +6,9 @@
 
 ### Optional Homework
 1. [Contiguous Array](https://leetcode.com/problems/contiguous-array/#/description)
-2. [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/#/description)
-3. [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/#/description)
-4. [Brick Wall](https://leetcode.com/problems/brick-wall/#/description)
+2. [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/#/description) //还没看
+3. [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/#/description) //还没看
+4. [Brick Wall](https://leetcode.com/problems/brick-wall/#/description) //还没看
 
 
 
