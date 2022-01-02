@@ -1,7 +1,7 @@
 ## Course
 ### Examples
 1. [Two Sum](https://leetcode.com/problems/two-sum/)
-2. *[Word Pattern](https://leetcode.com/problems/word-pattern/)* 再自己手打
+2. [Word Pattern](https://leetcode.com/problems/word-pattern/)
 3. [Group Anagrams](https://leetcode.com/problems/group-anagrams/)
 
 ### Optional Homework
@@ -30,12 +30,12 @@
 8. [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 9. [Two Sum III - Data structure design](https://leetcode.com/problems/two-sum-iii-data-structure-design/)
 10. [4Sum II](https://leetcode.com/problems/4sum-ii/)
-11. [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
-11. [Unique Word Abbreviation](https://leetcode.com/problems/unique-word-abbreviation/)
-12. [Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/)
+11. [3Sum](https://leetcode.com/problems/3sum/)
+12. [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+13. [Unique Word Abbreviation](https://leetcode.com/problems/unique-word-abbreviation/)
+14. [Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/)
 
-
-### Design the key
+Design the key
 1. [Group Anagrams](https://leetcode.com/problems/group-anagrams/)
 2. [Group Shifted Strings](https://leetcode.com/problems/group-shifted-strings/)
 3. [Valid Sudoku](https://leetcode.com/problems/valid-sudoku/)
