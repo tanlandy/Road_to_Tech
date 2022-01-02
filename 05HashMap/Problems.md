@@ -1,3 +1,7 @@
+## Memo
+1. 一对一映射：2个HashMap
+
+
 ## Course
 ### Examples
 1. [Two Sum](https://leetcode.com/problems/two-sum/)
