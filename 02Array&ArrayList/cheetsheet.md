@@ -12,6 +12,7 @@ friendArray2[0] = "World"; //overwrite
 ```
 friendArray[0]; // Access
 friendArray.length // Get length
+
 // Shift and insert
 // Say we want to insert the element at index 2.
 for (int i = 4; i >= 2; i--) {
@@ -43,9 +44,14 @@ Arrays.fill(nums, -1); // fill nums with -1
 // add; O(n)
 // remove; O(n)
 // find; O(n)
+myNumbers.add(1);
+myNumbers.add(2);
+myNumbers.add(3);
 myNumbers.size() // get length
 Collections.sort(myNumbers); // Sort
 myNumbers.toArray(new String[myNumbers.size()]); // ArrayList to Array
 ArrayList(map.values()); // 
+myNumbers.set(0, 10); // {10, 2, 3}
+
 ```
 
