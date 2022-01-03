@@ -23,6 +23,10 @@
 4. [Brick Wall](https://leetcode.com/problems/brick-wall/#/description) //还没看
 5. [Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/) //还没看
 
+### OA
+1. [Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+2. [Find Anagram Mappings](https://leetcode.com/problems/find-anagram-mappings/)
+
 ## Leetcode Tutorial
 ### HashSet
 1. [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
