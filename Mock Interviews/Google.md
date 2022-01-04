@@ -22,3 +22,13 @@ clarification: 输入输出、类型
 考前3天：
 1. leetcode google tasks 6 months by frequency, 做前200
 2. 一亩三分地面经前2页
+
+# Question2
+A domino has the face value of a pair of numbers (a, b) where a, b ∈ {1 ... 6}. We want to make a chain of dominoes so that
+the sequence will look like (a0, a1), (a1, a2), (a2, a3), ... that is, we can only connect two dominoes if the numbers being 
+connected are the same.
+
+The question is, given a small stack of randomly drawm dominoes, what is the longest chain that can be made?
+
+
+(0, 1), (0, 0), (1, 2) (1, 3) -> 3
