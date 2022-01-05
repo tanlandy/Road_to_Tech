@@ -1,6 +1,6 @@
 # Array
 ## Initiate
-```
+```Java
 String[] friendArray = new String[10];
 friendArray[0] = "Hello";
 int[] nums = new int[]{1,4,2,3};
@@ -9,7 +9,7 @@ String[] friendArray2 = {"Hello","Wow","Earth"};
 friendArray2[0] = "World"; //overwrite
 ```
 ## Methods
-```
+```Java
 friendArray[0]; // Access
 friendArray.length // Get length
 
@@ -27,7 +27,7 @@ length--;
 
 ```
 # Arrays
-```
+```Java
 int[] nums = new int[]{1,2,3,4,5,6,7,8};
 Arrays.sort(nums); // Sort
 Arrays.copyOfRange(nums, 2, 5); // return [3,4,5]; creates a copy of elements nums[2,5)
@@ -38,7 +38,7 @@ Arrays.fill(nums, -1); // fill nums with -1
 ## Initiate
 `ArrayList<Integer> myNumbers = new ArrayList<>();`
 ## Methods
-```
+```Java
 // get; O(1)
 // set; O(1)
 // add; O(n)

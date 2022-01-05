@@ -26,7 +26,7 @@
 ## Initiate
 `Map<Integer, Integer> map = new HashMap<>(); // <Key, Value>`
 ## Methods
-```
+```Java
 map.putIfAbsent(0, 0); // insert a new (key, value) pair
 map.put(1, 1) // insert a new pair
 map.put(1, 2) // update the pair
@@ -52,7 +52,7 @@ keySet(); // return Set<key> 输出含有key的数组，同时key都是唯一的
 - The hash set is one of the implementations of a set data structure to store no repeated values.
 - Only stores values(key) // 存HashMap里面的key
 - 制作sliding window
-```
+```Java
 set.add(nums[i]);
 if (set.size() > k) set.remove(nums[i - k]);
 ```
@@ -64,7 +64,7 @@ if (set.size() > k) set.remove(nums[i - k]);
 ## Initiate
 ` Set<Integer> numSet = new HashSet<>();`
 ## Methods
-```
+```Java
 max = Collections.max(numSet) // get max
 min = Collections.min(numSet) // get min
 size = numSet.size() // get size
@@ -106,7 +106,7 @@ Long, Integer, etc
 
 ## Template
 1. Using hash map to find duplicates.
-```
+```Java
 /*
  * 
  * Replace ReturnType with the actual type of your return value.
@@ -129,7 +129,7 @@ ReturnType aggregateByKey_hashmap(List<Type>& keys) {
 
 2. Using HashMap to store and update `<String, List<String>> `pair
 
-```
+```Java
 public List<List<String>> groupStrings(String[] strings) {
     Map<String, List<String>> map = new HashMap<>();
 

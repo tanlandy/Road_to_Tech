@@ -2,7 +2,7 @@
 ## Initiate
 `String s1 = "Hello World";`
 ## Methods
-```
+```Java
 return s1.equals("HELLO"); // Compare function
 s1[5] = 'x'; // Error: string in Java is immutable
 s1 += '!'; // concatenate
@@ -39,7 +39,7 @@ for (String s : strs) {
 ## Initiate
 `StringBuilder word = new StringBuilder();`
 ## Method
-```
+```Java
 word.append("4");
 word.append(" ");
 word.toString(); // return String
@@ -49,7 +49,7 @@ word.toString(); // return String
 
 # Integer
 ## Methods
-```
+```Java
 Integer.toString(5); // return "5"
 
 ```

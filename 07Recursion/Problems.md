@@ -28,9 +28,13 @@
 
 
 ## Backtracking
-1. [Subsets](https://leetcode.com/problems/subsets/ )
+1. [Subsets](https://leetcode.com/problems/subsets/)
 
-```
+Given an integer array nums of unique elements, return all possible subsets (the power set).
+Input: nums = [1,2,3]
+Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+
+```Java
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
@@ -47,9 +51,9 @@
         }
     }
 ```
-2. [Subsets II (contains duplicates)](https://leetcode.com/problems/subsets-ii/)
+1. [Subsets II (contains duplicates)](https://leetcode.com/problems/subsets-ii/)
 
-```
+```Java
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         List<List<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
@@ -70,7 +74,7 @@
 3. [Permutations](https://leetcode.com/problems/permutations/)
 
 
-```
+```Java
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> list = new ArrayList<>();
         // Arrays.sort(nums); // not necessary
@@ -93,7 +97,7 @@
 ```
 4. [Permutations II (contains duplicates)](https://leetcode.com/problems/permutations-ii/)
 
-```
+```Java
      public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
@@ -118,7 +122,7 @@
 ```
 5. [Combination Sum](https://leetcode.com/problems/combination-sum/)
 
-```
+```Java
     public List<List<Integer>> combinationSum(int[] nums, int target) {
         List<List<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
@@ -141,7 +145,7 @@
 6. [Combination Sum II (can't reuse same element)](https://leetcode.com/problems/combination-sum-ii/)
 
 
-```
+```Java
     public List<List<Integer>> combinationSum2(int[] nums, int target) {
         List<List<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
@@ -165,7 +169,7 @@
 ```
 7. [Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
 
-```
+```Java
     public List<List<String>> partition(String s) {
         List<List<String>> list = new ArrayList<>();
         backtrack(list, new ArrayList<>(), s, 0);
