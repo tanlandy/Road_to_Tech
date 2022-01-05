@@ -17,7 +17,7 @@
 ## 提高班
 1. 简历 & Recursion *没看简历*
 2. Recursion *Done*
-3. Coding style & DFS & 简历 *48min*
+3. Coding style & DFS & 简历 *recursion看完，1:36开始简历，没看简历*
 4. BFS
 5. DP
 6. Tree
