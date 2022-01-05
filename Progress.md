@@ -2,12 +2,12 @@
 
 # 课程进度
 ## 基础班
-1. Time complexity: Done
-2. Array & array list; Java Variable & data type: Done
+1. Time complexity: *Done*
+2. Array & array list; Java Variable & data type: *Done*
 3. Sort
-4. LinkedList: Done
+4. LinkedList: *Done*
 5. Stack & Queue
-6. HashMap & coding style: Done
+6. HashMap & coding style: *Done*
 7. Recursion
 8. Recursion2
 9. Tree & Graph
@@ -16,8 +16,8 @@
 
 ## 提高班
 1. 简历 & Recursion *没看简历*
-2. Recursion *to 23min*
-3. Coding style & DFS
+2. Recursion *Done*
+3. Coding style & DFS & 简历 *combination*
 4. BFS
 5. DP
 6. Tree
