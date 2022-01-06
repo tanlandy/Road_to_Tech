@@ -1,5 +1,11 @@
-# Self introduction
+# Interview Process
+1. Resume
+2. HR Phone Interview
+3. Phone Screen Technical Interview
+4. On-site Interview
+5. Offer
 
+# Resume
 
 # HR Phone Interview
 - Self introduction
@@ -17,3 +23,6 @@
 - Technical Communication
 - Host Manager
 
+
+# Offer
+- Review and Negotiation
