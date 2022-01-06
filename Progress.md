@@ -15,7 +15,7 @@
 11. 复习
 
 ## 提高班
-1. 简历 & Recursion *没看简历*
+1. 简历 & Recursion *1h10min之后看完*
 2. Recursion *Done*
 3. Coding style & DFS & 简历 *recursion看完，1:36开始简历，没看简历*
 4. BFS
@@ -36,7 +36,12 @@
 19. 操作系统
 20. Design Patterns
 
-# 学习路径
+# 学习方式
 1. 看视频，在课间上做笔记
 2. 讲解一道例题之后，leetcode盲打，更新要点到课件
-3. 视频结束后，回顾课件，整理总结到这里
+3. 视频结束后，回顾课件，整理总结到cheetsheet
+
+# 学习路径
+1. 视频
+2. OA 
+3. Leetcode(用来复习巩固)
