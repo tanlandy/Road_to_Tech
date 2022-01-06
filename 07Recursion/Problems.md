@@ -254,10 +254,9 @@ public void helper(int s, int[] weights, List<Integer> curr, List<List<Integer>>
         curr.add(weights[i]);
         // pick: (s - w[i], index + 1)
         helper(s - weights[i], weights, curr, res, index + 1);
-
         // not pick: (s, index +++++)
         curr.remove(curr.size() - 1);
-        while (i < weights.length - 1 ** weights[i] == weights[i + 1]) {
+        while (i < weights.length - 1 && weights[i] == weights[i + 1]) {
             i++;
         }
     }
@@ -275,43 +274,48 @@ Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
 
 ```Java
     public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> list = new ArrayList<>();
+        // initate the res
+        List<List<Integer>> res = new ArrayList<>();
         Arrays.sort(nums);
-        backtrack(list, new ArrayList<>(), nums, 0);
-        return list;
+        ArrayList<Integer> curr = new ArrayList<>();
+        backtrack(res, curr, nums, 0);
+        return res;
     }
     
-    private void backtrack(List<List<Integer>> list , List<Integer> tempList, int [] nums, int start){
-        list.add(new ArrayList<>(tempList));
-        for(int i = start; i < nums.length; i++){
-            tempList.add(nums[i]);
-            backtrack(list, tempList, nums, i + 1);
-            tempList.remove(tempList.size() - 1);
+    private void backtrack(List<List<Integer>> res , List<Integer> curr, int [] nums, int index){
+        res.add(new ArrayList<>(curr));
+        for(int i = index; i < nums.length; i++){
+            curr.add(nums[i]);
+            backtrack(res, curr, nums, i + 1);
+            curr.remove(curr.size() - 1);
         }
     }
 ```
-1. [Subsets II (contains duplicates)](https://leetcode.com/problems/subsets-ii/)
-
+2. [Subsets II (contains duplicates)](https://leetcode.com/problems/subsets-ii/)
+Input: nums = [1,2,2]
+Output: \[[],[1],[1,2],[1,2,2],[2],[2,2]]
 ```Java
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         List<List<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
-        backtrack(list, new ArrayList<>(), nums, 0);
+        ArrayList<Integer> curr = new ArrayList<>();
+        backtrack(list, curr, nums, 0);
         return list;
     }
     
-    private void backtrack(List<List<Integer>> list, List<Integer> tempList, int [] nums, int start){
-        list.add(new ArrayList<>(tempList));
+    private void backtrack(List<List<Integer>> list, List<Integer> curr, int [] nums, int start){
+        list.add(new ArrayList<>(curr));
         for(int i = start; i < nums.length; i++){
             if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
-            tempList.add(nums[i]);
-            backtrack(list, tempList, nums, i + 1);
-            tempList.remove(tempList.size() - 1);
+            curr.add(nums[i]);
+            backtrack(list, curr, nums, i + 1);
+            curr.remove(curr.size() - 1);
         }
     } 
 ```
 3. [Permutations](https://leetcode.com/problems/permutations/)
-
+Input: nums = [1,2,3]
+Output: \[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
 
 ```Java
     public List<List<Integer>> permute(int[] nums) {
@@ -322,20 +326,22 @@ Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
      }
      
      private void backtrack(List<List<Integer>> list, List<Integer> tempList, int [] nums){
+        // base case
         if(tempList.size() == nums.length){
            list.add(new ArrayList<>(tempList));
-        } else{
-           for(int i = 0; i < nums.length; i++){ 
-              if(tempList.contains(nums[i])) continue; // element already exists, skip
-              tempList.add(nums[i]);
-              backtrack(list, tempList, nums);
-              tempList.remove(tempList.size() - 1);
-           }
+           return;
+        } 
+        for(int i = 0; i < nums.length; i++){ 
+            if(tempList.contains(nums[i])) continue; // element already exists, skip
+            tempList.add(nums[i]);
+            backtrack(list, tempList, nums);
+            tempList.remove(tempList.size() - 1);
         }
      } 
 ```
 4. [Permutations II (contains duplicates)](https://leetcode.com/problems/permutations-ii/)
-
+Input: nums = [1,1,2]
+Output:\[[1,1,2], [1,2,1], [2,1,1]]
 ```Java
      public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> list = new ArrayList<>();
@@ -345,6 +351,7 @@ Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
     }
     
     private void backtrack(List<List<Integer>> list, List<Integer> tempList, int [] nums, boolean [] used){
+        // base case
         if(tempList.size() == nums.length){
             list.add(new ArrayList<>(tempList));
         } else{
@@ -360,6 +367,8 @@ Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
     }
 ```
 5. [Combination Sum](https://leetcode.com/problems/combination-sum/)
+Input: candidates = [2,3,6,7], target = 7
+Output: \[[2,2,3],[7]]
 
 ```Java
     public List<List<Integer>> combinationSum(int[] nums, int target) {
@@ -382,7 +391,8 @@ Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
     }
 ```
 6. [Combination Sum II (can't reuse same element)](https://leetcode.com/problems/combination-sum-ii/)
-
+Input: candidates = [10,1,2,7,6,1,5], target = 8
+Output:\[[1,1,6], [1,2,5], [1,7], [2,6]]
 
 ```Java
     public List<List<Integer>> combinationSum2(int[] nums, int target) {
@@ -408,6 +418,9 @@ Output: \[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
 ```
 7. [Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
 
+A palindrome string is a string that reads the same backward as forward.
+Input: s = "aab"
+Output: \[["a","a","b"],["aa","b"]]
 ```Java
     public List<List<String>> partition(String s) {
         List<List<String>> list = new ArrayList<>();
