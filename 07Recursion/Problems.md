@@ -26,8 +26,247 @@
 
 ## OA
 
+## 例题整理
 
-## Backtracking
+### Maze
+
+1. Maze
+
+Given a maze and a start point and a target point, return whether the target can be reached.
+
+```Java
+public boolean solveMaze(char[][]maze, int startX, int startY, int targetX, int targetY) {
+    // base case
+    if (startX == targetX && startY == targetY) {
+        return true;
+    }
+    
+    // conditions: reach the wall or visited before
+    if (startX < 0 || startY < 0 || startX >= maze.length || startY >= maze[0].length
+        || maze[startX][startY] == 'X') {
+        return false;
+    }
+    
+    // visited before
+    maze[startX][startY] = "x";
+    
+    int[] dx = {1, 0, -1, 0};
+    int[] dy = {0, 1, 0, -1};
+    
+    for (int i = 0; i < 4, i++) {
+        if (solveMaze(maze, startX + dx[i], startY + dy[i], targetX, targetY)) {
+            return true;
+        }
+    }
+    return false; 
+}
+```
+
+2. Maze print
+
+Given a maze and a start point and a target point, print out the path to reach the target.
+```Java
+public boolean solveMaze(char[][]maze, int startX, int startY, int targetX, int targetY, String path) {
+    // As needed to print out the path, we need to initiate the path and store it
+
+    // base case
+    if (startX == targetX && startY == targetY) {
+        System.out.println(path);
+        return true;
+    }
+    
+    // conditions
+    if (startX < 0 || startY < 0 || startX > maze.length || startY > maze[0].length ||
+        maze[startX][startY] == 'X') {
+        return false;
+    }
+
+    // visited before
+    maze[startX][startY] = 'X';
+    int[] dx = {1. 0, -1, 0};
+    int[] dy = {0, 1, 0, -1};
+
+    // initiate the directions
+    char[] direc = {'D', 'R', 'U', 'L'};
+    
+    for (int i = 0; i < 4; i++) {
+        // initiate the path each time, in this case, we don't need to remove the visited path after each recursion
+        // all newPaths won't affect each other
+        String newPath = path + direc[i] + " ";
+        if (solveMaze(maze, startX, startY, targetX, targetY, newPath)) {
+            return true;
+        }
+    }
+    return false;       
+}
+```
+
+3. Maze return path
+
+Given a maze and a start point and a target point, return the path to reach the target.
+```Java
+public void mazeSolve(int[][]maze, int startX, int startY, int targetX, int targetY, ArrayList<Character> path) {
+    // As needed to return the path, we put inititate the path in main function
+
+    //base case
+    if (startX == targetX && startY == targetY) {
+        return true;
+    }
+    
+    // conditions
+    if (startX < 0 || startY < 0 || startX > maze.length || startY > maze[0].length 
+        || maze[startX][startY] == 'X') {
+        return false;
+    }
+    maze[startX][startY] = 'X';
+    
+    int[] dx = {1, 0, -1, 0};
+    int[] dy = {0, 1, 0, -1};
+    char[] direc = {'D', 'R', 'U', 'L'};
+    
+    for (int i = 0; i < 4; i++) {
+        
+        path.add(direc[i]);
+        if (mazeSolve(maze, startX, startY, targetX, targetY, path)) {
+            return true;
+        }
+        // as path is edited each time, after each call, it has to back to the previous status
+        path.remove(path.size() - 1);
+    }
+    return false;
+    
+}
+```
+### Knapsack
+1. 0-1 Knapsack
+Given a knapsack which can hold s pounds of items, and a set of items with weight w1, w2, ... wn. 
+Return whether we can pick speciﬁc items so that their total weight s.
+s = 20; w = [14, 8, 7, 5, 3];
+```Java
+public boolean knapsack(int s, int[] weight, int index) {
+    // pick: (s - w[i], w - w[i])
+    // not pick: (s, w - w[i])
+
+    // base case
+    if (s == 0) {
+        return true;
+    }
+
+    // conditions
+    if (index == weight.length || s < 0) {
+        return false;
+    }
+
+    return (knapsack(s - weight[i], weight, index + 1) ||
+    knapsack(s, weight, index + 1));
+
+}
+```
+
+2. 0-1 Knapsack II
+Try to put items into the pack as many as possible, return the largest weight we can get in the knapsack
+```Java
+public int knapsack(int s, int[] weights, int index) {
+    // base case
+    if (s == 0 || index == weights.length) {
+        return 0;
+    }
+
+    if (weights[index] > s) {
+        return knapsack(s, weights, index + 1);
+    }
+    return Math.max(knapsack(s, weights, index + 1), 
+                    weights[index] + knapsack(s - weights[index], weights, index + 1))
+}
+
+```
+
+
+
+3. Knapsack: use unlimited number of times
+Given a set of candidate numbers (C) and a target number (T), ﬁnd all unique combinations in C where the candidate numbers sums to T.
+
+All candidate numbers are unique.
+
+The same repeated number may be chosen from C unlimited number of times
+
+
+```Java
+public ArrayList<ArrayList<Integer>> knapsack(int s, int[] weight) {
+ 
+    // need to return the value, initiate the res in main fun
+    // use curr to store the value in each recursion
+
+    ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+    ArrayList<Integer> curr = new ArrayList<>();
+    helper(s, weight, curr, res, 0);
+    return res;
+}
+
+public void helper(int s, int[] weight, ArrayList<Integer> curr, ArrayList<ArrayList<Integer>> res, int index) {
+    // base case
+    if (s == 0) {
+        // finally, add the curr to the res
+        // as curr are affected with each other, have to use `new` 
+        res.add(new ArrayList<Integer>(curr));
+        return;
+    }
+
+    // conditions
+    if (s < 0 || index == weight.length) {
+        return;
+    }
+ 
+    // pick:(s - w[i], w, index)
+    curr.add(weight[index]);
+    helper(s - weight[index], weight, curr, res, index);
+
+    // not pick:(s, w, index + 1)
+    curr.remove(curr.size() - 1);
+    helper(s, weight, curr, res, index + 1);
+
+}
+```
+3. Kanpsack II: duplicate + use once
+Candidate numbers may contain duplicate.
+Each number in C may only be used once in the combination.
+
+```Java
+public List<List<Integer>> knapsack(int s, int[] weights) {
+    Arrays.sort(weights);
+    List<List<Integer>> res = new ArrayList<List<Integer>>();
+    List<Integer> curr = new ArrayList<>();
+
+    helper(s, weights, curr, res, 0);
+    return res;
+}
+
+public void helper(int s, int[] weights, List<Integer> curr, List<List<Integer>> res, int index) {
+    // base case
+    if (s < 0) return;
+    if (s == 0) {
+        res.add(new ArrayList<Integer>(curr));
+        return;
+    }
+
+    // for loop, in this case, don't need to call helper() when not pick
+    for (int i = index; i < weights.length; i++) {
+        curr.add(weights[i]);
+        // pick: (s - w[i], index + 1)
+        helper(s - weights[i], weights, curr, res, index + 1);
+
+        // not pick: (s, index +++++)
+        curr.remove(curr.size() - 1);
+        while (i < weights.length - 1 ** weights[i] == weights[i + 1]) {
+            i++;
+        }
+    }
+}
+```
+
+
+
+### Backtracking
 1. [Subsets](https://leetcode.com/problems/subsets/)
 
 Given an integer array nums of unique elements, return all possible subsets (the power set).
