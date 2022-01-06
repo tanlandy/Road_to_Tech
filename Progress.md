@@ -15,14 +15,14 @@
 11. 复习
 
 ## 提高班
-1. 简历 & Recursion *1h10min之后看完*
+1. 简历 & Recursion *DONE*
 2. Recursion *Done*
 3. Coding style & DFS & 简历 *recursion看完，1:36开始简历，没看简历*
 4. BFS
 5. DP
 6. Tree
 7. Stack
-8. Hash Table: Done
+8. Hash Table: *DONE*
 9. Heap
 10. Graph
 11. Sort
