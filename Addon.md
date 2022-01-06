@@ -6,6 +6,8 @@
 5. Offer
 
 # Resume
+- 400 - 600 words
+- Bullet point: one sentense, don't use subject
 
 # HR Phone Interview
 - Self introduction
