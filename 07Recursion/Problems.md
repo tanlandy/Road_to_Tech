@@ -269,6 +269,13 @@ public void helper(int s, int[] weights, List<Integer> curr, List<List<Integer>>
 
 
 ### Backtracking
+STEPS:
+1. Determine which movement is the recursive funciton
+2. Check isValid(candidate)
+3. place(cadidate), revert the previous desicion i.e. remove(candidate) by going back and store the original direction
+4. main funcition
+
+
 1. [Subsets](https://leetcode.com/problems/subsets/)
 
 Given an integer array nums of unique elements, return all possible subsets (the power set).
