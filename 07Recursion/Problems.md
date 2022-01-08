@@ -460,3 +460,36 @@ Output: \[["a","a","b"],["aa","b"]]
     
 }
 ```
+
+8. [Robot Room Cleaner](https://leetcode.com/problems/robot-room-cleaner/)
+// 大同小异，主要是边界条件的区别，模板都是一样的
+
+```Java
+    private static final int[][] directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};   
+    
+    public void cleanRoom(Robot robot) {
+        backtrack(robot, 0, 0, 0, new HashSet<>());
+    }
+    
+    private void backtrack(Robot robot, int row, int col, int curDirection, Set<String> visited) {
+        // Cleans current cell.
+        robot.clean();
+        visited.add(row + " " + col);
+        
+        for (int i = curDirection; i < curDirection + 4; i++) {
+            int newRow = directions[i % 4][0] + row;
+            int newCol = directions[i % 4][1] + col;
+            if (!visited.contains(newRow + " " + newCol) && robot.move()) {
+                backtrack(robot, newRow, newCol, i % 4, visited);
+                // Moves backward one step while maintaining the orientation.
+                robot.turnRight();
+                robot.turnRight();
+                robot.move();
+                robot.turnRight();
+                robot.turnRight();
+            }
+            // Changed orientation.
+            robot.turnRight();
+        }         
+    }
+```
