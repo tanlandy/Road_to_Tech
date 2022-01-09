@@ -7,9 +7,9 @@
 3. Sort
 4. LinkedList: *DONE*
 5. Stack & Queue *STEP1完成* 
-6. HashMap & coding style: *DONE*
-7. Recursion
-8. Recursion2
+6. HashMap & coding style *DONE*
+7. Recursion & 简历 *DONE*
+8. Recursion2 *1:20*
 9. Tree & Graph
 10. BST
 11. 复习
