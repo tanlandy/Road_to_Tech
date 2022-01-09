@@ -6,7 +6,7 @@
 2. Array & array list; Java Variable & data type: *DONE*
 3. Sort
 4. LinkedList: *DONE*
-5. Stack & Queue *DONE* 还没手敲例题和HW
+5. Stack & Queue *STEP1完成* 
 6. HashMap & coding style: *DONE*
 7. Recursion
 8. Recursion2
@@ -18,7 +18,7 @@
 1. Intro & Recursion *DONE*
 2. Recursion *DONE*
 3. Recursion & 简历 *DONE*
-4. DFS & BFS 
+4. DFS & BFS *24min*
 5. DP
 6. Tree
 7. Stack
