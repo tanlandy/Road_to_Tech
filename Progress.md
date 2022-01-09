@@ -6,7 +6,7 @@
 2. Array & array list; Java Variable & data type: *DONE*
 3. Sort
 4. LinkedList: *DONE*
-5. Stack & Queue *DONE*
+5. Stack & Queue *DONE* 还没手敲例题和HW
 6. HashMap & coding style: *DONE*
 7. Recursion
 8. Recursion2

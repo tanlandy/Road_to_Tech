@@ -36,15 +36,18 @@ for (String s : strs) {
 ```
 
 # StringBuilder
+
 ## Initiate
-`StringBuilder word = new StringBuilder();`
+```Java
+StringBuilder word = new StringBuilder();
+StringBuilder res = new StringBuilder(strStack.pop());
+```
+
 ## Method
 ```Java
 word.append("4");
 word.append(" ");
 word.toString(); // return String
-
-
 ```
 
 # Integer
@@ -54,8 +57,24 @@ Integer.toString(5); // return "5"
 
 ```
 
+# Character
+## Initiate
+`char c = s.charAt(index);`
+## Method
+```Java
+Character.isDigit(c); // check if c is digit
+
+
+```
+
+
+
+
+
 # ASCII
 'a'in Java is 97 -> nums['a'] -> nums[97]
 `s.charAt(i) - 'a'` shift the ascii value so that **a-z** have values 0 - 25
 
 `s.charAt(i) - 'A'` shift the ascii value so that **A-Z** have values 0 - 25
+
+
