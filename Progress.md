@@ -2,12 +2,12 @@
 
 # 课程进度
 ## 基础班
-1. Time complexity: *Done*
-2. Array & array list; Java Variable & data type: *Done*
+1. Time complexity: *DONE*
+2. Array & array list; Java Variable & data type: *DONE*
 3. Sort
-4. LinkedList: *Done*
-5. Stack & Queue
-6. HashMap & coding style: *Done*
+4. LinkedList: *DONE*
+5. Stack & Queue *DONE*
+6. HashMap & coding style: *DONE*
 7. Recursion
 8. Recursion2
 9. Tree & Graph
