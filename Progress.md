@@ -8,8 +8,8 @@
 4. LinkedList: *DONE*
 5. Stack & Queue *STEP1完成* 
 6. HashMap & coding style *DONE*
-7. Recursion & 简历 *DONE*
-8. Recursion2 *1:20*
+7. Recursion & 简历 *STEP1完成*
+8. Recursion2 *STEP1完成*
 9. Tree & Graph
 10. BST
 11. 复习
@@ -18,7 +18,7 @@
 1. Intro & Recursion *DONE*
 2. Recursion *DONE*
 3. Recursion & 简历 *DONE*
-4. DFS & BFS *24min*
+4. DFS & BFS *1h16min二叉树DFS看完*
 5. DP
 6. Tree
 7. Stack
