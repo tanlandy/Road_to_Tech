@@ -3,6 +3,7 @@
 2. Binary Search - Using a loop or recursion to divide search space in half after each comparison.
 3. Post-processing - Determine viable candidates in the remaining space.
 
+画出来数字表示的高度，然后来看左中右
 
 # Templetes
 1. Basic
@@ -33,3 +34,19 @@ class Solution {
 ```
 
 2. return its immediate right neighbor's index
+```Java
+class Solution {
+    public int findPeakElement(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int pivot = l + (r - l) / 2;
+            if (nums[pivot] > nums[pivot + 1]) {
+                r = pivot;
+            } else {
+                l = pivot + 1;
+            }
+        }
+        return l;
+    }
+}
+```
