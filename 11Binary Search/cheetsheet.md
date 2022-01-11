@@ -31,3 +31,5 @@ class Solution {
     }
 }
 ```
+
+2. return its immediate right neighbor's index
