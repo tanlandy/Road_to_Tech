@@ -1,4 +1,4 @@
-# Question:
+# Question1:
 // input: integer N
 // output: date of Nth event in calender
 // question: given the calendar app, and a specific date, return the nearest event
@@ -32,3 +32,68 @@ The question is, given a small stack of randomly drawm dominoes, what is the lon
 
 
 (0, 1), (0, 0), (1, 2) (1, 3) -> 3
+
+
+# Question3 Jan.11.2022
+## Question:
+Whether the binary tree are identical
+Example:
+   1
+  / \
+ /   \
+3     2
+and 
+   1
+  / \
+ /   \
+2     3
+are not identical. But
+   1
+  / \
+ /   \
+2     2
+and 
+   1
+  / \
+  \ / 
+   2
+are NOT identical.
+
+Also   
+      1 
+     /  \
+    /     \
+   2     \
+  /  \     /
+ /    \  /
+2     2 
+ \
+   \
+    2 
+and
+      1
+     /  \
+    /     \
+   2      \
+  /  \       \
+ /    \       \
+2     2     /
+ \        /
+   \    /
+    2
+are not identical.
+
+preorder (root is pre)
+1,2,2,2,2,2
+1,2,2,2,2,2
+
+Use set to mark visited
+use attribute in the node(not enough)
+--> keep the first visited number, keep the inorder number
+any questions for me?
+
+feedback:
+1. 基本数据结构和算法的概念，要熟悉 tree traversal之类的要bug free而且neat
+2. 最优解：keep 所有preorder number
+
+BQ 考察是否fit in google culture, positve impact, collaborate, (leadership)
