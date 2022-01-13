@@ -253,13 +253,13 @@ public void helper(int s, int[] weights, List<Integer> curr, List<List<Integer>>
     }
 
     // for loop, in this case, don't need to call helper() when not pick
-    for (int i = index; i < weights.length; i++) {
+    for (int i = index; i < weights.length; i++) { // i = index: 拿与不拿，拿了就直接往下，不拿就不考虑之前的
         curr.add(weights[i]);
         // pick: (s - w[i], index + 1)
         helper(s - weights[i], weights, curr, res, index + 1);
         // not pick: (s, index +++++)
         curr.remove(curr.size() - 1);
-        while (i < weights.length - 1 && weights[i] == weights[i + 1]) {
+        while (i < weights.length - 1 && weights[i] == weights[i + 1]) { // may only be used once
             i++;
         }
     }
