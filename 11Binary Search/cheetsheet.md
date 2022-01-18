@@ -3,6 +3,8 @@
 2. Binary Search - Using a loop or recursion to divide search space in half after each comparison.
 3. Post-processing - Determine viable candidates in the remaining space.
 
+use long tyep to avoid data flow
+
 画出来数字表示的高度，然后来看左中右
 
 # Templetes
@@ -50,3 +52,8 @@ class Solution {
     }
 }
 ```
+
+确认上界：
+对于平方： target / 2
+<<= 1 // *= 2
+>>= 1 // /= 2

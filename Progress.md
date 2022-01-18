@@ -64,3 +64,7 @@
 1.22 提高班16、17--Leetcode280
 1.23 提高班18、19--Leetcode295
 1.24 提高班20，第一轮拿下--Leetcode310
+
+
+BST的leetcode做到conclusion的valid perfect square, included
+剩下其他的都没有看
