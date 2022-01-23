@@ -68,3 +68,12 @@
 
 BST的leetcode做到conclusion的valid perfect square, included
 剩下其他的都没有看
+
+# Questions recap
+Jan22
+1. Balanced Binary Tree: 深度作返回值
+2. Symmetric Tree
+3. Minimum Depth of Binary Tree
+4. Root to Leaf Path Sum
+5. Binary Tree Maximum Path Sum
+6. Word Search
