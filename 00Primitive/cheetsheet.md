@@ -63,7 +63,8 @@ Integer.toString(5); // return "5"
 ## Method
 ```Java
 Character.isDigit(c); // check if c is digit
-
+Character.isLetterOrDigit(c); // Check if its space, return false
+Character.toLowerCase(c); // c to lower case, return 'h'
 
 ```
 
