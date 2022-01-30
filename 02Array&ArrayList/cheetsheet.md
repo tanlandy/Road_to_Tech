@@ -12,7 +12,7 @@ friendArray2[0] = "World"; //overwrite
 ```Java
 friendArray[0]; // Access
 friendArray.length // Get length
-
+$$
 // Shift and insert
 // Say we want to insert the element at index 2.
 for (int i = 4; i >= 2; i--) {
@@ -52,6 +52,8 @@ Collections.sort(myNumbers); // Sort
 myNumbers.toArray(new String[myNumbers.size()]); // ArrayList to Array
 ArrayList(map.values()); // 
 myNumbers.set(0, 10); // {10, 2, 3}
+
+Collections.reverse(myNumber); // reverse the items in myNumber
 
 ```
 

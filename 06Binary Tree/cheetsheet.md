@@ -1,5 +1,5 @@
-## memo
-```
+## PreOrder
+``` Java
 // pre-order
 /**
  * Definition for a binary tree node.
@@ -26,29 +26,30 @@ class Solution {
     }
 }
 
-class Solution {
-    public List<Integer> preorderTraversal(TreeNode root) {
-        List<Integer> answer = new ArrayList<>();
-        Stack<TreeNode> s = new Stack<TreeNode>();
-        if (root != null) {
-            s.push(root);
+public static void preOrder(TreeNode root) {
+    Stack<TreeNode> stack = new Stack<>();
+    List<Integer> res = new ArrayList<>();
+    stack.push(root);
+    while (!stack.isEmpty()) {
+        res.add(root.val); // visit
+        if (root.right != null) { // push right
+            stack.push(root.right);
         }
-        TreeNode cur;
-        while (!s.empty()) {
-            cur = s.pop();
-            answer.add(cur.val);            // visit the root
-            if (cur.right != null) {
-                s.push(cur.right);          // push right child to stack if it is not null
-            }
-            if (cur.left != null) {
-                s.push(cur.left);           // push left child to stack if it is not null
-            }
+        if (root.left != null) { // push left
+            root = root.left;
+        } else {
+            root = stack.pop(); // pop the left first
         }
-        return answer;
     }
 }
 
-// in-order
+
+```
+
+## inorder
+```Java
+
+// recursive
 class Solution {
     private void inorderTraversal(TreeNode root, List<Integer> answer) {
         if (root == null) {
@@ -65,6 +66,26 @@ class Solution {
     }
 }
 
+// interative
+public static void inOrder(TreeNode root) {
+    Stack<TreeNode> stack = new Stack<>();
+    List<Ingeter> res = new ArrayList<>(); // to store result
+    while (root != null || !stack.isEmpty()) {
+        if (root != null) { // push the node, go to left
+            stack.push(root);
+            root = root.left; 
+        } else { // if there's no left, then pop, add, and push the right
+            root = root.pop();
+            res.add(root.val);
+            root = root.right;
+        }
+    }
+
+
+}
+```
+## Post
+```Java
 // post-order
 class Solution {
     private void postorderTraversal(TreeNode root, List<Integer> answer) {
@@ -82,7 +103,10 @@ class Solution {
     }
 }
 
-// level-order(BFS)
+```
+
+## level-order(BFS)
+```Java
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -92,30 +116,32 @@ class Solution {
  *     TreeNode(int x) { val = x; }
  * }
  */
+
+//  双Queue法，牢记于心
 class Solution {
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> ans = new ArrayList<>();
-        Queue<TreeNode> q = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
         if (root != null) {
-            q.offer(root);
+            queue.offer(root);
         }
-        TreeNode cur;
-        while (!q.isEmpty()) {
-            int size = q.size();
-            List<Integer> subAns = new LinkedList<Integer>();
-            for (int i = 0; i < size; ++i) {        // traverse nodes in the same level
-                cur = q.poll();
-                subAns.add(cur.val);                // visit the root
-                if (cur.left != null) {
-                    q.offer(cur.left);              // push left child to queue if it is not null
+        while (!queue.isEmpty()) { // 外层判断是否有元素
+            List<Integer> oneRes = new ArrayList<>();
+            Queue<TreeNode> queue2 = new LinkedList<>();
+            while (!queue.isEmpty()) { // 内层while形成一整层
+                TreeNode top = queue.poll(); // 拿出来
+                if (top.left != null) { // 放到Queue2里
+                    queue2.offer(top.left);
                 }
-                if (cur.right != null) {
-                    q.offer(cur.right);             // push right child to queue if it is not null
+                if (top.right != null) {
+                    queue2.offer(top.right);
                 }
+                oneRes.add(top.val); //形成一整层
             }
-            ans.add(subAns);
+            res.add(oneRes); // 加上一整层
+            queue = queue2;
         }
-        return ans;
+        return res;
     }
 }
 ```
