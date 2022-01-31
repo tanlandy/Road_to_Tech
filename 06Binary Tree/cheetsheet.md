@@ -127,9 +127,9 @@ class Solution {
         }
         while (!queue.isEmpty()) { // 外层判断是否有元素
             List<Integer> oneRes = new ArrayList<>();
-            Queue<TreeNode> queue2 = new LinkedList<>();
+            Queue<TreeNode> queue2 = new LinkedList<>(); // 外层中新建queue
             while (!queue.isEmpty()) { // 内层while形成一整层
-                TreeNode top = queue.poll(); // 拿出来
+                TreeNode top = queue.poll(); // 拿出来，内层中拿出来那一整层
                 if (top.left != null) { // 放到Queue2里
                     queue2.offer(top.left);
                 }

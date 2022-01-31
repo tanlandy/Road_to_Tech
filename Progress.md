@@ -19,7 +19,7 @@
 2. Recursion *DONE*
 3. Recursion & 简历 *DONE*
 4. DFS & BFS *STEP1完成* 
-5. DP *41min*
+5. DP *1:10*
 6. Tree
 7. Stack
 8. Hash Table: *DONE*
