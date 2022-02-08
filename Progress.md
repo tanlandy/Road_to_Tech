@@ -18,9 +18,9 @@
 1. Intro & Recursion *DONE*
 2. Recursion *DONE*
 3. Recursion & 简历 *DONE*
-4. DFS & BFS *STEP1完成* 
-5. DP *1:46* 完成maze 3道题之后再继续看
-6. Tree
+4. DFS & BFS *STEP1完成* 差maze
+5. DP *STEP1完成*  差word ladder
+6. Tree *1:21*
 7. Stack
 8. Hash Table: *DONE*
 9. Heap
