@@ -20,7 +20,7 @@
 3. Recursion & 简历 *DONE*
 4. DFS & BFS *STEP1完成* 差maze
 5. DP *STEP1完成*  差word ladder
-6. Tree *1:21*
+6. Tree *DONE*
 7. Stack
 8. Hash Table: *DONE*
 9. Heap
