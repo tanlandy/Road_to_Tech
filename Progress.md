@@ -21,7 +21,7 @@
 4. DFS & BFS *STEP1完成* 差maze
 5. DP *STEP1完成*  差word ladder
 6. Tree *DONE*
-7. Stack
+7. Stack *38min*
 8. Hash Table: *DONE*
 9. Heap
 10. Graph
