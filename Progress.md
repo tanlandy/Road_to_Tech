@@ -19,12 +19,12 @@
 2. Recursion *DONE*
 3. Recursion & 简历 *DONE*
 4. DFS & BFS *STEP1完成* 差maze
-5. DP *STEP1完成*  差word ladder
-6. Tree *DONE*
-7. Stack *38min*
-8. Hash Table: *DONE*
-9. Heap
-10. Graph
+5. BFS cont. *STEP1完成*  差word ladder
+6. DP *DONE*
+7. DP cont. & Tree *1:47min*
+8. Stack
+9. Hash Table: *DONE*
+10. Heap, Graph
 11. Sort
 12. Bit
 13. 并查集
