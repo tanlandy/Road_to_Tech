@@ -21,10 +21,10 @@
 4. DFS & BFS *STEP1完成* 差maze
 5. BFS cont. *STEP1完成*  差word ladder
 6. DP *DONE*
-7. DP cont. & Tree *1:47min*
-8. Stack
-9. Hash Table: *DONE*
-10. Heap, Graph
+7. DP cont. & Tree *DONE*
+8. Tree cont. & Hashmap *DONE*
+9. Hash Table & Stack, Queue *DONE*
+10. Heap, Graph 
 11. Sort
 12. Bit
 13. 并查集
