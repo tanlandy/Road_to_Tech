@@ -46,3 +46,9 @@ What would you do when there's conflict with manager? —> 不要把自己意见
 Technical difficulty, one example? -> 看能不能坚持、尝试下来
 
 -> Leadership principle
+
+why amazon?
+1. 产品好，服务稳定，创新aws平台，提供好的service
+
+
+LRU再看看
