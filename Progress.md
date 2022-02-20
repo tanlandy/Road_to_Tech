@@ -24,8 +24,8 @@
 7. DP cont. & Tree *DONE*
 8. Tree cont. & Hashmap *DONE*
 9. Hash Table & Stack, Queue *DONE*
-10. Heap, Graph 
-11. Sort
+10. Heap, Graph *1:10前未看，其他完成*
+11. Heap & Graph & Sort *50min*
 12. Bit
 13. 并查集
 14. 面向对象设计
