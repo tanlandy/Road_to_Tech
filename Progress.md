@@ -25,12 +25,12 @@
 8. Tree cont. & Hashmap *DONE*
 9. Hash Table & Stack, Queue *DONE*
 10. Heap, Graph *1:10前未看，其他完成*
-11. Heap & Graph & Sort *50min*
-12. Bit
-13. 并查集
-14. 面向对象设计
-15. 系统设计
-16. 复习
+11. Heap & Graph *DONE*
+12. Graph & Sort *DONE*
+13. Sort & 并查集 *DONE*
+14. 并查集 & Bit & Design *DONE*
+15. Design *DONE*
+16. Design 复习
 17. 计算机网络
 18. Java基础知识
 19. 操作系统
@@ -54,16 +54,16 @@
 3. Leetcode(用来复习巩固)
 
 # Progress推演
-1.15 简历，基础班的5、7、8，提高班的4完成--Leetcode187
-1.16 提高班5，基础班3--Leetcode200
-1.17 简历二稿提高班6，基础班9、10--Leetcode215
-1.18 基础班11，提高班7、9--Leetcode230
-1.19 简历终稿，提高班10、11--Leetcode245
-1.20 提高班12、13--Leetcode255
-1.21 提高班14、15--Leetcode270
-1.22 提高班16、17--Leetcode280
-1.23 提高班18、19--Leetcode295
-1.24 提高班20，第一轮拿下--Leetcode310
+2.15 简历，基础班的5、7、8，提高班的4完成--Leetcode187 *DONE*
+2.16 提高班5，基础班3--Leetcode200 *DONE*
+2.17 简历二稿提高班6，基础班9、10--Leetcode215 *DONE*
+2.18 基础班11，提高班7、9--Leetcode230 *DONE*
+2.19 简历终稿，提高班10、11--Leetcode245 *DONE*
+2.20 提高班12、13--Leetcode260  *DONE*
+2.21 提高班14、15、16--Leetcode280
+2.22 提高班17、18--Leetcode300
+2.23 提高班19、20--Leetcode320
+2.24 第一轮拿下--Leetcode360
 
 
 BST的leetcode做到conclusion的valid perfect square, included
