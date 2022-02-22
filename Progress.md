@@ -30,7 +30,7 @@
 13. Sort & 并查集 *DONE*
 14. 并查集 & Bit & Design *DONE*
 15. Design *DONE*
-16. Design 复习
+16. Design 复习 *DONE* 复习时可以再看一遍最后10min
 17. 计算机网络
 18. Java基础知识
 19. 操作系统
@@ -60,7 +60,7 @@
 2.18 基础班11，提高班7、9--Leetcode230 *DONE*
 2.19 简历终稿，提高班10、11--Leetcode245 *DONE*
 2.20 提高班12、13--Leetcode260  *DONE*
-2.21 提高班14、15、16--Leetcode280
+2.21 提高班14、15、16--Leetcode280 *DOING*
 2.22 提高班17、18--Leetcode300
 2.23 提高班19、20--Leetcode320
 2.24 第一轮拿下--Leetcode360
