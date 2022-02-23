@@ -31,10 +31,10 @@
 14. 并查集 & Bit & Design *DONE*
 15. Design *DONE*
 16. Design 复习 *DONE* 复习时可以再看一遍最后10min
-17. 计算机网络
-18. Java基础知识
-19. 操作系统
-20. Design Patterns
+17. Design Patterns *DONE*
+18. 计算机网络 
+19. Java基础知识
+20. 操作系统
 
 # 学习方式
 1. 看视频，在课间上做笔记
