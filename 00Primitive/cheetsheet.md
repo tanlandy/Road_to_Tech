@@ -13,12 +13,15 @@ s1.length(); // get length
 s1.charAt(0); // get char at index 0
 s = s1.trim(); // trim all extra spaces in s1
 String[] words = s1.split(" ") // 按空格分开，存到array中
-char[] charS = s1.toCharArray(); charS = {'H', 'e', 'l',...,'l', 'd'};  converts the given string into a sequence of characters
+
+// String -> Char[]; Char[] -> String
+char[] charS = s1.toCharArray(); // charS = {'H', 'e', 'l',...,'l', 'd'};  converts the given string into a sequence of characters
 String s2 = String.valueOf(charS); // s2 = "Hello world"; returns the string representation
 
 // 将String排序
 String str = new String("Hefasf");
 char[] charS = str.toCharArray();
+Arrays.sort(charS);
 String newStr = String.valueOf(charS);
 
 // 将String[]排序
@@ -52,6 +55,7 @@ word.toString(); // return String
 ```Java
 Integer.toString(5); // return "5"
 int left = Integer.MIN_VALUE;
+int right = Integer.MAX_VALUE;
 
 ```
 
@@ -66,14 +70,14 @@ Character.toLowerCase(c); // c to lower case, return 'h'
 
 ```
 
-
-
-
-
 # ASCII
-'a'in Java is 97 -> nums['a'] -> nums[97]
-`s.charAt(i) - 'a'` shift the ascii value so that **a-z** have values 0 - 25
+```Java
+// 'a'in Java is 97 -> nums['a'] -> nums[97]
+`s.charAt(i) - 'a'` // shift the ascii value so that **a-z** have values 0 - 25
 
-`s.charAt(i) - 'A'` shift the ascii value so that **A-Z** have values 0 - 25
+`s.charAt(i) - 'A'` // shift the ascii value so that **A-Z** have values 0 - 25
+
+
+```
 
 

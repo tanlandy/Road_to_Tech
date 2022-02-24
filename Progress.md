@@ -32,9 +32,9 @@
 15. Design *DONE*
 16. Design 复习 *DONE* 复习时可以再看一遍最后10min
 17. Design Patterns *DONE*
-18. 计算机网络 
-19. Java基础知识
-20. 操作系统
+18. Java基础知识
+19. 计算机网络 
+20. 操作系统 *34min*
 
 # 学习方式
 1. 看视频，在课间上做笔记
@@ -77,3 +77,12 @@ Jan22
 4. Root to Leaf Path Sum
 5. Binary Tree Maximum Path Sum
 6. Word Search
+
+
+
+1. brute force
+2. Simpler one 
+3. Simpler one by noticing a pattern
+should I look for a different solution
+Use some visualization 
+test the solution on a few examples
