@@ -1,3 +1,13 @@
+# Print
+```Java
+// To print a double with 6 decimal
+double n = 3.1313131;
+System.out.printf("%f%n", n);
+System.out.printf("%7.6f%n", n); // 总共7位数，6位小数
+
+System.out.println(max + " " + min); // 打印出来12 15
+```
+
 # String
 ## Initiate
 `String s1 = "Hello World";`
@@ -33,6 +43,14 @@ for (String s : strs) {
 }
 
 
+
+// "04:12:34PM" to "16:12:34" 
+String s = "04:12:34PM";
+int first = Integer.parseInt(s.substring(0,2)) + 12;
+String n = first + s.substring(2,8);
+
+
+
 ```
 
 # StringBuilder
@@ -41,6 +59,22 @@ for (String s : strs) {
 ```Java
 StringBuilder word = new StringBuilder();
 StringBuilder res = new StringBuilder(strStack.pop());
+
+public static String timeConversion(String s) {
+
+    if(s.charAt(s.length()-2) == 'A'){
+        if((s.substring(0,2)).equals("12"))
+            return("00"+s.substring(2,8));
+
+    }else{
+        if(!(s.substring(0,2)).equals("12"))
+            return(Integer.parseInt(s.substring(0,2))+12+s.substring(2,8));
+
+    }
+    return(s.substring(0,8));
+
+}
+
 ```
 
 ## Method
@@ -56,6 +90,10 @@ word.toString(); // return String
 Integer.toString(5); // return "5"
 int left = Integer.MIN_VALUE;
 int right = Integer.MAX_VALUE;
+
+long sum; // 64 bits, primitive Java types
+Integer sum; // 64 bits, non-primitive Java types, can be null
+
 
 ```
 

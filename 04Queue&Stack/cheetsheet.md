@@ -4,9 +4,9 @@
 ## Methods
 ```Java
 // 栈顶栈底
-push // O(1)
-pop // O(1)
-peek // O(1)
+stack.push() // O(1) 放入栈顶
+stack.pop() // O(1) 删除并且return栈顶
+stack.peek() // O(1)
 
 ```
 
