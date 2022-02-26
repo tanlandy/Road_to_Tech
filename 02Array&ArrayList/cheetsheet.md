@@ -12,7 +12,7 @@ friendArray2[0] = "World"; //overwrite
 ```Java
 friendArray[0]; // Access
 friendArray.length // Get length
-$$
+
 // Shift and insert
 // Say we want to insert the element at index 2.
 for (int i = 4; i >= 2; i--) {
