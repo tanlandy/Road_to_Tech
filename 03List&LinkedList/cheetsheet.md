@@ -11,7 +11,27 @@ list.remove(index,value) // O(n)
 ```
 ## Templates
 ```Java
-// swap nodes in pairs: (1,2,3,4) -> (2,1,4,3)
+// always check if null
+    if (head == null) {
+        return false;
+    }
+
+
+
+// reverse Linked List: [1,2,3,4] -> [4,3,2,1]
+public ListNode reverseLinkedList(ListNode head) {
+    ListNode pre = null;
+    ListNode cur = head;
+    while (cur != null) {
+        ListNode temp = cur.next; // store 3
+        cur.next = pre; // 2 -> 1
+        pre = cur; // 1站到2，从而下一轮3 -> 2
+        cur = temp; // 从2站到3
+    }
+    return pre;
+}
+
+// swap nodes in pairs: [1,2,3,4] -> [2,1,4,3]
 public ListNode swapPairs(ListNode head) {
     ListNode dummy = new ListNode(-1);
     dummy.next = head;
@@ -27,7 +47,16 @@ public ListNode swapPairs(ListNode head) {
     return dummy.next;
 }
 
-
+// two pointers to find middleNode
+public ListNode middleNode(ListNode head) {
+    ListNode fast = head;
+    ListNode slow = head;
+    while (fast != null && fast.next != null) { 
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return slow;
+}
 
 
 ```
