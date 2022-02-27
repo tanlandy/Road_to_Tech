@@ -14,12 +14,6 @@
        }
    );
 
-
-
-
-
-
-
 // merge sort: O(nlogn)
     public ListNode sortList(ListNode head) {
         if (head == null || head.next == null)
@@ -78,7 +72,7 @@
         List<Interval> res = new ArrayList<>();
         Interval prev = null;
         for (Interval inter : intervals) {
-            if (  prev==null || inter.start>prev.end ) {
+            if ( prev==null || inter.start>prev.end ) {
                 res.add(inter);
                 prev = inter;
             } else if (inter.end>prev.end) {
@@ -89,6 +83,14 @@
         return res;
     }
 
-
+// Sort string
+    Arrays.sort(
+        str,
+        new Comparator<String>() {
+            public int compare(String str1, String str2) {
+                return (str2 + str1).compareTo(str1 + str2);
+            }
+        }
+    );
 
 ```

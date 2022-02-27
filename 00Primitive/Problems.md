@@ -13,7 +13,11 @@ for (int i = 0; i < strOri.length(); i++) {
 }
 String strNew = sb.toString();
 
-
+// []nums to String
+String[] str = new String[nums.length];
+for (int i = 0; i < nums.length; i++) {
+    str[i] = String.valueOf(nums[i]);
+}
 
 
 
