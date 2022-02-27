@@ -15,8 +15,9 @@ list.remove(index,value) // O(n)
     if (head == null) {
         return false;
     }
-
-
+    ListNode dummy = new ListNode(-1);
+    dummy.next = head;
+    ListNode pre = dummy;
 
 // reverse Linked List: [1,2,3,4] -> [4,3,2,1]
 public ListNode reverseLinkedList(ListNode head) {
@@ -57,6 +58,39 @@ public ListNode middleNode(ListNode head) {
     }
     return slow;
 }
+
+// [1,2,3,4,5] -> [1,4,3,2,5]
+        for (int i = 0; i < left - 1; i++) { // pre will stay on 1
+            pre = pre.next;
+        }
+        ListNode start = pre.next; // start stays on 2
+        ListNode cur = start.next; // cur stays on 3
+        // [1,2,3,4,5] -> [1,3,2,4,5] -> [1,4,3,2,5]
+        for (int i = 0; i < right - left; i++) {
+        start.next = cur.next; // 2 -> 4
+        cur.next = pre.next; // 3 -> 2
+        pre.next = cur; // 1 -> 3
+        cur = start.next; // cur = 4
+        // after first loop:
+        // 1 -> 3 -> 2 -> 4 -> 5
+        // pre = 1, start = 2, cur = 4
+        return dummy.next;
+
+// [1,2,3,4,5] -> [1,3,5,2,4]
+ListNode odd = head;
+        ListNode even = odd.next;
+        ListNode evenHead = even;
+        // [1, 2, 3, 4, 5, 6] -> [1,3][2,4,5,6]
+        //       odd
+        
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = odd.next;
+        }
+        odd.next = evenHead;
+        return head;
 
 
 ```
