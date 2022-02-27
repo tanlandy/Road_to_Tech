@@ -7,7 +7,7 @@ meeting rooms2
 2. Coding
    1. Clarification
    2. Assumption
-   3. Solution (Bruce force and High-level idea)
+   3. Solution (Bruce force and High-level idea), with test case
    4. Coding (signature自己写)
    5. Use test cases to validate
    6. Time and space complexity
@@ -26,3 +26,11 @@ meeting rooms2
    E4, E5: 2轮coding + 1轮behavior + 1轮system design
 2. Coding时间45min: 2medium OR 1hard
    
+
+
+# SDE
+## 本次题目：
+LinkedList swap pair + Leetcode 417
+## 回顾
+1. 练习边做边沟通
+2. 第一题15min以内，第二题20min
