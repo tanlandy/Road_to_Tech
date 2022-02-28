@@ -66,23 +66,52 @@ class Solution {
     }
 }
 
-// interative
-public static void inOrder(TreeNode root) {
-    Stack<TreeNode> stack = new Stack<>();
-    List<Ingeter> res = new ArrayList<>(); // to store result
-    while (root != null || !stack.isEmpty()) {
-        if (root != null) { // push the node, go to left
-            stack.push(root);
-            root = root.left; 
-        } else { // if there's no left, then pop, add, and push the right
-            root = root.pop();
-            res.add(root.val);
-            root = root.right;
+// iterative
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        if (root == null) {
+            return res;
         }
+        stack.push(root);
+        while (!stack.isEmpty()) { // 注意条件
+            root = stack.pop();
+            res.add(root.val); // 先把parent放进来
+            if (root.right != null) { // 先进后出，先放右，后放左
+                stack.push(root.right);
+            }
+            if (root.left != null) {
+                stack.push(root.left);
+            }
+            
+        }
+        return res;
     }
 
+// iterative
+  public List<Integer> inorderTraversal(TreeNode root) {
+        // stack iteratively traverse
+        // go to the bottom left
+        // pop the node, add, go to right
+        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
 
-}
+        while (!stack.isEmpty() || root != null) { // 容易忽视||的情况
+            while (root != null) { // keep going left
+                stack.push(root);
+                root = root.left;
+            }
+            // reach the bottom left
+            root = stack.pop(); // fetch the node
+            res.add(root.val); // add to the res
+            root = root.right; // go to the right
+        }
+        return res;
+        
+    }
 ```
 ## Post
 ```Java
