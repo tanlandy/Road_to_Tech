@@ -66,7 +66,7 @@ class Solution {
     }
 }
 
-// iterative
+// iterative-Preorder
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
         Stack<TreeNode> stack = new Stack<>();
@@ -74,21 +74,21 @@ class Solution {
             return res;
         }
         stack.push(root);
+        
         while (!stack.isEmpty()) { // 注意条件
-            root = stack.pop();
-            res.add(root.val); // 先把parent放进来
-            if (root.right != null) { // 先进后出，先放右，后放左
-                stack.push(root.right);
+            TreeNode node = stack.pop();
+            res.add(node.val); // 先把parent放进来
+            if (node.right != null) { // 先进后出，先放右，后放左
+                stack.push(node.right);
             }
-            if (root.left != null) {
-                stack.push(root.left);
+            if (node.left != null) {
+                stack.push(node.left);
             }
-            
         }
         return res;
     }
 
-// iterative
+// iterative-Inorder
   public List<Integer> inorderTraversal(TreeNode root) {
         // stack iteratively traverse
         // go to the bottom left
@@ -99,15 +99,16 @@ class Solution {
             return res;
         }
 
-        while (!stack.isEmpty() || root != null) { // 容易忽视||的情况
-            while (root != null) { // keep going left
-                stack.push(root);
-                root = root.left;
+        TreeNode node = root;
+        while (!stack.isEmpty() || node != null) { // 容易忽视||的情况
+            while (node != null) { // keep going left
+                stack.push(node);
+                node = node.left;
             }
             // reach the bottom left
-            root = stack.pop(); // fetch the node
-            res.add(root.val); // add to the res
-            root = root.right; // go to the right
+            node = stack.pop(); // fetch the node
+            res.add(node.val); // add to the res
+            node = node.right; // go to the right
         }
         return res;
         
