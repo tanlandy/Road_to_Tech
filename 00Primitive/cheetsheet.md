@@ -18,7 +18,7 @@ s1[5] = 'x'; // Error: string in Java is immutable
 s1 += '!'; // concatenate
 s1.indexOf('o'); // find first 'o'; O(n)
 s1.lastIndexOf('o'); // find last 'o'; O(n)
-String s2 = s1.substring(1,5) // get substring; O(n)
+String s2 = s1.substring(1,3) // get substring; O(n)// s2 = "el", [1,3)
 s1.length(); // get length
 s1.charAt(0); // get char at index 0
 s = s1.trim(); // trim all extra spaces in s1
