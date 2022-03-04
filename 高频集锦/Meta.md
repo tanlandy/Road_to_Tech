@@ -1,3 +1,8 @@
+## 面经必看
+https://www.1point3acres.com/bbs/thread-856086-1-1.html 
+### 电面
+https://www.1point3acres.com/bbs/thread-859864-1-1.html 
+
 ## Top 60
 8. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
 
@@ -194,6 +199,19 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
     }
     // Time: O(n), n is size of nestedList
     // Space: O(k), k is largest List
+
+
+```
+
+12. [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+
+```Java
+
 
 
 ```
