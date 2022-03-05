@@ -1,3 +1,30 @@
+# 面试步骤
+## coding
+1. Repeat the question back
+2. Ask questions about edge cases
+   1. Arrays
+      1. 0s & Negative nubmers
+      1. Size
+      2. Dublicates
+   1. Find
+      1. length
+      2. Negative input
+3. Take your time to think about
+   1. how does it sound to you?
+4. talking while coding line by line
+5. Run through test cases
+6. Analyze time, space complexity on your own
+## post interview
+Ask their thought about the company's future
+
+# Meta value
+Bring the world closer
+values:
+1. moving fast
+2. build
+
+
+
 # Research Scientist Intern Mar.2.2022
 ## Steps
 1. Introduce your self: 1.5min - 2min

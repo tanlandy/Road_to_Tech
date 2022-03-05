@@ -15,6 +15,7 @@ https://www.1point3acres.com/bbs/thread-857570-1-1.html
 ### OA2
 https://www.1point3acres.com/bbs/thread-859323-3-1.html 
 https://www.1point3acres.com/bbs/thread-474434-1-1.html 
+https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=amazon 
 1. Coding:
 (1) Find substrings with k distinct letters. Attention: length of substring has to be k as well.
 (2) K closest points to origin.
