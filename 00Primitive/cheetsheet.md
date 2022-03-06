@@ -106,6 +106,14 @@ Character.isDigit(c); // check if c is digit
 Character.isLetterOrDigit(c); // Check if its space, return false
 Character.toLowerCase(c); // c to lower case, return 'h'
 
+// char[] 存储'a' - 'z'
+char[] letters = new char[26];
+index = 0;
+for (char i = 'a'; i < 'z'; i++) {
+    char[index] = i;
+    index++;
+}
+
 ```
 
 # ASCII
