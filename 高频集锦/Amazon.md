@@ -12,6 +12,125 @@ https://www.1point3acres.com/bbs/thread-859207-1-1.html
 https://www.1point3acres.com/bbs/thread-858506-1-1.html 
 https://www.1point3acres.com/bbs/thread-857570-1-1.html 
 
+
+1. 移动数据
+
+```Python
+def dataMovement(data,movefrom,moveto):
+    s=set(data)
+    for destination, origination in zip(movefrom,moveto):
+        s.remove(movefrom)
+        s.add(moveto)
+    return sorted(list(s))
+```
+2. 图片最大灰度
+
+```python
+def getMaximunGery(grid):
+    prfSumRow = [0]*len(grid)
+    prfSumCol = [0]*len(groud[0]
+    for r in range(len(grid)):
+        for c in range(len(grid[0])):
+            if grid[r][c]=="1":  prfSumRow[r]+=1; prfSumCol‍‌‌‌‌‍‍‍‍‍‌‍‌‍‌‍‌‍‌‌[c]+=1
+            else:                prfSumRow[r]-=1; prfSumCol[c]-=1
+            
+    return max(prfSumRow)+max(prfSumCol)
+
+```
+3. Search word + 1
+4. stock max
+5. 统计出现次数
+6. 一滴血 ng
+7. 一个卡车k个空 ng
+8. 温度差
+```
+给一个integer array表示温度，然后告诉你一个测量标准，对第X天的标准值是前X天的温度和(包括第X天)与X天后的温度和(包括第X天)的差的绝对值。也就是说 measure(X) = abs(sum(weather[:X+1]) - sum(weather[X:]))。然后让你找出哪一天的测量标准的值最大。
+一个货车，车上装了一堆货，已知每个货物运费=重量，而且重量unique。给一个K值，找出最低运费能运走的额外K个货物。简单说就是，给一个integer array，每个值都是unique的。然后给一个K, 找出K个最小的不在这个array里面的值，然后加起来就是答案。
+第一题用了个prefix sum就做出来了。第二题就是一个for loop去check在不在，提早把array变成set就好。给定2个小时，10分钟做完交卷。
+```
+9.  parcel 
+10. 内存占用
+
+```python
+ 给你一个数组代表process内存占用，要求删除其中连续K个使得释放的空间最大。比如[1, 3, 5, 7], k=2， 那么就是删除5,7，返回1+3 = 4。 sliding window每次删除最后一个加入一个新的就行很简单。
+def max_release(processes, k):
+    ans = cur = sum(processes[:k])
+    for i, process in enumerate(processes[k:], k):
+        cur = cur + process - processes[i-k]
+        ans = max(ans, cur)
+    return ans
+
+```
+11. moviesReward
+
+```python
+Amazon Prime Video is a subscription video-on-demand over-the-top streaming and rental service. The team at Prime Video is developing a method to divide movies into groups based on the number of awards they have won. A group can consist of any number of movies, but the difference in the number of awards won by any two movies in the group must not exceed k.
+The movies can be grouped together irrespective of their initial order. Determine the minimum number of groups that can be formed such that each movie is in exactly orly group.
+Example
+The numbers of awards per movie are awards = [1, 5, 4, 6, 8, 9, 21, and the maximum allowed difference is k = 3.
+
+One way to divide the movies into the minimum number of groups is:
+
+The first group can contain [2, 1], The maximum difference between awards of any two movies is 1 which does not exceed K.
+The second group can contain [5, 4, 6], The maximum difference between awards of any two movies is 2 which does not exceed k.
+The third group can contain [8,9]. The maximum difference between awards of any two movies is 1 which does not exceed k.
+The movies can be divided into a minimum of 3 groups.
+
+Function Description
+Complete the function minimumGroups in the
+editor below.
+minimum Groups has the following parameters:
+int awards[n]; the number of awards each movie has earned
+int k: the maximum difference in awards counts
+
+给你一个数组代表movies获得rewards的数量，要求把他们分组且每组内reward的difference不大于k，求最少分几组。例‍‌‌‌‌‍‍‍‍‍‌‍‌‍‌‍‌‍‌‌如[1,5,6,10], k=2 分三组。先sort然后greedy过一遍分组就行，可以用反证证明正确性。
+def arrange_rewards(rewards, k):
+    rewards.sort()
+    ans = []
+    cur, low = [rewards[0]], rewards[0]
+    for i, reward in enumerate(rewards[1:], 1):
+        if reward - low > k:
+            ans.append(cur[:])
+            cur = [reward]
+            low = reward
+        else:
+            cur.append(reward)
+    else:
+        ans.append(cur)
+    return ans                    
+rewards = [10, 1, 6, 5]
+k = 2
+arrange_rewards(rewards, k)
+
+```
+```Java
+public static List<List<Integer>> getAwardsGroups(int[] awards, int k){
+        List<List<Integer>> res = new ArrayList<>();
+        
+        Arrays.sort(awards);
+        
+        int i = 0;
+        while(i < awards.length){
+            int elem = awards[i];
+            List<Integer> temp = new ArrayList<>();
+            temp.add(elem);
+            i++;
+            while(i < awards.length && (awards[i] - elem)<k){
+                temp.add(awards[i]);
+                i++;
+            }
+            res.add(temp);
+        }
+        return res;
+    }
+
+
+```
+12. 九宫格
+
+大概解题思路就是数每个字符出现的次数，然后从多到少排序。前9个字母每次出现只要按1次 （sum+出现次数*1），之后的9个字母每次出现按2次（sum+各自出现次数*2）。。。然后和就是答案。
+
+
 ### OA2
 https://www.1point3acres.com/bbs/thread-859323-3-1.html 
 https://www.1point3acres.com/bbs/thread-474434-1-1.html 
