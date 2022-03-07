@@ -127,3 +127,9 @@ for (char i = 'a'; i < 'z'; i++) {
 ```
 
 
+# Math
+```Java
+int a = Math.ceil(4.5) // a = 5
+double b = (double) 5 / 2 // b = 2.5
+
+```
