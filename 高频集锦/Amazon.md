@@ -1,18 +1,8 @@
 ## 面经必看
+https://coda.io/d/Offer_dm5fzh3MwOp/OA1_suMAY#OA1_tua4n/r5 全
+https://www.1point3acres.com/bbs/thread-855709-1-1.html 
 
 ### OA1
-https://www.1point3acres.com/bbs/thread-844232-1-1.html 
-https://coda.io/d/Offer_dm5fzh3MwOp/OA1_suMAY#OA1_tua4n/r5 
-https://www.1point3acres.com/bbs/thread-851767-1-1.html 全
-https://www.1point3acres.com/bbs/thread-844232-1-1.html 
-https://www.1point3acres.com/bbs/thread-855709-1-1.html 
-https://www.1point3acres.com/bbs/thread-859427-1-1.html 
-https://www.1point3acres.com/bbs/thread-859785-1-1.html 
-https://www.1point3acres.com/bbs/thread-859207-1-1.html 
-https://www.1point3acres.com/bbs/thread-858506-1-1.html 
-https://www.1point3acres.com/bbs/thread-857570-1-1.html 
-
-
 1. 移动数据
 给了三个list, initinal locations, moveFrom, moveTo, 求从moveFrom 到 moveTo后，return各个物品的位置，从小到大
 ```Python
@@ -534,10 +524,21 @@ Return the maximum possible value of an element in arr after performing the oper
     }
 
 ```
+20. Array = [1, -1, -1, 1, 1, -1]找最长长度使subarray product = 1
+思路：
+先遍历一遍，找最左與最右-1的index 及所有-1的數量
+若-1的數量為偶數，return array長度
+若為基數, return max(len-(left_most + 1), right_most)
 
+21. Maximum Character Frequency Deviation
+
+给你一个字符串，对每一个子串定义一个deviation。deviation=子串里出现频率最高的字母的频率， 减去出现频率最低的字母的频率。
+在所有子串里找出deviation的最大值。
+举例： s=acccabb。子串accc的deviation=3-1=2。因为c出现的频率最高，是3。a出现的频率最低，是1，所以子串accc的deviation=3-1=2。其余子串‍‌‌‌‌‍‍‍‍‍‌‍‌‍‌‍‌‍‌‌的deviation都小于等于2，所以2是deviation中的最大值，返回2。
 
 
 ### OA2
+https://www.1point3acres.com/bbs/thread-847083-1-1.html 
 https://www.1point3acres.com/bbs/thread-686711-1-1.html 
 https://www.1point3acres.com/bbs/thread-847083-1-1.html 
 https://www.1point3acres.com/bbs/thread-859323-3-1.html 
@@ -548,25 +549,7 @@ https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=a
 (2) K closest points to origin.
 单选题 https://www.1point3acres.com/bbs/interview/amazon-software-engineer-557398.html 
 
-### BQ
-edge case you've think
-challenge
-
-a situation kind of pushback: you have an idea and other disgree, how did you solve
--> mysql or mongoDB
-
-project planned for a certain timeline, and you find you couldn't finish
--> communication
-
-
-
-
-https://www.1point3acres.com/bbs/thread-839216-1-1.html  
-Tell me an example you helped peers
-Tell me an example you do something out of your responsibility
-Tell me a time you had conflict with coworkers/teammates.
-
-### Work simulation
+#### Work simulation
 https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=amazon 
 https://www.1point3acres.com/bbs/thread-474434-1-1.html 
 Q1: Schedule the design reviewmeeting (1)
@@ -657,3 +640,26 @@ Q21: Ask Jacob aquestion
 4 - Are we receivingcomplaints from customers?
 2 - How long will ittake to solve this problem?
 1 - If I help you withthis problem, will you help me finish my work today?
+
+### VO
+https://www.1point3acres.com/bbs/thread-859207-1-1.html 
+
+
+### BQ
+edge case you've think
+challenge
+
+a situation kind of pushback: you have an idea and other disgree, how did you solve
+-> mysql or mongoDB
+
+project planned for a certain timeline, and you find you couldn't finish
+-> communication
+
+
+
+
+https://www.1point3acres.com/bbs/thread-839216-1-1.html  
+Tell me an example you helped peers
+Tell me an example you do something out of your responsibility
+Tell me a time you had conflict with coworkers/teammates.
+
