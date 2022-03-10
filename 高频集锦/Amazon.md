@@ -14,7 +14,7 @@ https://www.1point3acres.com/bbs/thread-857570-1-1.html
 
 
 1. 移动数据
-
+给了三个list, initinal locations, moveFrom, moveTo, 求从moveFrom 到 moveTo后，return各个物品的位置，从小到大
 ```Python
 def dataMovement(data,movefrom,moveto):
     s=set(data)
@@ -23,8 +23,26 @@ def dataMovement(data,movefrom,moveto):
         s.add(moveto)
     return sorted(list(s))
 ```
-2. 图片最大灰度
+```Java
+// Set里面删除movefrom，添加moveto
+// iterate
+// for (Integer i : numSet) {
+//     System.out.print(i + " ");
+// }
+// Set<String> s = new HashSet<String>();
+// s.add("Geeks");
+// s.add("for");
 
+// int n = s.size();
+// String arr[] = new String[n];
+
+// int i = 0;
+// for (String x : s)
+//     arr[i++] = x;
+```
+2. 图片最大灰度
+求array中灰度值最⼤的点的灰度值为多少，两层for循环分别 求出colsGrey\[]和rowsGrey[]，然后遍历一遍求max
+遍历一下row和col，然后遍历数组里的每个元素进行运算
 ```python
 def getMaximunGery(grid):
     prfSumRow = [0]*len(grid)
@@ -37,19 +55,159 @@ def getMaximunGery(grid):
     return max(prfSumRow)+max(prfSumCol)
 
 ```
-3. Search word + 1
-4. stock max
+3. Search word
+⼀个searchWord和⼀个resultWord，问最 少给searchWord末尾添加⼏个字符，可以 让resultWord成为它的⼀个 subsequence。举个栗⼦：search给 Word=“armaze”， resultWord=”amazon”，则应该返回2（添 加on）。思路是两个指针p1，p2分别遍历 两个字符串，如果指向的字符相同，则将双 指针同时向后移动⼀位，反之只移动指向 searchWord的指针，直到任意指针到达末 尾。返回resultString的长度与ResultString指针位置的差
+```Java
+    public static int findiff(String a,String b){
+        int m = a.length(),n=b.length();
+        int a1 = 0,b1=0;
+        
+        while(a1 < m&& b1 <n){
+            if(a.charAt(a1) == b.charAt(b1)){
+                b1+=1;
+            };
+            a1+=1;
+        }
+        
+        return n -b1;
+    }
+```
+4. Max average stock price
+给⼀个⻓度为n的数组表示n个⽉的股价， 给定k值，给连续k⽉并且k个值各不⼀样的区间求和，找到最⼤和。例⼦：｛1，2， 3，4｝，k=2，那总共有(1,2) (2,3) (3,4) 三个⻓度为k的连续区间，最大和是7
+```Java
+    int getMaxStock(int[] stocks, int k) {     
+// sliding window,      
+// if meet duplicated number, move start to last pos in map, remove from map, cur     
+// if window < k, add new one to cur, map, window++, if window == k, update res     
+// if window == k, add new one to cur, map,  start++, remove old from map, cur, update res     
+        if (stocks.length == 0 || k == 0) return 0;     
+        int res = 0, start = 0, count = 0, cur = 0;     
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>(); // stock => pos          
+        for(int i = 0; i < stocks.length; i++) {       
+            if (map.containsKey(stocks[i])) {         
+                int finalStart = map.get(stocks[i]);         
+                while(start <= finalStart) {           
+                    cur -= stocks[start];           
+                    map.remove(stocks[start]);           
+                    count--;           
+                    start++;         
+                    }       
+            // } else {         
+            //     if (count < k) {           
+            //         cur += stocks[i];           
+            //         count++;          
+            //         map.put(stocks[i], i);           
+            //         if (count == k) {             
+            //             res = Math.max(res, cur);           
+            //         }         
+            //     } 
+            } else {           
+                    cur += stocks[i] - stocks[start];          
+                    map.put(stocks[i], i);           
+                    map.remove(stocks[start]);           
+                    start++;           
+                    res = Math.max(res, cur);         
+                }       
+            }     
+        }     
+        return res;   
+    }
+```
+
+方法二
+```Java
+    public static int MAS(int[] stock, int k) {
+
+        int left = 0;
+        int sum = 0;
+        int re1s = 0;
+
+        HashSet<Integer> map = new HashSet<>();
+
+        for (int i = 0; i < stock.length; i++) {
+            if (i - left == 3) {
+                re1s = Math.max(re1s, sum);
+                sum = sum - stock[left];
+                map.remove(stock[left]);
+                left++;
+            }
+            if (i - left < 3 && !map.contains(stock[i])) {
+                sum = sum + stock[i];
+                map.add(stock[i]);
+                continue;
+            }
+            if (i - left < 3 && map.contains(stock[i])) {
+                while (map.contains(stock[i])) {
+                    map.remove(stock[left]);
+                    sum = sum - stock[left];
+                    left++;
+                }
+                map.add(stock[i]);
+                sum = sum + stock[i];
+                continue;
+            }
+        }
+        return re1s;
+    }
+```
+
 5. 统计出现次数
 6. 一滴血 ng
+
+findMinHealth, ⼀个游戏，输⼊⼀个数列代 表每关要掉的⾎🩸，还有⼀个值表示⼀个只 能⽤⼀次的可以挡最⾼伤害的盾，要求过完 全部关后还要留一滴血，求最开始要多少血
+思路：sum（power）-min（max（power），armor）+ 1
+
 7. 一个卡车k个空 ng
-8. 温度差
+
+一个货车，车上装了一堆货，已知每个货物运费=重量，而且重量unique。给一个K值，找出最低运费能运走的额外K个货物。简单说就是，给一个integer array，每个值都是unique的。然后给一个K, 找出K个最小的不在这个array里面的值，然后加起来就是答案。方法就是一个for loop去check在不在，提早把array变成set就好。
+```Java
+    public static int getHeaviestPackage(int[] packages){
+        int ans = Integer.MIN_VALUE;
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i= packages.length - 1; i >= 0; i--) {
+            int weight = packages[i];
+            while (!stack.isEmpty() && weight < stack.peek()) {
+                weight += stack.pop();
+            }
+            stack.push(weight);
+        }
+        while(!stack.isEmpty()){
+            ans = Math.max(ans,stack.pop());
+        }
+
+        return ans;
+    }
 ```
+8. 温度差
+
 给一个integer array表示温度，然后告诉你一个测量标准，对第X天的标准值是前X天的温度和(包括第X天)与X天后的温度和(包括第X天)的差的绝对值。也就是说 measure(X) = abs(sum(weather[:X+1]) - sum(weather[X:]))。然后让你找出哪一天的测量标准的值最大。
-一个货车，车上装了一堆货，已知每个货物运费=重量，而且重量unique。给一个K值，找出最低运费能运走的额外K个货物。简单说就是，给一个integer array，每个值都是unique的。然后给一个K, 找出K个最小的不在这个array里面的值，然后加起来就是答案。
-第一题用了个prefix sum就做出来了。第二题就是一个for loop去check在不在，提早把array变成set就好。给定2个小时，10分钟做完交卷。
+用prefix sum就可
+
+```Java
+    public static int Temprature(int[] nums) {
+        int n = nums.length;
+        int total = 0;
+        int[] presum = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            presum[i] = presum[i - 1] + nums[i - 1];
+            total += nums[i - 1];
+        }
+        int resl = Integer.MIN_VALUE;
+        for (int i = 1; i < n; i++) {
+            int pre = presum[i] + nums[i];
+            int after = total - presum[i];
+            int max = Math.max(pre, after);
+            resl = Math.max(max, resl);
+        }
+        resl = Math.max(total, resl);
+        return resl;
+    }
+
+
 ```
 9.  parcel 
-10. 内存占用
+10.  内存占用
 
 ```python
  给你一个数组代表process内存占用，要求删除其中连续K个使得释放的空间最大。比如[1, 3, 5, 7], k=2， 那么就是删除5,7，返回1+3 = 4。 sliding window每次删除最后一个加入一个新的就行很简单。
@@ -126,12 +284,262 @@ public static List<List<Integer>> getAwardsGroups(int[] awards, int k){
 
 
 ```
-12. 九宫格
-
+13. 九宫格
+给⼀串字符，"abcdefgabc"，然后⽤⼿机 九宫格打出。⼿机九宫格可以是任何字⺟组 合，唯⼀要求是每个键⾄少有两个字⺟，最 多三个字⺟。换句话说，这⾥的键位不⼀定 是我们常⻅的2=abc，3=def等等，可以是 1=agq，2=bhj...任何顺序都可以。要求
 大概解题思路就是数每个字符出现的次数，然后从多到少排序。前9个字母每次出现只要按1次 （sum+出现次数*1），之后的9个字母每次出现按2次（sum+各自出现次数*2）。。。然后和就是答案。
+```Java
+    public static int minPress(String s){
+        
+        Map<Character,Integer> map = new HashMap<>();
+
+        for(char c:s.toCharArray()){
+            map.put(c,map.getOrDefault(c,0)+1);
+        }
+        
+        List<Character> charac =  new ArrayList<>((map.keySet()));
+        Collections.sort(charac,(a,b)->(map.get(b)-map.get(a)));
+        
+        int min = 0;
+        int count =0;
+        
+        for(char c:charac){
+            if (count<9){
+                min+= map.get(c);
+            }
+            else if(count>=9 && count<18){
+                 min+= map.get(c)*2;
+            }
+            else{
+                min+= map.get(c)*3;
+            }
+            count+=1;
+        }
+        return min;
+    }
+```
+
+14. user system: register, login, logout
+用两个hm，一个存username and password一个存是否已经登录即可。
+```Java
+public static List implementAPI(List logs) {
+	HashMap<String,String[]> hm=new HashMap<>();
+	ArrayList ans=new ArrayList();
+	int n=logs.size();
+
+	for(int i = 0;i < n; i++) {
+		String s=logs.get(i);
+		String inp[]=s.split(" ");
+		String type=inp[0];
+		String uname=inp[1];
+		String pass= inp.size==3 ? inp[2] : "";
+		
+		if(type.equals("register"))	{
+			if(hm.containsKey("uname")) {
+				ans.add("Username already exists");
+			}
+			else {
+				hm.put(uname, new String[]{pass,"0"});
+				ans.add("Registered Successfully");
+			}
+		} else if(type.equals("login")) {
+			if(!hm.containsKey(uname)) {
+				ans.add("Login Unsuccessful");
+			} else {
+				String curr[]=hm.get(uname);
+				
+				if(curr[1].equals("1") || !curr[0].equals(pass)) {
+					ans.add("Login Unsuccessful");
+				} else {
+					hm.put(uname, new String[]{curr[0],"1"});
+					ans.add("Logged In Successfully");
+				}
+			}
+		} else if(type.equals("logout")) {
+			if(!hm.containsKey(uname)) {
+				ans.add("Logout Unsuccessful");
+			} else {
+				String curr[]=hm.get(uname);
+				if(curr[1].equals("0")) {
+					ans.add("Logout Unsuccessful");
+				} else {
+					String curr[]=hm.get(uname);
+					if(curr[1].equals("0")) {
+						ans.add("Logout Unsuccessful");
+					} else {
+						hm.put(uname, new String[]{curr[0],"0"});
+						ans.add("Logout Successful");
+					}
+				}
+			}
+		}
+	}
+}
+```
+
+15. S中的字母可以组成多少个T
+给两个字符串s和t，求问使⽤s所有的字⺟最多能够重组出⼏个t。举个栗⼦： s = "mononom", t = "mon"，则答案是2
+思路是用两个counter统计s和t的字母出现频率，然后遍历t的所有字母，找到s中出现次数/t中出现次数的最小值（向下取整）
+```Java
+  public static int Countst(String a,String b){
+        char[] a1 = a.toCharArray();
+        char[] b1 = b.toCharArray();
+        
+        Map<Character,Integer> map1 = new HashMap<>();
+        Map<Character,Integer> map2 = new HashMap<>();
+        
+        for(char c : a1){
+            map1.put(c,map1.getOrDefault(c,0)+1);
+        }
+        System.out.println(map1);
+        for(char c : b1){
+            map2.put(c,map2.getOrDefault(c,0)+1);
+        }
+        System.out.println(map2);
+        int count = Integer.MAX_VALUE;
+        for (char c: b1){
+            int a = map1.getOrDefault(c,0);
+            int b = map2.getOrDefault(c,0);
+
+            int times = a/b;
+            count = Math.min(count,times);
+        }
+        return count;
+}
+```
+
+16. The kth Factor of N
+You are given two positive integers n and k. A factor of an integer n is defined as an integer i where n % i == 0.
+
+Consider a list of all factors of n sorted in ascending order, return the kth factor in this list or return -1 if n has less than k factors.
+Input: n = 12, k = 3
+Output: 3
+Explanation: Factors list is [1, 2, 3, 4, 6, 12], the 3rd factor is 3.
+
+```Java
+    public int kthFactor(int n, int k) {
+        for (int i = 1; i < n/2 + 1; i++) {
+            if (n % i == 0) {
+                k--;
+                if (k == 0) {
+                    return i;
+                }
+            }
+        }
+        return k == 1 ? n : -1;
+    }
+```
+
+17. [1846. Maximum Element After Decreasing and Rearranging](https://leetcode.com/problems/maximum-element-after-decreasing-and-rearranging/)
+
+You are given an array of positive integers arr. Perform some operations (possibly none) on arr so that it satisfies these conditions:
+
+The value of the first element in arr must be 1.
+The absolute difference between any 2 adjacent elements must be less than or equal to 1. In other words, abs(arr[i] - arr[i - 1]) <= 1 for each i where 1 <= i < arr.length (0-indexed). abs(x) is the absolute value of x.
+There are 2 types of operations that you can perform any number of times:
+
+Decrease the value of any element of arr to a smaller positive integer.
+Rearrange the elements of arr to be in any order.
+
+Return the maximum possible value of an element in arr after performing the operations to satisfy the conditions.
+```Java
+  public int maximumElementAfterDecrementingAndRearranging(int[] A) {
+        Arrays.sort(A);
+        int pre = 0;
+        for (int a: A)
+            pre = Math.min(pre + 1, a);
+        return pre;
+    }
+```
+
+18. merge intervals
+
+```Java
+    public int[][] merge(int[][] intervals) {
+
+        if (intervals == null || intervals.length == 0){
+            return intervals;
+        }
+        
+        List<int[]> res = new ArrayList<>();
+
+        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
+
+        int[] curr = intervals[0];
+
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] > curr[1]) {
+                res.add(curr);
+                curr = intervals[i];
+            } else {
+                curr[1] = Math.max(curr[1], intervals[i][1]);
+            }
+        }
+
+        res.add(curr);
+
+        return res.toArray(new int[res.size()][2]);
+    }
+```
+
+19. sumOfSubarray
+
+```Java
+   public static int sumSubarray(int[] A) {
+        int res = 0;
+        int res1 = 0;
+        int mod = (int) 1e9 + 7;
+
+        int n = A.length, left[] = new int[n], right[] = new int[n],
+                left1[] = new int[n], right1[] = new int[n];
+
+        Stack<int[]> s1 = new Stack<>(), s2 = new Stack<>(),
+                s3 = new Stack<>(), s4 = new Stack();
+
+        for (int i = 0; i < n; i++) {
+            int count = 1;
+            int count1 = 1;
+            while (!s1.isEmpty() && s1.peek()[0] > A[i])
+                count += s1.pop()[1];
+            s1.push(new int[] { A[i], count });
+            left[i] = count;
+
+            while (!s3.isEmpty() && s3.peek()[0] < A[i])
+                count1 += s3.pop()[1];
+            s3.push(new int[] { A[i], count1 });
+            left1[i] = count1;
+
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            int count = 1;
+            int count1 = 1;
+            while (!s2.isEmpty() && s2.peek()[0] >= A[i])
+                count += s2.pop()[1];
+            s2.push(new int[] { A[i], count });
+            right[i] = count;
+
+            while (!s4.isEmpty() && s4.peek()[0] <= A[i])
+                count1 += s4.pop()[1];
+            s4.push(new int[] { A[i], count1 });
+            right1[i] = count1;
+
+        }
+
+        for (int i = 0; i < n; i++) {
+            res1 = res1 + A[i] * left[i] * right[i];
+            res = res + A[i] * left1[i] * right1[i];
+        }
+
+        return res - res1;
+    }
+
+```
+
 
 
 ### OA2
+https://www.1point3acres.com/bbs/thread-686711-1-1.html 
+https://www.1point3acres.com/bbs/thread-847083-1-1.html 
 https://www.1point3acres.com/bbs/thread-859323-3-1.html 
 https://www.1point3acres.com/bbs/thread-474434-1-1.html 
 https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=amazon 
@@ -159,6 +567,7 @@ Tell me an example you do something out of your responsibility
 Tell me a time you had conflict with coworkers/teammates.
 
 ### Work simulation
+https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=amazon 
 https://www.1point3acres.com/bbs/thread-474434-1-1.html 
 Q1: Schedule the design reviewmeeting (1)
 1 - We can take ourbest guess at an estimate on our own

@@ -32,6 +32,7 @@ String s2 = String.valueOf(charS); // s2 = "Hello world"; returns the string rep
 String str = new String("Hefasf");
 char[] charS = str.toCharArray();
 Arrays.sort(charS);
+Arrays.sort(arr, Collections.reverseOrder()); // 从高到低排序
 String newStr = String.valueOf(charS);
 
 // 将String[]排序
