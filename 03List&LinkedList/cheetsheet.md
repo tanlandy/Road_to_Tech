@@ -61,21 +61,52 @@ public ListNode middleNode(ListNode head) {
 }
 
 // [1,2,3,4,5] -> [1,4,3,2,5]
+ 
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (head == null) {
+            return null;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
         for (int i = 0; i < left - 1; i++) { // pre will stay on 1
             pre = pre.next;
         }
-        ListNode start = pre.next; // start stays on 2
-        ListNode cur = start.next; // cur stays on 3
-        // [1,2,3,4,5] -> [1,3,2,4,5] -> [1,4,3,2,5]
+        ListNode first = pre.next; // first stays on 2
+        ListNode second = first.next; // second stays on 3
+        // [1,  2,  3,4,5] -> [1,3,2,4,5] -> [1,4,3,2,5]
+        // pre fir sec
         for (int i = 0; i < right - left; i++) {
-        start.next = cur.next; // 2 -> 4
-        cur.next = pre.next; // 3 -> 2
-        pre.next = cur; // 1 -> 3
-        cur = start.next; // cur = 4
-        // after first loop:
-        // 1 -> 3 -> 2 -> 4 -> 5
-        // pre = 1, start = 2, cur = 4
+            first.next = second.next; // 2 -> 4
+            second.next = pre.next; // 3 -> 2
+            pre.next = second; // 1 -> 3
+            second = first.next; // second = 4
+        }
         return dummy.next;
+        
+    }
+
+// [1,2,3,4,5,6] -> [1,3,5,2,4,6]
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        ListNode odd = head;
+        ListNode even = odd.next;
+        ListNode evenHead = even;
+        // [1, 2, 3, 4, 5, 6] -> [1,3][2,4,5,6]
+        //       odd
+        
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = odd.next;
+        }
+        odd.next = evenHead;
+        return head;
+    }
+
 
 // [1,2,3,4,5] -> [1,3,5,2,4]
         ListNode odd = head;
