@@ -4,7 +4,7 @@
 - Stores a relationship, both key and value are important
 - 技巧：心里想着pair，形成一个映射的图形，从而能更好应用函数
 - 用来计数<element, count>
-`map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);`
+
 
 ## When to use
 1. when time-consuming to find something in Array
@@ -30,6 +30,7 @@
 map.putIfAbsent(0, 0); // insert a new (key, value) pair
 map.put(1, 1) // insert a new pair
 map.put(1, 2) // update the pair
+map.put(nums[i], map.getOrDefault(nums[i], 0) + 1); // 加进来
 map.get(1) // return 2, get the value of specific key
 map.getOrDefault(c, 0) //
 map.remove(0) // remove a key
