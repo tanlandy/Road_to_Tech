@@ -19,7 +19,7 @@ list.remove(index,value) // O(n)
     dummy.next = head;
     ListNode pre = dummy;
 
-// reverse Linked List: [1,2,3,4] -> [4,3,2,1]
+// reverse Linked List: [1,2,3,4,5] -> [5,4,3,2,1]
 public ListNode reverseLinkedList(ListNode head) {
     ListNode pre = null;
     ListNode cur = head;
@@ -38,6 +38,7 @@ public ListNode swapPairs(ListNode head) {
     dummy.next = head;
     ListNode pre = dummy;
     while (pre.next != null && pre.next.next != null) { // 因为second = pre.next.next
+    // 从[pre,1,2,3]变成[2,1,3]
         ListNode first = pre.next; // first = 1
         ListNode second = pre.next.next; // second = 2;
         first.next = second.next; // 1 -> 3;
@@ -91,6 +92,48 @@ ListNode odd = head;
         }
         odd.next = evenHead;
         return head;
+
+
+//  Intersection of Two Linked Lists
+ 
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode pA = headA;
+        ListNode pB = headB;
+        while (pA != pB) {
+            // a + c + b == b + c + a
+            // if pA to the end, set it to b
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
+        }
+        return pA;
+    }
+}
+
+// 成环
+// [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        while (fast != null && slow != null) {
+            if (fast == null || fast.next == null) { // 先找到成环的点
+                return null;
+            } 
+            fast = fast.next.next;
+            slow = slow.next; 
+            if (slow == fast) { // 找到后，从头往后走，同时slow往后走，遇见的地方就是交叉点
+                ListNode temp = head;
+                while (head != slow) {
+                    head = head.next;
+                    slow = slow.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
+}
 
 
 ```
