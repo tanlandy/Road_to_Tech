@@ -78,7 +78,7 @@ public ListNode middleNode(ListNode head) {
         return dummy.next;
 
 // [1,2,3,4,5] -> [1,3,5,2,4]
-ListNode odd = head;
+        ListNode odd = head;
         ListNode even = odd.next;
         ListNode evenHead = even;
         // [1, 2, 3, 4, 5, 6] -> [1,3][2,4,5,6]
