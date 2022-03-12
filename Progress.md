@@ -1,5 +1,12 @@
 看除以2是否在其中之前，要先看是否是偶数
 
+# Todo Questions
+## LinkedList
+https://leetcode.com/problems/lru-cache/ 
+https://leetcode.com/problems/merge-k-sorted-lists/ 
+https://leetcode.com/problems/reverse-nodes-in-k-group/solution/ 
+
+
 # 课程进度
 ## 基础班
 1. Time complexity: *DONE*
