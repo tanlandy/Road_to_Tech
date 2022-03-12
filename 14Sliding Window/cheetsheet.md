@@ -14,8 +14,8 @@ while (right < s.size()) {
     }
 }
 
-
 ```
+-> 扩大的条件和结果；缩小的条件和结果
 1、当移动right扩大窗口，即加入字符时，应该更新哪些数据？
 
 2、什么条件下，窗口应该暂停扩大，开始移动left缩小窗口？
@@ -194,4 +194,33 @@ Explanation: The answer is "abc", with the length of 3.
 
 
 
+```
+
+5. [209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
+
+Given an array of positive integers nums and a positive integer target, return the minimal length of a contiguous subarray [numsl, numsl+1, ..., numsr-1, numsr] of which the sum is greater than or equal to target. If there is no such subarray, return 0 instead.
+
+Input: target = 7, nums = [2,3,1,2,4,3]
+Output: 2
+Explanation: The subarray [4,3] has the minimal length under the problem constraint.
+
+```Java
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int l = 0;
+        int r = 0;
+        int res = Integer.MAX_VALUE;
+        int sum = 0;
+        while (r < nums.length) {
+            sum += nums[r];
+            while (sum >= target) {
+                sum -= nums[l];
+                res = Math.min(res, r - l + 1);
+                l++;
+            }
+            r++;
+        }
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
+}
 ```
