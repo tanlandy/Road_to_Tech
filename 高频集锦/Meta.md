@@ -284,6 +284,34 @@ Output: 2
 ```
 
 
+11. [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+
+```Java
+    public Node treeToDoublyList(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Node dummy = new Node(-1, null, null);
+        Node pre = dummy;
+        pre = inorderDFS(root, pre);
+        pre.right = dummy.right; // 连起来,dummy.right就是head
+        dummy.right.left = pre;
+        return dummy.right;
+    }
+    
+    private Node inorderDFS(Node node, Node pre) {
+        if (node == null) { // 最后为空的时候要返回pre
+            return pre;
+        }
+        pre = inorderDFS(node.left, pre);
+        node.left = pre;
+        pre.right = node;
+        pre = inorderDFS(node.right, node); //这时候node就是pre
+        return pre;
+    }
+
+```
+
 
 ## 查缺补漏
 
