@@ -451,8 +451,85 @@ public int[][] merge(int[][] intervals) {
 		}
 	}
 ```
+## Top 21-30
 
+21. [24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
+[1,2,3,4] -> [2,1,4,3]
 
+时间O(n)
+空间O(1)
+```Java
+public ListNode swapPairs(ListNode head) {
+    ListNode dummy = new ListNode(-1);
+    dummy.next = head;
+    ListNode pre = dummy;
+    while (pre.next != null && pre.next.next != null) { // 因为second = pre.next.next
+    // 从[pre,1,2,3]变成[2,1,3]
+        ListNode first = pre.next; // first = 1
+        ListNode second = pre.next.next; // second = 2;
+        first.next = second.next; // 1 -> 3;
+        second.next = first; // 2 -> 1;
+        pre.next = second; // pre -> 2;要把2连起来
+        pre = first; // pre = 1;
+    }
+    return dummy.next;
+}
+
+```
+
+22. [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+Return true if you can finish all courses. Otherwise, return false.
+
+思路：
+graph记录依赖关系
+preNum记录依赖数量
+    对于依赖数量为0的，从依赖关系找到课程，更新该课程的依赖数量
+[0,1],[2,1],[3,1],[3,2]
+graph: from to 
+1->0, 2, 3
+2->3
+preNum: to
+0: 1
+1: 0
+2: 1
+3: 2
+开始上课
+```Java
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        // 建图：几门课graph里就有几个起点
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        // 邻接表：记录依赖数量
+        int [] preNum = new int[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            preNum[prerequisites[i][0]]++;
+        }
+        // 拓扑排序：开始上课
+        for (int i = 0; i < numCourses; i++) {
+            boolean available = false;
+            for (int j = 0; j < numCourses; j++) {
+                // 先找入边为0的
+                if (preNum[j] == 0) {
+                    for (int k : graph.get(j)) {
+                        preNum[k]--;
+                    }
+                    available = true;
+                    preNum[j] = -1;
+                    break;
+                }
+            }
+            if (!available) {
+                return false;
+            }
+        }
+        return true;
+    }
+```
 
 
 ### Todo

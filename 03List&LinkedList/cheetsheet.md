@@ -24,10 +24,10 @@ public ListNode reverseLinkedList(ListNode head) {
     ListNode pre = null;
     ListNode cur = head;
     while (cur != null) {
-        ListNode temp = cur.next; // store 3
-        cur.next = pre; // 2 -> 1
-        pre = cur; // 1站到2，从而下一轮3 -> 2
-        cur = temp; // 从2站到3
+        ListNode temp = cur.next; // store 2
+        cur.next = pre; // 1 -> null
+        pre = cur; // 站到1，从而下一轮2 -> 1
+        cur = temp; // 从1站到2
     }
     return pre;
 }
@@ -43,7 +43,7 @@ public ListNode swapPairs(ListNode head) {
         ListNode second = pre.next.next; // second = 2;
         first.next = second.next; // 1 -> 3;
         second.next = first; // 2 -> 1;
-        pre.next = second; // pre -> 2;
+        pre.next = second; // pre -> 2;要把2连起来
         pre = first; // pre = 1;
     }
     return dummy.next;
