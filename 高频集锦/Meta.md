@@ -70,7 +70,7 @@ codesignal oa
 ### 电面
 https://www.1point3acres.com/bbs/thread-859864-1-1.html 
 
-## Top 60
+## Top 1-10
 8. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
 
 You are given a 0-indexed array of positive integers w where w[i] describes the weight of the ith index.
@@ -234,6 +234,8 @@ class CheckValidAbbr{
 // Space: O(k) k is size of larget num
 
 ```
+
+## Top 11-20
 11. [339. Nested List Weight Sum](https://leetcode.com/problems/nested-list-weight-sum/)
 You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists.
 
@@ -284,7 +286,7 @@ Output: 2
 ```
 
 
-11. [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+13. [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
 
 ```Java
     public Node treeToDoublyList(Node root) {
@@ -311,218 +313,147 @@ Output: 2
     }
 
 ```
+14. [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
 
 
-## 查缺补漏
 
-### 前缀和Prefix sum
-1. [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
+15. [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 
-Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+16. [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
 
-A subarray is a contiguous part of an array.
 
-Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
-Output: 6
-Explanation: [4,-1,2,1] has the largest sum = 6.
+17. [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+
 ```Java
-// Clarify: will there be all negative nums? Null? Need to return the index?
-// Assumption
-// Brute force: two for loops
-    // first one go from each index: i = 0 to nums.length 
-        // int curArray = 0 -> find the maximum subarray start at that index
-    // second go from that index: j = i to nums.length
-        // curA+=num[j]; maxA=max(curA, maxA)-> update the overallMax
-    // Time: O(n^2) Space: O(1)
 
-// DP -> Use it when asked for max or min -> when a negative num is worth keeping -> when the subArray is negative, it's not worth
-// curA = max(nums[i], precurA + sum)
-// [-2,1,-3,4,-1,2,1] curA = -2, maxA = -2
-//  |
-// [-2,1,-3,4,-1,2,1] curA = 1, maxA = 1
-//     |
-// [-2,1,-3,4,-1,2,1] curA = 1, maxA = 1
-//        |
-// [-2,1,-3,4,-1,2,1] curA = 4, maxA = 4
-//          |
-// [-2,1,-3,4,-1,2,1] curA = 3, maxA = 4
-//             |
-// [-2,1,-3,4,-1,2,1] curA = 5, maxA = 5
-//               |
-// [-2,1,-3,4,-1,2,1]
-// [-2,1,-3,4,-1,2,1]
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length <= 1) {
+            return intervals;
+        }
 
-class FindMaxSubarray {
-    public int maxSubarray(int[] nums) {
-        if (nums.length == 0) {
-            return null;
+        // Sort by ascending starting point
+        Arrays.sort(intervals,
+                    new Comparator<int[]>() {
+                        public int compare(int[] a, int[] b) {
+                            return a[0] - b[0];
+                        }
+                    }
+                );        
+        List<int[]> res = new ArrayList<>();
+        int[] newInterval = intervals[0];
+        res.add(newInterval);
+        for (int[] interval : intervals) {
+            if (newInterval[1] >= interval[0]) { // Overlapping intervals, move the end if needed
+            // 如果新的更远，那么就更新一下
+                newInterval[1] = Math.max(interval[1], newInterval[1]);
+            } else { // Disjoint intervals, add the new interval to the list
+                newInterval = interval;
+                res.add(newInterval);
+            }
         }
-        int maxS = nums[0];
-        int curS = nums[0];
-        for (int i = 0; i < nums.length; i++) {
-            curS = Math.max(nums[i], nums[i] + curS);
-            maxS = Math.max(maxS, curS);
-        }
-        return maxS;
+        return res.toArray(new int[res.size()][]);
+        
+        
     }
 }
-// Time: O(n), Space: O(1)
-
 ```
-2. [523. Continuous Subarray Sum](https://leetcode.com/problems/continuous-subarray-sum/)
 
-Given an integer array nums and an integer k, return true if nums has a continuous subarray of size at least two whose elements sum up to a multiple of k, or false otherwise.
+Follow up: How do you add intervals and merge them for a large stream of intervals?
 
-An integer x is a multiple of k if there exists an integer n such that x = n * k. 0 is always a multiple of k.
 
-Input: nums = [23,2,6,4,7], k = 6
-Output: true
-Explanation: [23, 2, 6, 4, 7] is an continuous subarray of size 5 whose elements sum up to 42.
-42 is a multiple of 6 because 42 = 7 * 6 and 7 is an integer.
+We need to have two functions for the tree (add interval and query tree).
+
+Implementation Details
+TreeNode - On top of the left child, right child, start boundary, and end boundary, we have a middle field that determines whether a new interval goes to the left child, right right or merged with the current node.
+
+add - If the new interval touches or crosses the middle of the current node, we update the current node. Otherwise, we put the new interval into the left subtree or right subtree.
+
+Why do we use middle for comparison and not start or end boundaries?
+The reason is that we can use merge-sort technique to query the merged intervals result when the left subtree does not overlap with the right subtree.
+query - Use merge-sort technique by retrieving the merged intervals of the left subtree (i.e. left_intervals) and those of the right subtree (i.e. right_intervals). Because of the implementation of add, we can guarantee that
+
+if there's an interval in the left_intervals that overlaps with the current node, then we know that all the intervals after that interval overlaps with the current node.
+The first few intervals or zero intervals in the right_intervals overlap with the current node.
 
 ```Java
-// clarify: k = 0? single element? array is null?
-// Brute forth: iterate all subarrays and see if the mod(k) is 0 or not 
-    // O(n^2): outer loop i = 0 to n; inner loop: j = i to n
-
-// Iterate once, keep trace of sum of curSubArray
-// For e.g. in case of the array [23,2,6,4,7], k = 6, the running sum is [23,25,31,35,42] and the remainders are [5,1,1,5,0]. We got remainder 5 at index 0 and at index 3. That means, in between these two indexes we must have added a number which is multiple of the k.
-// current one: sum_i = m*k + modk
-// previous one: sum_j = n*k + modk 
-// As modk == modk
-// Thus, sum_i - sum_j = (m - n) * k -> find it
-
-class CheckArraySum {
-    public boolean isSumValid(int[] nums, int k) {
-        // map<curSum, index>
-        Map<Integer, Integer> map = new HashMap<>();
-        map.put(0, -1);//(0, -1) can allow it to return true when the curSum%k=0,
-        // In addition, it also avoids the first element of the array is the multiple of k, since 0-(-1)=1 is not greater than 1.
-        int sum=0;
-        for (int i = 0; i < nums.length; i++) {
-            sum += nums[i];
-            if (k != 0) {
-                sum = sum % k;
-            }
-            if (map.containsKey(sum)) {
-                if (i - map.get(sum) > 1) { // when == 1, means nums[i] % k == 0
-                    return true;
-                }
-            } else map.put(sum, i);
-        }
-        return false;
-    }
-}
-
-
-```
-
-3. [13. Roman to Integer](https://leetcode.com/problems/roman-to-integer/)
-
-Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
-Symbol       Value
-I             1
-V             5
-X             10
-L             50
-C             100
-D             500
-M             1000
-
-Given a roman numeral, convert it to an integer.
-
-Input: s = "LVIII"
-Output: 58
-Explanation: L = 50, V= 5, III = 3.
-
-s = "CMXCIV:
-Output: 994
-Explanation:
-The symbols barely look sorted at all here—from left-to-right we have 100, 1000, 10, 100, 1, 5. Do not panic though, we just need to look for each occurrence of a smaller symbols preceding a bigger symbol. The first, third, and fifth symbols are all smaller than their next symbol. Therefore they are all going to be subtracted from their next.
-
-The first two symbols are CM. This is M - C = 1000 - 100 = 900
-The second two symbols are XC. This is C - X = 100 - 10 = 90.
-The final two symbols are IV. This is V - I = 5 - 1 = 4.
-Like we did above, we add these together. (M - C) + (C - X) + (V - I) = 900 + 90 + 4 = 994.
-
-```Java
-// clarification: input always valid?
-// larger num always comes earlier
-    static Map<Character, Integer> map = new HashMap<>();
-    
-    static {
-        map.put('M', 1000);
-        map.put('D', 500);
-        map.put('C', 100);
-        map.put('L', 50);
-        map.put('X', 10);
-        map.put('V', 5);
-        map.put('I', 1);
-    }
-
-    public int romanToInteger(String s) {
-        // go from left to right
-        // if s.charAt(i) < i+1 -> sum -= num
-        // else sum += num
-        int sum = 0;
-        for (int i = 0; i < s.length() - 1; i++) {
-            char c = s.charAt(i);
-            char c2 = s.charAt(i + 1);
-            if (map.get(c) < map.get(c2)) {
-                sum -= map.get(c);
-            } else {
-                sum += map.get(c);
-            }
-        }
-        char cLast = s.charAt(s.length() - 1);
-        sum += map.get(cLast);
-        return sum;
-    }
-```
-
-4. [12. Integer to Roman](https://leetcode.com/problems/integer-to-roman/)
-
-Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
-
-Symbol       Value
-I             1
-V             5
-X             10
-L             50
-C             100
-D             500
-M             1000
-
-Given an integer, convert it to a roman numeral.
-
-Input: num = 1994
-Output: "MCMXCIV"
-Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
-
-```Java
-// largest symble comes first
-// go from left to right, update from largest to next largest
-    private static final int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};    
-    
-    private static final String[] symbols = {"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
-    
-    public String intToRoman(int num) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < values.length; i++) {
-            while (values[i] <= num) {
-                num -= values[i];
-                sb.append(symbols[i]);
-            }
-        }
-        return sb.toString();
-      
-    }
-
+public int[][] merge(int[][] intervals) {
+		Itnode root=new Itnode(intervals[0][0], intervals[0][1]);
+		
+		for(int i=1;i<intervals.length;i++) {
+			add(root, intervals[i]);
+		}
+		
+		List<int[]> list=merge(root);
+		int[][] ans=new int[list.size()][2];
+		for(int i=0;i<ans.length;i++) {
+			ans[i]=list.get(i);
+		}
+		return ans;
+	}
+	
+	List<int[]> merge(Itnode root){
+		List<int[]> res=new Vector<>();
+		if(root==null) return res;
+		
+		List<int[]> left=merge(root.left);
+		List<int[]> right=merge(root.right);
+		
+		boolean inserted=false;
+		for(int[] i:left) {
+			if(i[1]>=root.low) {
+				inserted=true;
+				i[0]=Math.min(i[0], root.low);
+				i[1]=Math.max(i[1], root.high);
+				root=new Itnode(i[0], i[1]);
+			}
+			res.add(i);
+		}
+		
+		if(!inserted) res.add(new int[] {root.low,root.high});
+		
+		for(int[] i:right) {
+			if(i[0]<=root.high) {
+				inserted=true;
+				i[0]=Math.min(i[0], root.low);
+				i[1]=Math.max(i[1], root.high);
+				res.remove(res.size()-1);
+			}
+			res.add(i);
+		}
+		
+		return res;
+		
+	}
+	
+	Itnode add(Itnode root,int[] i) {
+		if(root==null) return new Itnode(i[0], i[1]);
+		
+		if(i[0]<root.low)
+			root.left=add(root.left, i);
+		else
+			root.right=add(root.right,i);
+		return root;
+	}
+	
+	static class Itnode{
+		int low,high,max;
+		Itnode left,right;
+		Itnode(int l,int h){
+			this.low=l;this.high=h;this.max=h;
+			this.left=this.right=null;
+		}
+	}
 ```
 
 
 
-### 拓扑排序
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)

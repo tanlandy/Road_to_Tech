@@ -16,26 +16,24 @@
         boolean isOdd = true; // to see if need to reverse
         while (!queue.isEmpty()) {  // 一次走一层
             List<Integer> oneRes = new ArrayList<>(); // one result
-            Queue<TreeNode> queue2 = new LinkedList<>(); // the second queue，存下一层
-            while (!queue.isEmpty()) { // 存满下一层，一次走一个节点
+            int n = queue.size();
+            for (int i = 0; i < n; i++) { // 存满一层
                 TreeNode top = queue.poll();
                 if (top.left != null) {
-                    queue2.offer(top.left);
+                    queue.offer(top.left);
                 }
                 if (top.right != null) {
-                    queue2.offer(top.right);
+                    queue.offer(top.right);
                 }
                 oneRes.add(top.val);
             }
-            
+           
             if (!isOdd) {
                 Collections.reverse(oneRes);
             }
             
             res.add(oneRes); // 把res加进来
-            isOdd = !isOdd; // 反转
-            queue = queue2; // queue存下一层
-            
+            isOdd = !isOdd; // 反转            
         }
         return res;
     }
