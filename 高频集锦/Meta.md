@@ -72,6 +72,19 @@ https://www.1point3acres.com/bbs/thread-859864-1-1.html
 
 
 # VO
+目标：
+3.14 30 - 35
+3.15 45 - 55
+3.16 60 - 75
+3.17 75 - 95
+3.18 90 - 120
+3.19 105 - 140
+3.20 120 - 160
+3.21 135 - 180
+3.22 150 - 200
+3.23 165 - 220
+3.24 180 - 240
+3.25 每个专题做2道
 
 ## Top 1-10
 8. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
