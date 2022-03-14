@@ -70,6 +70,9 @@ codesignal oa
 ### 电面
 https://www.1point3acres.com/bbs/thread-859864-1-1.html 
 
+
+# VO
+
 ## Top 1-10
 8. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
 
@@ -163,6 +166,8 @@ Return the minimum number of moves required to make s valid.
 Input: s = "((("
 Output: 3
 
+时间O(n)
+空间O(1)
 ```Java
 // edge case: ")))((("
 // clarify: only ()? what is a valid one
@@ -833,9 +838,108 @@ Output: 5
 
 
 
+## Top 31-40
+31. [1344. Angle Between Hands of a Clock](https://leetcode.com/problems/angle-between-hands-of-a-clock/)
+
+Given two numbers, hour and minutes, return the smaller angle (in degrees) formed between the hour and the minute hand.
+
+Answers within 10-5 of the actual value will be accepted as correct.
+
+时间O(1)
+空间O(1)
+```Java
+    public double angleClock(int hour, int minutes) {
+        // 1min angle: 360 / 60 = 6
+        // 1hour angle: 350 / 12 = 30
+        // correct 12-hour: (hour mod 12) * 30
+        // take into account of min: (hour mod 12 + min/60) * 30
+        int perMinAngle = 360 / 60;
+        int perHourAngle = 360 / 12;
+        
+        double minAngle = minutes * perMinAngle;
+        double hourAngle = (hour % 12 + minutes / 60.00) * perHourAngle;
+        
+        double diff = Math.abs(hourAngle - minAngle);
+        return Math.min(diff, 360 - diff);
+    }
+
+```
+
+32. [398. Random Pick Index](https://leetcode.com/problems/random-pick-index/)
+
+Given an integer array nums with possible duplicates, randomly output the index of a given target number. You can assume that the given target number must exist in the array.
+
+Implement the Solution class:
+
+Solution(int[] nums) Initializes the object with the array nums.
+int pick(int target) Picks a random index i from nums where nums[i] == target. If there are multiple valid i's, then each index should have an equal probability of returning.
+
+Input
+["Solution", "pick", "pick", "pick"]
+[[[1, 2, 3, 3, 3]], [3], [1], [3]]
+Output
+[null, 4, 0, 2]
+
+Explanation
+Solution solution = new Solution([1, 2, 3, 3, 3]);
+solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+solution.pick(1); // It should return 0. Since in the array only nums[0] is equal to 1.
+solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+
+```Java
+    private int[] nums;
+    private Random rand;
+
+    public Solution(int[] nums) {
+        this.nums = nums;
+        this.rand = new Random();
+    }
+    
+    public int pick(int target) {
+        // pick the target, return its index
+        int count = 0;
+        int index = -1;
+        for (int i = 0; i < this.nums.length; i++) {
+            if (this.nums[i] == target) {
+                count++;
+                // choose the current num with 1 / count probability
+                // rand.nextInt(5) return [0, 5)
+                // 最后一个假设count = 10，这时候拿它的概率就是1/10
+                if (rand.nextInt(count) == 0) {
+                    index = i;
+                }
+            }
+        }
+        return index;
+    }
+```
+
+33. [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
+
+Implement the MedianFinder class:
+
+MedianFinder() initializes the MedianFinder object.
+void addNum(int num) adds the integer num from the data stream to the data structure.
+double findMedian() returns the median of all elements so far. Answers within 10-5 of the actual answer will be accepted.
+
+Input
+["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]
+[[], [1], [2], [], [3], []]
+Output
+[null, null, null, 1.5, null, 2.0]
+
+Explanation
+MedianFinder medianFinder = new MedianFinder();
+medianFinder.addNum(1);    // arr = [1]
+medianFinder.addNum(2);    // arr = [1, 2]
+medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
+medianFinder.addNum(3);    // arr[1, 2, 3]
+medianFinder.findMedian(); // return 2.0
+
+```Java
 
 
-
+```
 
 
 ### Todo
@@ -846,3 +950,10 @@ Output: 5
 [计算器](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484903&idx=1&sn=184beaad36a71c9a8dd93c41a8ba74ac&scene=21#wechat_redirect)
 [DFS岛屿](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247492234&idx=1&sn=fef28b1ca7639e056104374ddc9fbf0b&scene=21#wechat_redirect)
 [二叉树](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247494655&idx=1&sn=f3445112d7322ea8491073fd2d19f25c&scene=21#wechat_redirect)
+
+# BQ
+1. Q:‍‌‌‌‌‍‍‍‍‍‌‍‌‍‌‍‌‍‌‌ 你觉得自己有什么方向需要提升，你是怎么去做的？
+A: 我看了本书讲xxx，想往这个方向提升，方法是1.看书 2. 多和experienced sde沟通
+                                他就会问一个follow up：那第二点你做了吗？你去找其他sde聊了吗？哪个公司的？都聊了些什么？
+
+2. Q: 和队友conflict，需要细节到你用几次meeting解决了？每次大概都聊了什么？有其他人engage吗？怎么解决第三人的问题
