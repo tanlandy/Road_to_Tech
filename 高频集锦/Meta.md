@@ -659,6 +659,86 @@ The next permutation of an array of integers is the next lexicographically great
     }
 ```
 
+25. [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+Given a list of accounts where each element accounts[i] is a list of strings, where the first element accounts[i][0] is a name, and the rest of the elements are emails representing emails of the account.
+
+Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some common email to both accounts. Note that even if two accounts have the same name, they may belong to different people as people could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have the same name.
+
+After merging the accounts, return the accounts in the following format: the first element of each account is the name, and the rest of the elements are emails in sorted order. The accounts themselves can be returned in any order.
+
+Input: accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John","johnsmith@mail.com","john00@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
+Output: [["John","john00@mail.com","john_newyork@mail.com","johnsmith@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
+Explanation:
+The first and second John's are the same person as they have the common email "johnsmith@mail.com".
+The third John and Mary are different people as none of their email addresses are used by other accounts.
+We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'], 
+['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com']] would still be accepted.
+
+```Java
+
+
+
+```
+
+26. [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/)
+
+There are n buildings in a line. You are given an integer array heights of size n that represents the heights of the buildings in the line.
+
+Input: heights = [4,2,3,1]
+Output: [0,2,3]
+
+思路：从右往左走，每次记录最大值，比较最大值和当前值
+时间： O(n)
+空间： O(n)
+```Java
+    public int[] findBuildings(int[] heights) {
+        int curMax = Integer.MIN_VALUE;
+        List<Integer> li = new ArrayList<>();
+        for (int i = heights.length - 1; i >= 0; i--) {
+            if (heights[i] > curMax) {
+                li.add(i);
+                curMax = heights[i];
+            }
+        }
+        int[] res = new int[li.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = li.get(li.size() - i - 1);
+        }
+        return res;
+    }
+```
+
+27. [263. Ugly Number](https://leetcode.com/problems/ugly-number/)
+
+An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
+
+Given an integer n, return true if n is an ugly number.
+
+Input: n = 6
+Output: true
+Explanation: 6 = 2 × 3
+
+时间 O(logn)
+```Java
+    public boolean isUgly(int n) {
+        if (n <= 0) {
+            return false;
+        }
+        int[] divisors = new int[]{2, 3, 5};
+        for (int d : divisors) {
+            while (n % d == 0) {
+                n /= d;
+            }
+        }
+        return n == 1;
+    }
+```
+
+
+
+
+
 
 
 
