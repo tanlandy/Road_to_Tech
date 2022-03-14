@@ -99,6 +99,7 @@ class PickWithWeight{
     private int[] prefixSums;
     private int totalSum;
 
+    // [1,3,5] -> [1,4,9]
     public PickWithWeight(int[] w) { // Time: O(n), Space: O(n)
         // generate prefixSums and totalSum
         this.prefixSums = new int[w.length];
@@ -330,6 +331,8 @@ Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
 Output: [[1,6],[8,10],[15,18]]
 Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
 
+时间：O(nlogn)
+空间：O(logn) if sorted in place
 ```Java
 
 class Solution {
@@ -337,7 +340,6 @@ class Solution {
         if (intervals.length <= 1) {
             return intervals;
         }
-
         // Sort by ascending starting point
         Arrays.sort(intervals,
                     new Comparator<int[]>() {
@@ -348,7 +350,7 @@ class Solution {
                 );        
         List<int[]> res = new ArrayList<>();
         int[] newInterval = intervals[0];
-        res.add(newInterval);
+        res.add(newInterval); // 先把第一个给放进去
         for (int[] interval : intervals) {
             if (newInterval[1] >= interval[0]) { // Overlapping intervals, move the end if needed
             // 如果新的更远，那么就更新一下
@@ -358,9 +360,7 @@ class Solution {
                 res.add(newInterval);
             }
         }
-        return res.toArray(new int[res.size()][]);
-        
-        
+        return res.toArray(new int[res.size()][]); // 还要处理返回值
     }
 }
 ```
@@ -530,6 +530,136 @@ preNum: to
         return true;
     }
 ```
+
+23. [50. Pow(x, n)](https://leetcode.com/problems/powx-n/)
+
+Input: x = 2.00000, n = 10
+Output: 1024.00000
+
+// 第一个方法 O(n)的时间复杂度 O(1)空间
+```Java
+    public double myPow(double x, int n) {
+        long N = n;
+        if (N < 0) {
+            x = 1 / x;
+            N = -N;
+        }
+        double ans = 1;
+        for (long i = 0; i < N; i++) {
+            ans = ans * x;
+        }
+        return ans;
+    }
+```
+
+// 第二个方法
+思路：
+A = x^n
+n是偶数：x^2n = A * A
+n是奇数：x^2n = A * A * 2
+时间O(logn)
+空间O(logn)
+```Java
+    public double myPow(double x, int n) {
+        long N = n;
+        if (N < 0) {
+            N = -N;
+            x = 1 / x;
+        }
+        return logPow(x, N);
+    }
+    private double logPow(double x, long N) {
+        if (N == 0) {
+            return 1.0;
+        }
+        double half = logPow(x, N / 2);
+        if (N %2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
+```
+
+// 第三个方法
+x^(a + b) = x^a * x^b
+x^2n = A * A
+```Java
+    public double myPow(double x, int n) {
+        long N = n;
+        if (N < 0) {
+            N = -N;
+            x = 1 / x;
+        }
+        double ans = 1;
+        double curX = x;
+        for (long i = N; i > 0; i /= 2) {
+            if (i % 2 == 1) {
+                ans = curX * ans;
+            }
+            curX = curX * curX;
+        }
+        return ans;
+    }
+
+```
+24. [31. Next Permutation](https://leetcode.com/problems/next-permutation/)
+
+A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
+
+For example, for arr = [1,2,3], the following are considered permutations of arr: [1,2,3], [1,3,2], [3,1,2], [2,3,1].
+The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).
+
+暴力解：
+时间O(n!)
+空间O(1)
+
+时间O(n)
+空间O(1)
+```Java
+// 先找到最右的下降子序列
+// 再交换该子序列左边的数，和子序列中刚好比它大的数
+// 最后把下降子序列倒序
+    public void nextPermutation(int[] nums) {
+        if (nums == null || nums.length <= 0) {
+            return;
+        }
+        // 从后往前，找到下降序列的起点
+        int i = nums.length - 2;
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
+            i--;
+        }
+        // 此时i是最右下降序列的index-1
+        if (i >= 0) {
+            // 从后往前，找到下降序列中刚好比i大的点，然后交换
+            int j = nums.length - 1;
+            while (nums[i] >= nums[j]) {
+                j--;
+            }
+            swap(nums, i, j);
+        }
+        // 交换下降序列
+        reverse(nums, i + 1, nums.length - 1);
+    }
+    
+    // 交换两个点
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    // 交换后续下降序列
+    private void reverse(int[] nums, int i, int j) {
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+```
+
+
 
 
 ### Todo
