@@ -677,27 +677,7 @@ The next permutation of an array of integers is the next lexicographically great
     }
 ```
 
-25. [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
 
-Given a list of accounts where each element accounts[i] is a list of strings, where the first element accounts[i][0] is a name, and the rest of the elements are emails representing emails of the account.
-
-Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some common email to both accounts. Note that even if two accounts have the same name, they may belong to different people as people could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have the same name.
-
-After merging the accounts, return the accounts in the following format: the first element of each account is the name, and the rest of the elements are emails in sorted order. The accounts themselves can be returned in any order.
-
-Input: accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John","johnsmith@mail.com","john00@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
-Output: [["John","john00@mail.com","john_newyork@mail.com","johnsmith@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
-Explanation:
-The first and second John's are the same person as they have the common email "johnsmith@mail.com".
-The third John and Mary are different people as none of their email addresses are used by other accounts.
-We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'], 
-['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com']] would still be accepted.
-
-```Java
-
-
-
-```
 
 26. [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/)
 
@@ -952,6 +932,176 @@ medianFinder.findMedian(); // return 2.0
 ```Java
 
 
+```
+
+## 3.15 
+16. [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+Given a list of accounts where each element accounts[i] is a list of strings, where the first element accounts[i][0] is a name, and the rest of the elements are emails representing emails of the account.
+
+Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some common email to both accounts. Note that even if two accounts have the same name, they may belong to different people as people could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have the same name.
+
+After merging the accounts, return the accounts in the following format: the first element of each account is the name, and the rest of the elements are emails in sorted order. The accounts themselves can be returned in any order.
+
+Input: accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John","johnsmith@mail.com","john00@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
+Output: [["John","john00@mail.com","john_newyork@mail.com","johnsmith@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]]
+Explanation:
+The first and second John's are the same person as they have the common email "johnsmith@mail.com".
+The third John and Mary are different people as none of their email addresses are used by other accounts.
+We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'], 
+['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com']] would still be accepted.
+
+如果数据不是实时变化，本类问题可以用BFS或者DFS的方式遍历，如果数据实时变化（data stream）则并查集每次的时间复杂度可以视为O（1）；需要牢记合并与查找两个操作的模板
+
+方法一： DFS
+Here N is the number of accounts and K is the maximum length of an account.
+时间：O(NKlogNK) 所有email都是同一个人的名下
+空间：O(NK) adjList O(NK) visited O(NK) DFS O(NK)
+
+
+```Java
+// 1. 建adjList，对每个用户，name -> emails
+// 2. 对每个用户，从第一个点开始DFS
+// 3. 在DFS时候，存每个信息
+// 4. DFS结束时候，sort并且连到用户上
+// 5. 把用户按要求存起来
+    public List<List<String>> accountsMerge3(List<List<String>> accounts) {
+        Map<String, Set<String>> graph = new HashMap<>();
+        Map<String, String> emailToName = new HashMap<>();
+
+        // step 1: build graph that connects all emails have relationships
+        for (List<String> account : accounts) {
+            String name = account.get(0);
+            for (int i = 1; i < account.size(); i++) {
+                graph.putIfAbsent(account.get(i), new HashSet<>());
+                emailToName.put(account.get(i), name);
+                if (i != 1) {
+                    // email相互连起来
+                    graph.get(account.get(i)).add(account.get(i - 1));
+                    graph.get(account.get(i - 1)).add(account.get(i));
+                }
+            }
+        }
+
+        // step 2: DFS traversal to traverse all nodes in every single component and generate each result list individually
+        List<List<String>> result = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        for (String email : graph.keySet()) {
+            if (!visited.contains(email)) {
+                visited.add(email);
+                List<String> newList = new ArrayList<>();
+                dfs(newList, graph, visited, email);
+                Collections.sort(newList);
+                newList.add(0, emailToName.get(newList.get(0)));
+                result.add(newList);
+            }
+        }
+        return result;
+    }
+
+    public void dfs(List<String> result, Map<String, Set<String>> graph, Set<String> visited, String curPoint) {
+        result.add(curPoint);
+        Set<String> neighbors = graph.get(curPoint);
+        for (String neighbor : neighbors) {
+            if (!visited.contains(neighbor)) {
+                visited.add(neighbor);
+                dfs(result, graph, visited, neighbor);
+            }
+        }
+    }
+
+```
+
+
+方法二：Union Find
+```
+```
+
+17. [323. Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
+
+You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.
+
+Return the number of connected components in the graph.
+
+思路一：DFS
+无向图中每个顶点都可以搜索到达
+每个图执行一次DFS搜索
+
+Here E = Number of edges, V = Number of vertices.
+时间：O(E+V)     ->    邻接表O(E)，DFS O(E+V)
+空间：O(E+V)     ->   邻接表O(E)，visited O(V), DFS O(V)
+```Java
+// 1. 建立邻接表，每个顶点都存上相连的顶点，买个顶点->相关的点
+// 2. visited记录走过的顶点
+// 3. counter记录数量
+// 4. DFS遍历
+    public int countComponents(int n, int[][] edges) {
+        // n是顶点数量vertices
+        int count = 0;
+        List<Integer>[] adjList = new ArrayList[n]; // 注意右边的构造
+        // 建空表
+        for (int i = 0; i < n; i++) {
+            adjList[i] = new ArrayList<>();
+        }
+        // 表放数据 [1,2] -> 1连2， 2连1
+        for (int i = 0; i < edges.length; i++) {
+            adjList[edges[i][0]].add(edges[i][1]);
+            adjList[edges[i][1]].add(edges[i][0]);
+        }
+        // visited记录这个点走过没有
+        boolean[] visited = new boolean[n];
+        // DFS遍历，每个点都执行一次//实际上是每个图执行一次
+        for (int i = 0; i < n; i++) {
+            // 如果没走过
+            if (!visited[i]) {
+                count++;
+                dfs(adjList, visited, i);
+            }
+        }
+        return count;
+    }
+    
+    private void dfs(List<Integer>[] adjList, boolean[] visited, int start) {
+        visited[start] = true;
+        // 选中一个点之后，把邻接表中和该点有联系的所有点都走一遍
+        for (int i = 0; i < adjList[start].size(); i++) {
+            // 如果和这个点有联系的点还没走过
+            if (!visited[adjList[start].get(i)]) {
+                // 走那个有联系的点
+                dfs(adjList, visited, adjList[start].get(i));
+            }
+        }
+    }
+```
+
+思路二：Union find
+
+时间复杂度: O(V + ElogV).
+
+Iterating over every edge requires O(E)O(E) operations, and for every operation, we are performing the combine method which is O(α(n))O(α(n)), where α(n) is the inverse Ackermann function.
+
+空间复杂度: O(V)
+```Java
+// 1. count = n
+// 2. 一边遍历节点，一边combine。如果见过就跳过，如果没见过，count--
+    public int countComponents(int n, int[][] edges) {
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) parent[i] = i;
+        int components = n;
+        for (int[] e : edges) {
+            int p1 = findParent(parent, e[0]);
+            int p2 = findParent(parent, e[1]);
+            if (p1 != p2) {
+                parent[p1] = p2; // Union 2 component
+                components--;
+            }
+        }
+        return components;
+    }
+    private int findParent(int[] parent, int i) {
+        if (i == parent[i]) return i;
+        return parent[i] = findParent(parent, parent[i]); // Path compression O(logV)
+    }
 ```
 
 
