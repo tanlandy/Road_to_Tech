@@ -1,3 +1,29 @@
+## 资源
+### Leadership principles
+https://www.amazon.jobs/en/principles?tag=1p3a-api-20
+Work simulation(原则有先后顺序)
+目前两大做题中最重要原则：
+1.requirement排在第一，deadline第二。
+2.有manager出现的选项无脑选manager，manager就是一个组的地头蛇。
+amazon9条主要原则
+原则1：客户是上帝，requirement优先，任何影响上帝的事情都不能干，
+        如某个requirement影响了上帝的体验，
+        你就是死键盘上也不能砍了，宁愿miss deadline
+原则2：为长远考虑，即客户几年之后可能会出现的需求也要考虑到，
+        不会为了交付短期的deadline，
+        而牺牲长期的价值。（比如 global api  和 local api）
+原则3：最高标准，“最高”对应上面的“长远”。
+原则4：一般情况，能请示manager就请示manager，manager一般不会出错
+原则5：速度很重要，决策和行动都可以改变，因此不需要进行过于广泛的推敲
+        ，但提倡在深思熟虑下进行冒险。
+原则6：不需要一定要坚持“非我发明”，需求帮助也是可以的，四处寻找创意
+        ，并且接受长期被误导的可能
+原则7：敢于承担责任，任劳任怨，比如领导说谁会java，你会你就跳出来说我会
+原则8：对问题刨根问底，探究细节
+原则9：服从大局（团队比个人重要）
+
+
+
 ## 面经必看
 https://coda.io/d/Offer_dm5fzh3MwOp/OA1_suMAY#OA1_tua4n/r5 全
 https://www.1point3acres.com/bbs/thread-855709-1-1.html 
@@ -538,12 +564,10 @@ Return the maximum possible value of an element in arr after performing the oper
 
 
 ### OA2
-https://www.1point3acres.com/bbs/thread-847083-1-1.html 
-https://www.1point3acres.com/bbs/thread-686711-1-1.html 
-https://www.1point3acres.com/bbs/thread-847083-1-1.html 
-https://www.1point3acres.com/bbs/thread-859323-3-1.html 
-https://www.1point3acres.com/bbs/thread-474434-1-1.html 
-https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=amazon 
+DONE https://www.1point3acres.com/bbs/thread-686711-1-1.html 
+DONE https://www.1point3acres.com/bbs/thread-847083-1-1.html 
+DONE https://www.1point3acres.com/bbs/thread-474434-1-1.html 
+DONE https://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=474434&highlight=amazon 
 1. Coding:
 (1) Find substrings with k distinct letters. Attention: length of substring has to be k as well.
 (2) K closest points to origin.
@@ -663,3 +687,5 @@ Tell me an example you helped peers
 Tell me an example you do something out of your responsibility
 Tell me a time you had conflict with coworkers/teammates.
 
+OA 
+https://www.1point3acres.com/bbs/thread-859323-3-1.html 
