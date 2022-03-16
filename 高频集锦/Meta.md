@@ -929,10 +929,67 @@ medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
 medianFinder.addNum(3);    // arr[1, 2, 3]
 medianFinder.findMedian(); // return 2.0
 
+方法一：大小顶堆
+小堆的数字都比大顶堆大
+每次先到minHeap，再到maxHeap，同时均衡size
+如果最后奇数（minHeap.size()更大)就弹出
+如果是偶数就取平均
+
+时间：O(logn) add O(1) find
+空间：O(n)
 ```Java
+class MedianFinder {
+    PriorityQueue<Integer> minHeap;
+    PriorityQueue<Integer> maxHeap;
+ 
+    /** initialize your data structure here. */
+    public MedianFinder() {
+        minHeap = new PriorityQueue<>((n1, n2) -> n1 - n2);
+        // 大顶堆是倒着建立的
+        maxHeap = new PriorityQueue<>((n1, n2) -> n2 - n1);
+    }
+ 
+    public void addNum(int num) {
+        // 先到minHeap，再到maxHeap，大顶堆的所有数字都比小顶堆小
+        minHeap.offer(num);
+        maxHeap.offer(minHeap.poll());
+ 
+        // 均衡
+        if(minHeap.size()<maxHeap.size()){
+            minHeap.offer(maxHeap.poll());
+        }
+    }
+ 
+    public double findMedian() {
+        // 奇数
+        if(minHeap.size() > maxHeap.size()){
+            return minHeap.peek();
+        }else {// 偶数
+            return (minHeap.peek()+maxHeap.peek())/2.0;
+        }
+    }
+}
 
-
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
 ```
+
+Follow-up
+1. If all integer numbers from the stream are between 0 and 100, how would you optimize it?
+
+We can maintain an integer array of length 100 to store the count of each number along with a total count. Then, we can iterate over the array to find the middle value to get our median.
+
+Time and space complexity would be O(100) = O(1).
+
+2. If 99% of all integer numbers from the stream are between 0 and 100, how would you optimize it?
+
+In this case, we need an integer array of length 100 and a hashmap for these numbers that are not in [0,100].
+
+
 
 ## 3.15 
 16. [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
@@ -1104,6 +1161,91 @@ Iterating over every edge requires O(E)O(E) operations, and for every operation,
     }
 ```
 
+## 3.16
+
+18. [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+
+A peak element is an element that is strictly greater than its neighbors.
+
+Given an integer array nums, find a peak element, and return its index. If the array contains multiple peaks, return the index to any of the peaks.
+You must write an algorithm that runs in O(log n) time.
+
+Input: nums = [1,2,1,3,5,6,4]
+Output: 5
+Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.
+
+思路一（不满足时间复杂度）：
+linear scan 时间复杂度O(n)，，空间O(1)
+
+思路二（binary search)
+时间O(logn)
+空间O(1)
+```Java
+    public int findPeakElement(int[] nums) {
+        int l = 0;
+        int r = nums.length - 1;
+        while (l < r) { // [)条件，因为不会是最后一个
+            int mid = l + (r - l) / 2;
+            if (nums[mid] > nums[mid + 1]) {
+                // 不能mid + 1，因为用到了mid + 1
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l; // 最后返回l
+    }
+```
+
+19. [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+Given an n x n binary matrix grid, return the length of the shortest clear path in the matrix. If there is no clear path, return -1.
+
+A clear path in a binary matrix is a path from the top-left cell (i.e., (0, 0)) to the bottom-right cell (i.e., (n - 1, n - 1)) such that:
+
+All the visited cells of the path are 0.
+All the adjacent cells of the path are 8-directionally connected (i.e., they are different and they share an edge or a corner).
+The length of a clear path is the number of visited cells of this path.
+
+
+# 查缺补漏
+## 3.16
+1. [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/)
+
+BFS图的遍历
+
+思路：Push all gates into queue first. Then for each gate update its neighbor cells and push them to the queue.
+
+Repeating above steps until there is nothing left in the queue.
+
+```Java
+public void wallsAndGates(int[][] rooms) {
+        int m = rooms.length;
+        int n = m == 0 ? 0 : rooms[0].length;
+        int[][] dirs = {{-1,0}, {0,1}, {0,-1}, {1,0}};
+        Queue<int[]> queue = new LinkedList<>();
+        // add all gates to the queue
+        for (int i=0; i<m; i++) {
+            for (int j=0; j<n; j++) {
+                if (rooms[i][j] == 0) {
+                    queue.offer(new int[] {i,j});
+                }
+            }
+        }
+        // update distance from gates
+        while (!queue.isEmpty()) {
+            int[] curPos = queue.poll();
+            for (int[] dir: dirs) {
+                int X = curPos[0] + dir[0];
+                int Y = curPos[1] + dir[1];
+                if (X<0 || Y <0 || X >= m || Y >= n || rooms[X][Y] != Integer.MAX_VALUE) continue;
+                rooms[X][Y] = rooms[curPos[0]][curPos[1]]+1;
+                queue.offer(new int[] {X, Y});
+            }
+        }
+    }
+
+```
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
@@ -1113,6 +1255,9 @@ Iterating over every edge requires O(E)O(E) operations, and for every operation,
 [计算器](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484903&idx=1&sn=184beaad36a71c9a8dd93c41a8ba74ac&scene=21#wechat_redirect)
 [DFS岛屿](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247492234&idx=1&sn=fef28b1ca7639e056104374ddc9fbf0b&scene=21#wechat_redirect)
 [二叉树](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247494655&idx=1&sn=f3445112d7322ea8491073fd2d19f25c&scene=21#wechat_redirect)
+
+
+
 
 # BQ
 1. Q:‍‌‌‌‌‍‍‍‍‍‌‍‌‍‌‍‌‍‌‌ 你觉得自己有什么方向需要提升，你是怎么去做的？
