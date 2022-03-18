@@ -2,8 +2,15 @@
 1. Find minimum path/distance
 2. Queue
 
-# Template
+## DFS for tree
+Sub-problem 
+Base case 
+Recursion rule 
+ALWAYS think about two branches (left and right), pseudo code is helpful.
 
+
+# Template
+## 遍历树
 1. two queues zigzagOrder遍历二叉树
 ``` Java
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
@@ -218,8 +225,185 @@ class Solution {
         return new String(c);
     }
 }
+```
 
+## 遍历图
 
+1. [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/)
 
+```Java
 
+    public void wallsAndGates(int[][] rooms) {
+        int m = rooms.length;
+        int n = m == 0 ? 0 : rooms[0].length;
+        int[][] dirs = {{-1,0}, {0,1}, {0,-1}, {1,0}};
+        Queue<int[]> queue = new LinkedList<>();
+        // add all gates to the queue
+        for (int i=0; i<m; i++) {
+            for (int j=0; j<n; j++) {
+                if (rooms[i][j] == 0) {
+                    // queue存的是x, y
+                    queue.offer(new int[] {i,j});
+                }
+            }
+        }
+        // update distance from gates
+        while (!queue.isEmpty()) {
+            int[] curPos = queue.poll();
+            for (int[] dir: dirs) {
+                // 新x和y
+                int X = curPos[0] + dir[0];
+                int Y = curPos[1] + dir[1];
+                if (X<0 || Y <0 || X >= m || Y >= n || rooms[X][Y] != Integer.MAX_VALUE) continue;
+                // 距离+1
+                rooms[X][Y] = rooms[curPos[0]][curPos[1]]+1;
+                // 成功更新之后，要放回来，之后继续走
+                queue.offer(new int[] {X, Y});
+            }
+        }
+    }
+```
+
+2. [Number of Islands](https://leetcode.com/problems/number-of-islands/)
+
+方法一：不用visited[][]
+```Java
+    // 因为要考虑count，所以用了一个bfs函数来遍历
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int count = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    queue.offer(new int[]{i, j});
+                    bfs(grid, queue);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    private void bfs(char[][] grid, Queue<int[]> queue) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while (!queue.isEmpty()) {
+            int[] curP = queue.poll();
+            for (int[] dir : dirs) {
+                int x = curP[0] + dir[0];
+                int y = curP[1] + dir[1];
+                if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != '1') {
+                    continue;
+                }
+                grid[x][y] = '0';
+                queue.offer(new int[]{x, y});
+            }
+        }
+    }
+
+```
+
+方法二：用一个visited[][]存已经走过的点
+```Java
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1' && !visited[i][j]) {
+                    queue.offer(new int[]{i, j});
+                    bfs(grid, queue, visited);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    private void bfs(char[][] grid, Queue<int[]> queue, boolean[][] visited) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while (!queue.isEmpty()) {
+            int[] curP = queue.poll();
+            for (int[] dir : dirs) {
+                int x = curP[0] + dir[0];
+                int y = curP[1] + dir[1];
+                if (x < 0 || x >= m || y < 0 || y >= n || visited[x][y] || grid[x][y] != '1') {
+                    continue;
+                }
+                visited[x][y] = true;
+                queue.offer(new int[]{x, y});
+            }
+        }
+    }
+```
+
+DFS
+方法一：不用visited[][]
+```Java
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    dfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    private void dfs(char[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == '0' ) {
+            return;
+        }
+        grid[i][j] = '0';
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
+    }
+```
+
+方法二，用visited[][]
+```Java
+   public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int count = 0;
+        boolean[][] visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1' & !visited[i][j]) {
+                    dfs(grid, i, j, visited);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    private void dfs(char[][] grid, int i, int j, boolean[][] visited) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == '0' || visited[i][j]) {
+            return;
+        }
+        visited[i][j] = true;
+        dfs(grid, i + 1, j, visited);
+        dfs(grid, i - 1, j, visited);
+        dfs(grid, i, j + 1, visited);
+        dfs(grid, i, j - 1, visited);
+    }
 ```
