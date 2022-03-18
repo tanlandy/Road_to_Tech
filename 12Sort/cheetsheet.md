@@ -94,3 +94,33 @@
     );
 
 ```
+
+1. Quick Sort
+时间复杂度：平均O(nlogn)
+空间：O(1)
+
+
+
+2. Merge Sort
+时间：最坏O(nlogn)
+空间：O(n)
+思路：Recursion, divide, and conquer
+```Java
+public void mergeSort(int[] nums) {
+    mergeSort(nums, 0, nums.length - 1);
+}
+
+public void mergeSort(int[] nums, int l, int r) {
+    if (l < r) {
+        int mid = l + (r - l) / 2;
+        mergeSort(nums, l, mid);
+        mergeSort(nums, mid + 1, r);
+        merge(nums, l, mid, r);
+    }
+}
+
+public void merge(int[] nums, int l, int mid, int r) {
+    
+}
+
+```
