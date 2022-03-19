@@ -1247,6 +1247,167 @@ public void wallsAndGates(int[][] rooms) {
 
 ```
 
+## 3.19
+1. [148. Sort List](https://leetcode.com/problems/sort-list/)
+Top down Merge Sort排序链表
+思路：切段，然后先排左边，再排右边，最后合并
+时间O(nlogn)
+空间O(logn)
+```Java
+// merge sort: O(nlogn)
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) // 不要忘了边界条件
+            return head;
+            
+        // step 1. cut the list to two halves
+        ListNode prev = null, slow = head, fast = head;
+
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // 这时候prev.next = slow
+        prev.next = null; // 把前后切断了
+
+        // step 2. sort each half
+        ListNode l1 = sortList(head);
+        ListNode l2 = sortList(slow);
+
+        // step 3. merge l1 and l2
+        return merge(l1, l2);
+    }
+
+    private ListNode merge(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1); // 用dummy来存头的位置
+        ListNode cur = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                cur.next = l1;
+                l1 = l1.next;
+            } else {
+                cur.next = l2;
+                l2 = l2.next;
+            }
+            cur = cur.next;
+        }
+        if (l1 != null) {
+            cur.next = l1;
+        }
+        if (l2 != null) {
+            cur.next = l2;
+        }
+        return dummy.next;
+    }
+```
+
+2. [179. Largest Number](https://leetcode.com/problems/largest-number/)
+
+Given a list of non-negative integers nums, arrange them such that they form the largest number and return it.
+
+Since the result may be very large, so you need to return a string instead of an integer.
+
+Input: nums = [3,30,34,5,9]
+Output: "9534330"
+
+思路：Sorting via Custom Comparator
+First, we convert each integer to a string. Then, we sort the array of strings.
+
+edge case: when the array consists of only zeroes, so if the most significant number is 00, we can simply return 00. Otherwise, we build a string out of the sorted array and return it.
+
+时间：O(nlogn) 排序
+空间：O(n) allocate space for final return string
+
+```Java
+
+    public String largestNumber(int[] nums) {
+        // 数字转String[]
+        String[] asStrs = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            asStrs[i] = String.valueOf(nums[i]);
+        }
+        // String排序
+        Arrays.sort(asStrs, 
+                   new Comparator<String>() {
+                       public int compare(String a, String b) {
+                           return (b + a).compareTo(a + b);
+                       }
+                   }
+                   );
+        // edge case
+        if (asStrs[0].equals("0")) {
+            return "0";
+        }
+        // String[]转String
+        String largetNum = new String();
+        for (String s : asStrs) {
+            largetNum += s;
+        }
+        return largetNum;
+    }
+
+```
+
+3. [75. Sort Colors](https://leetcode.com/problems/sort-colors/)
+
+Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+
+We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
+
+You must solve this problem without using the library's sort function.
+
+Input: nums = [2,0,2,1,1,0]
+Output: [0,0,1,1,2,2]
+
+方法一：统排
+思路：数一遍然后输出
+时间：O(n)
+空间：O(1)
+```Java
+    public void sortColors(int[] nums) {
+        int[] count = {0, 0, 0};
+        for (int i = 0; i < nums.length; i++) {
+            count[nums[i]]++;
+        }
+        for (int i = 0; i < count[0]; i++) {
+            nums[i] = 0;
+        }
+        for (int i = count[0]; i < count[0] + count[1]; i++) {
+            nums[i] = 1;
+        }
+        for (int i = count[0] + count[1]; i < nums.length; i++) {
+            nums[i] = 2;
+        }
+    }
+```
+
+方法二：Two Pointers
+时间：O(n)
+空间：O(1)
+```Java
+    public void sortColors(int[] nums) {
+        int l = 0;
+        int r = nums.length - 1;
+        int i = 0;
+        while (i <= r) { // 注意终止条件
+            if (nums[i] == 0) { // l, i一起走
+                nums[i] = nums[l];
+                nums[l] = 0;
+                l++;
+                i++;
+            } else if (nums[i] == 2) { // 只有r走
+                nums[i] = nums[r];
+                nums[r] = 2;
+                r--;
+            } else {
+                i++;
+            }
+        }
+    }
+```
+
+
+
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
 [括号相关](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247487246&idx=1&sn=4a514020ce9dc8777e2d1d503188b62b&scene=21#wechat_redirect)
