@@ -1872,13 +1872,41 @@ Input: arr = [2,3,4,7,11], k = 5
 Output: 9
 Explanation: The missing positive integers are [1,5,6,8,9,10,12,13,...]. The 5th missing positive integer is 9.
 
+思路：
+arr[idx]的missing个数是arr[idx] - 1 - idx
+找到missing个数包括k的，然后往右加差的树
+[2,3,4,7,11], k = 5
+点11: missing = 11 - 1 - 4 =  6
+点7：missing = 7 - 1 - 3 = 3
+要返回的点7 + 5 - 3 = 9
+二分查找找到7，返回7+k-3
+        // missing of arr[i] = arr[i] - i - 1
+        // find the arr[i] < k < arr[i + 1]
+        // return arr[i] + k - (arr[i] - i - 1) = k + 1 + i
 ```Java
 
+    public int findKthPositive(int[] arr, int k) {
+        int l = 0;
+        int r = arr.length - 1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            // arr[idx] 位置上missing是 arr[idx] - idx - 1.
+            // If number of positive integer which are missing before arr[mid] is less than k --> continue to search
+            if (arr[mid] - mid - 1 < k) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        // 最后返回arr[right]位置上的missing，即是 arr[right] - right - 1
+        // return arr[r] + k - (arr[r] - r - 1);        
+        return l + k;
+    }
 
 
 ```
 
-6. [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
+6. [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/) 图遍历+二叉搜索
 
 
 7. [1060. Missing Element in Sorted Array](https://leetcode.com/problems/missing-element-in-sorted-array/)
