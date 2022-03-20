@@ -1703,6 +1703,201 @@ class Solution {
 9. [109. Convert Sorted List to Binary Search Tree](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/)
 
 
+## 3.20
+1. [1428. Leftmost Column with at Least a One](https://leetcode.com/problems/leftmost-column-with-at-least-a-one/)
+
+方法一：
+每行一个二分查找最左出现，然后更新
+时间：O(NlogM) N:row, M:cols
+空间：O(1)
+```Java
+/**
+ * // This is the BinaryMatrix's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface BinaryMatrix {
+ *     public int get(int row, int col) {}
+ *     public List<Integer> dimensions {}
+ * };
+ */
+
+class Solution {
+    public int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+        int rows = binaryMatrix.dimensions().get(0);
+        int cols = binaryMatrix.dimensions().get(1);
+        int smallestIndex = cols;
+        for (int row = 0; row < rows; row++) {
+            int l = 0;
+            int r = Math.min(smallestIndex, cols - 1); // 缩小查找范围
+            while (l <= r) {
+                int mid = l + (r - l) / 2;
+                if (binaryMatrix.get(row, mid) == 0) {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            if (l < cols && binaryMatrix.get(row, l) == 1) { // 排除left走到最右边的情况，这时候target>所有
+                smallestIndex = Math.min(smallestIndex, l);
+            }
+        }
+        return smallestIndex == cols ? -1 : smallestIndex;
+    }
+}
+```
+
+方法二：
+从右上往左下走：
+是0就往下走
+是1就往左走
+时间：O(N+M)
+空间：O(1)
+
+```Java
+class Solution {
+    public int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+        int rows = binaryMatrix.dimensions().get(0);
+        int cols = binaryMatrix.dimensions().get(1);
+        
+        int curRow = 0;
+        int curCol = cols - 1;
+        
+        while (curRow < rows && curCol >= 0) { // 走到左下角
+            if (binaryMatrix.get(curRow, curCol) == 0) { // 是0就往下
+                curRow++;
+            } else { // 是1就往左
+                curCol--;
+            }
+        }
+        // 如果还是curCol == cols - 1，就说明走到右下角还是没找到
+        // 返回的时候是curCol + 1，因为最后一次找到的时候curCol--
+        return (curCol == cols - 1) ? -1 : curCol + 1;
+    }
+}
+```
+2. [1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/)
+
+Given a binary array nums and an integer k, return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
+
+Input: nums = [1,1,1,0,0,0,1,1,1,1,0], k = 2
+Output: 6
+Explanation: [1,1,1,0,0,1,1,1,1,1,1]
+Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
+
+
+3. [1891. Cutting Ribbons](https://leetcode.com/problems/cutting-ribbons/)
+
+思路：找最右侧边界。一个一个往右尝试
+时间：O(Nlog(max(Length))) 
+空间：O(1)
+```Java
+class Solution {
+    public int maxLength(int[] ribbons, int k) {
+        int max = Integer.MIN_VALUE;
+        for (int num : ribbons) {
+            max = Math.max(num, max);
+        }
+        int l = 1;
+        int r = max;
+        while (l <= r) { // 左闭右闭
+            int mid = l + (r - l) / 2;
+            if (isValid(ribbons, k, mid)) {                             
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        if (r < 0) { // 右侧边界走到最左边的情况
+            return 0;
+        }
+        return r;
+    }
+    
+    private boolean isValid(int[] ribbons, int k, int mid) {
+        int count = 0;
+        for (int num : ribbons) {
+            count += num / mid;
+        }
+        return count >= k; // 满足的情况
+    }
+}
+```
+
+
+4. [1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
+
+思路：找最左侧边界
+上界是sum
+下界是max value
+```Java
+    public int shipWithinDays(int[] weights, int days) {
+        int l = 0;
+        int r = 0;
+        for (int num : weights) { // upper bound, lower bound
+            l = Math.max(l, num);
+            r += num;
+        }
+        while (l <= r) {  // 找最左侧边界
+            int mid = l + (r - l) / 2;
+            if (isValid(weights, days, mid)) { // 满足的话，移动r，找最左侧边界
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l; // 最左侧边界
+    }
+    
+    private boolean isValid(int[] weights, int days, int mid) {
+        int needDays = 1;
+        int cur = 0;
+        for (int w: weights) {
+            if (cur + w > mid) {
+                needDays += 1;
+                cur = 0;
+            }
+            cur += w;
+        }
+        return needDays <= days; // 满足的情况
+    }
+
+```
+
+5. [1539. Kth Missing Positive Number](https://leetcode.com/problems/kth-missing-positive-number/)
+
+Given an array arr of positive integers sorted in a strictly increasing order, and an integer k.
+
+Find the kth positive integer that is missing from this array.
+
+Input: arr = [2,3,4,7,11], k = 5
+Output: 9
+Explanation: The missing positive integers are [1,5,6,8,9,10,12,13,...]. The 5th missing positive integer is 9.
+
+```Java
+
+
+
+```
+
+6. [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
+
+
+7. [1060. Missing Element in Sorted Array](https://leetcode.com/problems/missing-element-in-sorted-array/)
+
+
+8. [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+
+
+9. [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+
+
+10. [2071. Maximum Number of Tasks You Can Assign](https://leetcode.com/problems/maximum-number-of-tasks-you-can-assign/)
+
+
+11. [378. Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+
+
+
+
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
 [括号相关](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247487246&idx=1&sn=4a514020ce9dc8777e2d1d503188b62b&scene=21#wechat_redirect)
