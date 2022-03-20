@@ -1,3 +1,19 @@
+## To pay attention 
+### communicate before writing codes
+1. size
+2. index range
+3. tail
+
+### while coding
+1. check null when using while
+2. if (head == null) return false;
+3. If data structure of the linkedlist will be changed, dummy node is needed.
+4. If structure (including head) will be changed, dummy node is needed.
+5. while (node != null) {node.next;}
+6. while (pre.next != null) {pre.next, pre.next.next;}
+7. **edge cases**
+# Templetes
+
 # List
 ## Initiate
 ` List<Integer> list = new LinkedList<>();`
@@ -9,7 +25,7 @@ list.set(index, value) // set value at index; O(n)
 list.add(opt_index, value) // add value at index; O(n)
 list.remove(index,value) // O(n)
 ```
-## Templates
+## 开头
 ```Java
 // always check if null
     if (head == null) {
@@ -18,7 +34,24 @@ list.remove(index,value) // O(n)
     ListNode dummy = new ListNode(-1);
     dummy.next = head;
     ListNode pre = dummy;
+```
 
+## 找中间点
+```Java
+// two pointers to find middleNode
+public ListNode middleNode(ListNode head) {
+    ListNode fast = head;
+    ListNode slow = head;
+    while (fast != null && fast.next != null) { 
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return slow;
+}
+```
+
+## 链表反转
+```Java
 // reverse Linked List: [1,2,3,4,5] -> [5,4,3,2,1]
 public ListNode reverseLinkedList(ListNode head) {
     ListNode pre = null;
@@ -49,17 +82,6 @@ public ListNode swapPairs(ListNode head) {
     return dummy.next;
 }
 
-// two pointers to find middleNode
-public ListNode middleNode(ListNode head) {
-    ListNode fast = head;
-    ListNode slow = head;
-    while (fast != null && fast.next != null) { 
-        slow = slow.next;
-        fast = fast.next.next;
-    }
-    return slow;
-}
-
 // [1,2,3,4,5] -> [1,4,3,2,5]
  
     public ListNode reverseBetween(ListNode head, int left, int right) {
@@ -86,6 +108,9 @@ public ListNode middleNode(ListNode head) {
         
     }
 
+```
+## 奇偶
+```Java
 // [1,2,3,4,5,6] -> [1,3,5,2,4,6]
     public ListNode oddEvenList(ListNode head) {
         if (head == null) {
@@ -107,24 +132,9 @@ public ListNode middleNode(ListNode head) {
         return head;
     }
 
-
-// [1,2,3,4,5] -> [1,3,5,2,4]
-        ListNode odd = head;
-        ListNode even = odd.next;
-        ListNode evenHead = even;
-        // [1, 2, 3, 4, 5, 6] -> [1,3][2,4,5,6]
-        //       odd
-        
-        while (even != null && even.next != null) {
-            odd.next = even.next;
-            odd = odd.next;
-            even.next = odd.next;
-            even = odd.next;
-        }
-        odd.next = evenHead;
-        return head;
-
-
+```
+## 成环问题
+```Java
 //  Intersection of Two Linked Lists
  
 public class Solution {
@@ -141,7 +151,6 @@ public class Solution {
     }
 }
 
-// 成环
 // [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
 public class Solution {
     public ListNode detectCycle(ListNode head) {
@@ -165,6 +174,40 @@ public class Solution {
         return null;
     }
 }
-
-
 ```
+
+
+
+
+## Course
+### Count related
+1. Linked list length
+2. Kth node from the end
+3. Mid node of the list
+4. Whether circle exists
+### Structure related
+5. Remove Duplicate from Sorted List
+6. Reverse Linked List
+7. *[Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)*
+8. Merge Sorted List
+9. Delete Node in a Linked List
+### Homework
+1. [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/)
+2. [Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements/)
+3. [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+4. [Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list/)
+### Homework Optional
+1. *[Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/)*
+2. *[Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)*
+3. *[Reorder List](https://leetcode.com/problems/reorder-list/#/description)*
+4. *[Rotate List](https://leetcode.com/problems/rotate-list/)*
+5. *[Partition List](https://leetcode.com/problems/partition-list/#/description)*
+6. [Palindrom Linked List](https://leetcode.com/problems/palindrome-linked-list/?tab=Description)
+7. [Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/#/submissions/1)
+## OA
+1. [Palindrom Linked List](https://leetcode.com/problems/palindrome-linked-list/?tab=Description)
+2. [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+3. *[Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)*
+
+
+

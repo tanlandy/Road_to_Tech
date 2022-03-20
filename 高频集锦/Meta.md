@@ -330,7 +330,6 @@ Output: 2
         pre = inorderDFS(node.right, node); //这时候node就是pre
         return pre;
     }
-
 ```
 14. [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
 
@@ -338,10 +337,9 @@ Output: 2
 
 15. [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 
-16. [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
 
 
-17. [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+16. [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
 
 Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 
@@ -987,7 +985,10 @@ Time and space complexity would be O(100) = O(1).
 
 2. If 99% of all integer numbers from the stream are between 0 and 100, how would you optimize it?
 
-In this case, we need an integer array of length 100 and a hashmap for these numbers that are not in [0,100].
+In this case, we need an integer array of length 100 and a counter for these numbers that are not in [0,100].
+
+I dont' think we need hashmap.
+As 99% is between 0-100. So can keep a counter for less_than_hundred and greater_than_hundred.
 
 
 
@@ -1406,6 +1407,300 @@ Output: [0,0,1,1,2,2]
     }
 ```
 
+
+3. [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+
+思路：
+Inorder traversal, sorted asending. 每次更新最后一个节点。
+需要记录最开始和最后信息
+Processing here is basically to link the previous node with the current one, and because of that one has to track the last node which is the largest node in a new doubly linked list so far.
+One more detail : one has to keep the first, or the smallest, node as well to close the ring of doubly linked list. 
+```Java
+    public Node treeToDoublyList(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Node dummy = new Node(-1, null, null); // 最开始
+        Node pre = dummy; // 最新节点
+        pre = inorderDFS(root, pre); // 记得这个函数有返回值
+        pre.right = dummy.right; // 全部结束，首位连起来,dummy.right就是head
+        dummy.right.left = pre;
+        return dummy.right;
+    }
+    
+    private Node inorderDFS(Node node, Node pre) {
+        if (node == null) { // 最后node为空的时候要返回pre
+            return pre;
+        }
+        pre = inorderDFS(node.left, pre);
+        node.left = pre;
+        pre.right = node;
+        pre = inorderDFS(node.right, node); //这时候node就是pre
+        return pre;
+    }
+```
+
+
+4. [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+
+思路一：
+An intuitive solution is to keep a hash table for each node in the list, via which we just need to iterate the list in 2 rounds respectively to create nodes and assign the values for their random pointers. As a result, the space complexity of this solution is O(N), although with a linear time complexity.
+用HashMap记录换过的，然后不断递归更新
+
+时间：O(n)
+空间：O(n)
+```Java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+    public Node random;
+
+    public Node() {}
+
+    public Node(int _val,Node _next,Node _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+public class Solution {
+  // HashMap which holds old nodes as keys and new nodes as its values.
+  HashMap<Node, Node> visitedHash = new HashMap<Node, Node>();
+  public Node copyRandomList(Node head) {
+
+    if (head == null) {
+      return null;
+    }
+
+    // If we have already processed the current node, then we simply return the cloned version of it.
+    if (this.visitedHash.containsKey(head)) {
+      return this.visitedHash.get(head);
+    }
+
+    // Create a new node with the value same as old node. (i.e. copy the node)
+    Node node = new Node(head.val, null, null);
+
+    // Save this value in the hash map. This is needed since there might be
+    // loops during traversal due to randomness of random pointers and this would help us avoid them.
+    this.visitedHash.put(head, node);
+
+    // Recursively copy the remaining linked list starting once from the next pointer and then from the random pointer.
+    node.next = this.copyRandomList(head.next);
+    node.random = this.copyRandomList(head.random);
+
+    return node;
+  }
+}
+```
+
+思路二：
+The idea is to associate the original node with its copy node in a single linked list. In this way, we don't need extra space to keep track of the new nodes.
+
+The algorithm is composed of the follow three steps which are also 3 iteration rounds.
+
+1. Iterate the original list and duplicate each node. The duplicate of each node follows its original immediately.
+2. Iterate the new list and assign the random pointer for each duplicated node.
+3. Restore the original list and extract the duplicated nodes.
+
+```Java
+/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return head;
+        }
+        // [1,2,3,4]
+        // [1,1',2,2',3,3',4,4']
+        Node cur = head;
+        while (cur != null) {
+            Node next = cur.next;
+            cur.next = new Node(cur.val);
+            cur.next.next = next;
+            cur = next;
+        }
+        
+        // random加上
+        cur = head;
+        while (cur != null) {
+            if (cur.random != null) {
+                cur.next.random = cur.random.next;
+            }
+            cur = cur.next.next;
+        }
+        
+        // 分隔开
+        // 奇数偶数
+        cur = head;
+        Node copyHead = head.next;
+        Node copy = copyHead;
+        while (copy.next != null) { // 这个条件不要忘
+            cur.next = cur.next.next;
+            cur = cur.next;
+            copy.next = copy.next.next;
+            copy = copy.next;
+        }
+        cur.next = cur.next.next; // 这句不要忘
+        return copyHead;
+    }
+}
+```
+
+5. [708. Insert into a Sorted Circular Linked List](https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/)
+
+思路：3个可能性
+时间：O(n)
+空间：O(1)
+```Java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _next) {
+        val = _val;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node insert(Node head, int insertVal) {
+        Node insertNode = new Node(insertVal);
+        if (head == null) {
+            insertNode.next = insertNode;
+            return insertNode;
+        }
+        Node cur = head;
+        // case1: [1,2,4], insert 3
+        // case2: [3,5,7], insert 2 or 8
+        // case3: [1,1,1], insert 1
+        while (cur.next != head) {
+            if (cur.val <= cur.next.val) {
+                if (cur.val <= insertVal && insertVal <= cur.next.val) { // case 1, 3
+                    break;
+                }
+            } else { 
+                if (insertVal >= cur.val || insertVal <= cur.next.val) { // case 2
+                    break;
+                }
+            }
+            cur = cur.next;
+        }
+        insertNode.next = cur.next;
+        cur.next = insertNode;
+        return head;
+    }  
+}
+```
+
+6. [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+
+```Java
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        // find the Nth node
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode cur = dummy.next; // cur = head算长度
+        int length = 0;
+        while (cur != null) {
+            cur = cur.next;
+            length++;
+        }
+        int delete = length - n;
+        cur = dummy;     // cur = dummy确定删除的点
+        while (delete > 0) {
+            cur = cur.next;
+            delete--;
+        }
+        cur.next = cur.next.next;
+        return dummy.next;
+    }
+```
+
+7. [116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/)
+
+思路：
+横向遍历，在中间的时候加，走到最后就不要加
+时间：O(n)
+空间：O(n)
+```Java
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                if (i < size - 1) {
+                    node.next = queue.peek();
+                }
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+        }
+        return root;
+    }
+```
+
+思路二：
+站在上一层，操作下一层
+时间：O(n)
+空间：O(1)
+```Java
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+        Node levelStart = root;
+        while (levelStart.left != null) {
+            Node head = levelStart;
+            while (head != null) {
+                head.left.next = head.right;
+                if (head.next != null) { // 如果右边有东西的话
+                    head.right.next = head.next.left;
+                }
+                head = head.next; // 走到右边
+            }
+            levelStart = levelStart.left; // 走到下一层
+        }
+        return root;
+    }
+```
+
+8. [114. Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/)
+
+9. [109. Convert Sorted List to Binary Search Tree](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/)
 
 
 ### Todo
