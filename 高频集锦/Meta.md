@@ -2111,6 +2111,113 @@ Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8
 13. [825. Friends Of Appropriate Ages](https://leetcode.com/problems/friends-of-appropriate-ages/)
 
 
+14. [297](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+
+```Java
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) { // 不能少
+            return "";
+        }
+        // use queue to serialize
+        Queue<TreeNode> queue = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
+        queue.offer(root); // 把根节点放进来
+        while (!queue.isEmpty()) { // 一次走一个节点
+            TreeNode node = queue.poll();
+            if (node == null) { // 如果是空，就放进来空，然后跳过这个节点
+                sb.append("null ");
+                continue;
+            }
+            sb.append(node.val + " ");
+            queue.offer(node.left);
+            queue.offer(node.right);
+        }
+        return sb.toString();
+        
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data == "") { // 不能少
+            return null;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        String[] values = data.split(" ");                          // 先搞一个数组存起来
+        TreeNode root = new TreeNode(Integer.parseInt(values[0]));  // String转成数字的方法
+        queue.offer(root);
+        for (int i = 1; i < values.length; i++) {
+            TreeNode top = queue.poll();
+            if (!values[i].equals("null")) {
+                TreeNode left = new TreeNode(Integer.parseInt(values[i]));
+                top.left = left;
+                queue.offer(left);
+            }
+            if (!values[++i].equals("null")) {
+                TreeNode right = new TreeNode(Integer.parseInt(values[i]));
+                top.right = right;
+                queue.offer(right);
+            }
+        }
+        return root;
+        
+    }
+```
+
+15. [314. Binary Tree Vertical Order Traversal](https://leetcode.com/problems/binary-tree-vertical-order-traversal/)
+
+Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).
+
+If two nodes are in the same row and column, the order should be from left to right.
+
+思路：
+Queue存<node, col>
+用一个HashMap<col, oneRes>
+遍历的时候，更新HashMap
+最后用HashMap来导出，但是不知道最小值最大值，所以实时更新一下
+时间：O(N)
+空间：O(N)
+
+```Java
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        // HashMap<col, oneRes>
+        // Queue<TreeNode, col>
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        Queue<Pair<TreeNode, Integer>> queue = new LinkedList<>(); // 注意如何定义
+        Map<Integer, ArrayList> map = new HashMap<>();
+        int col = 0;
+        int minCol = 0;
+        int maxCol = 0;
+        queue.offer(new Pair(root, col)); // 注意如何offer pair
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Pair<TreeNode, Integer> top = queue.poll();
+                TreeNode node = top.getKey();
+                col = top.getValue();
+                if (!map.containsKey(col)) {
+                    map.put(col, new ArrayList<>());
+                }
+                map.get(col).add(node.val);
+                if (node.left != null) {
+                    queue.offer(new Pair(node.left, col - 1)); // 加左边
+                }
+                if (node.right != null) {
+                    queue.offer(new Pair(node.right, col + 1)); // 加右边
+                }
+                minCol = Math.min(minCol, col); // 为了帮助最后的导出
+                maxCol = Math.max(maxCol, col);
+            }                               
+        }
+        for (int i = minCol; i <= maxCol; i++) {
+            res.add(map.get(i));
+        }
+        return res;
+    }
+```
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
