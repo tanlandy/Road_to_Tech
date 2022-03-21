@@ -2219,6 +2219,130 @@ Queue存<node, col>
     }
 ```
 
+16. [987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
+
+The vertical order traversal of a binary tree is a list of top-to-bottom orderings for each column index starting from the leftmost column and ending on the rightmost column. There may be multiple nodes in the same row and same column. In such a case, sort these nodes by their values.
+
+思路：
+与上一题唯一不同就是需要排个序
+方法就是每一层用一个rowMap，把rowMap排序好之后再放进大的map里。因此都不需要minmaxCol，
+```Java
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        // HashMap<col, oneRes>
+        // Queue<TreeNode, col>
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        Queue<Pair<TreeNode, Integer>> queue = new LinkedList<>(); // 注意如何定义，注意注意是Queue<Pair<TreeNode, Integer>>
+        Map<Integer, ArrayList> map = new HashMap<>();
+        int col = 0;
+        int minCol = 0;
+        int maxCol = 0;
+        queue.offer(new Pair(root, col)); // 注意如何offer pair
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            Map<Integer, ArrayList> rowMap = new HashMap<>(); // 唯一不同，每一层新建一个rowMap帮助排序
+            
+            for (int i = 0; i < size; i++) {
+                Pair<TreeNode, Integer> top = queue.poll();
+                TreeNode node = top.getKey();
+                col = top.getValue();
+                if (!rowMap.containsKey(col)) {
+                    rowMap.put(col, new ArrayList<>());
+                }
+                rowMap.get(col).add(node.val);
+                
+                if (node.left != null) {
+                    queue.offer(new Pair(node.left, col - 1)); // 加左边
+                }
+                if (node.right != null) {
+                    queue.offer(new Pair(node.right, col + 1)); // 加右边
+                }
+                minCol = Math.min(minCol, col); // 为了帮助最后的导出
+                maxCol = Math.max(maxCol, col);
+            }
+            
+            for (int key : rowMap.keySet()) { // 唯一不同，排序之后加到map里面
+                if (!map.containsKey(key)) { // 没有的话加进来
+                    map.put(key, new ArrayList<>());
+                }
+                ArrayList tmp = rowMap.get(key);  // 提取出来oneRes
+                Collections.sort(tmp);
+                map.get(key).addAll(tmp);     // 注意addAll方法
+            }                                      
+        }
+        for (int i = minCol; i <= maxCol; i++) {
+            res.add(map.get(i));
+        }
+        return res;
+    }
+```
+
+## 3.22
+1. [339. Nested List Weight Sum](https://leetcode.com/problems/nested-list-weight-sum/)
+
+Input: nestedList = [[1,1],2,[1,1]]
+Output: 10
+Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 = 10.
+
+方法一：BFS
+时间：O(n)
+空间：O(n)
+
+```Java
+    public int depthSum(List<NestedInteger> nestedList) {
+        Queue<NestedInteger> queue = new LinkedList<>();
+        queue.addAll(nestedList); // 注意这个addAll方法
+        int depth = 1;
+        int count = 0;
+        while (!queue.isEmpty()) { // 一次走一层
+            int size = queue.size();
+            for (int i = 0; i < size; i++) { // 一次走一个点
+                NestedInteger nest = queue.poll();
+                if (nest.isInteger()) {
+                    count += depth * nest.getInteger();
+                } else {
+                    queue.addAll(nest.getList());
+                }
+            }
+            depth++;
+        }
+        return count;
+    }
+```
+
+2. [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
+
+思路：BFS level order遍历，当走到最右的时候，更新res
+```Java
+    public List<Integer> rightSideView(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<Integer> res = new ArrayList<>();
+        if (root == null) {
+            return res;        
+        }
+        queue.offer(root);     
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+                if (i == size - 1) {
+                    res.add(node.val);
+                }
+            }
+        }
+        return res;      
+    }
+```
+
+
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
 [括号相关](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247487246&idx=1&sn=4a514020ce9dc8777e2d1d503188b62b&scene=21#wechat_redirect)
