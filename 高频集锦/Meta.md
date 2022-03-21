@@ -1774,7 +1774,7 @@ class Solution {
     }
 }
 ```
-2. [1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/)
+2. [1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) 复习了sliding window之后再看
 
 Given a binary array nums and an integer k, return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
 
@@ -1906,23 +1906,209 @@ arr[idx]的missing个数是arr[idx] - 1 - idx
 
 ```
 
-6. [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/) 图遍历+二叉搜索
+6. [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/) BFS图遍历+堆；之后再看
 
 
 7. [1060. Missing Element in Sorted Array](https://leetcode.com/problems/missing-element-in-sorted-array/)
+Given an integer array nums which is sorted in ascending order and all of its elements are unique and given also an integer k, return the kth missing number starting from the leftmost number of the array.
 
+Input: nums = [4,7,9,10], k = 3
+Output: 8
+Explanation: The missing numbers are [5,6,8,...], hence the third missing number is 8.
+
+思路：
+nums[i]之前的missing个数是nums[i] - nums[0] - i
+找到nums[i] < k < nums[i+1]的missing个数的位置
+返回nums[i] + k - (nums[i] - nums[0] - i) = k + nums[0] + i
+```Java
+
+    public int missingElement(int[] nums, int k) {
+        int l = 0;
+        int r = nums.length - 1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] - nums[0] - mid < k) {
+                l = mid + 1; 
+            } else {
+                r = mid - 1;
+            }
+        }
+        return k + nums[0] + r;
+    }
+
+```
 
 8. [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
+Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
+
+If target is not found in the array, return [-1, -1].
+
+You must write an algorithm with O(log n) runtime complexity.
+
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+
+```Java
+
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int l = 0;
+        int r = nums.length - 1;
+        // find left most
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] == target) {
+                r = mid - 1;
+            } else if (nums[mid] < target) {
+                l = mid + 1;
+            } else if (nums[mid] > target) {
+                r = mid - 1;
+            }
+        }
+        int[] res = new int[2];
+        res[0] = l;
+        if (l >= nums.length || nums[l] != target) {
+            res[0] = -1;
+        }
+        
+        // find right most
+        l = 0;
+        r = nums.length - 1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] == target) {
+                l = mid + 1;
+            } else if (nums[mid] < target) {
+                l = mid + 1;
+            } else if (nums[mid] > target) {
+                r = mid - 1;
+            }
+        }
+        res[1] = r;
+        if (r < 0 || nums[r] != target) {
+            res[1] = -1;
+        }
+        return res;
+    }
+}
+
+```
 
 9. [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
 
+```Java
+    public int search(int[] nums, int target) {
+        int l = 0;
+        int r = nums.length - 1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] >= nums[l]) { // 判断出来左边sorted
+                if (nums[l] <= target && target < nums[mid]) {
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            } else {
+                if (nums[mid] < target && target <= nums[r]) {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+```
 
-10. [2071. Maximum Number of Tasks You Can Assign](https://leetcode.com/problems/maximum-number-of-tasks-you-can-assign/)
+10. [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)
+
+Input: nums = [2,5,6,0,0,1,2], target = 0
+Output: true
+
+```Java
+    public boolean search(int[] nums, int target) {
+        int l = 0;
+        int r = nums.length - 1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] == target) {
+                return true;
+            } else if (nums[mid] > nums[l] || nums[mid] > nums[r]) { // 判断左边是sorted，与上题的判断方式有所区别
+                if (nums[l] <= target && target < nums[mid]) {
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            } else if (nums[mid] < nums[l] || nums[mid] < nums[r]) { // 右边是sorted
+                if (nums[mid] < target && target <= nums[r]) {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            } else { // 唯一区别，考虑都是相同点的情况
+                l++;
+            }
+        }
+        return false;
+    }   
+```
+
+11. [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) 378的前序题目
+
+思路一：看作array，取数字的时候就是matrix[mid / cols][mid % cols]
+时间：O(logmn)
+```Java
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0) {
+            return false;
+        }
+        int start = 0, rows = matrix.length, cols = matrix[0].length;
+        int end = rows * cols - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (matrix[mid / cols][mid % cols] == target) {
+                return true;
+            } 
+            if (matrix[mid / cols][mid % cols] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return false;
+    }
+```
+
+思路二：分别按照行、列，用2次二分查找
+时间：O(logm) + O(logn)
+```Java
+// TL, DR
+
+```
 
 
-11. [378. Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+12.  [378. Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/) 做完LC74，复习Heap之后，看掌握2种方法
 
+Given an n x n matrix where each of the rows and columns is sorted in ascending order, return the kth smallest element in the matrix.
+
+Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+
+You must find a solution with a memory complexity better than O(n2).
+
+Input: matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
+Output: 13
+Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8th smallest number is 13
+
+思路：
+
+```Java
+
+```
+
+13. [825. Friends Of Appropriate Ages](https://leetcode.com/problems/friends-of-appropriate-ages/)
 
 
 
