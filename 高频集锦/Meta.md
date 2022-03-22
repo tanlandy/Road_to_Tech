@@ -2342,6 +2342,14 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
     }
 ```
 
+# 3.22
+1. [252. Meeting Rooms](https://leetcode.com/problems/meeting-rooms/)
+
+
+2. [253. Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
+
+
+3. [273. Integer to English Words](https://leetcode.com/problems/integer-to-english-words/)
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)

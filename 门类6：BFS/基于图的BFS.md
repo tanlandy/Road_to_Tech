@@ -323,9 +323,65 @@ return -1
 
 2. [463. Island Perimeter](https://leetcode.com/problems/island-perimeter/)
 
+方法一：
+只计算和水相邻的边
+
+时间：O(mn)
+空间：O(1)
+```Java
+    public int islandPerimeter(int[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+    
+        int num = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 1) {
+                    if (i == 0 || grid[i - 1][j] == 0) num++; // up
+                    if (j == 0 || grid[i][j - 1] == 0) num++; // left
+                    if (i == rows -1 || grid[i + 1][j] == 0) num++; // DOWN
+                    if (j == cols -1 || grid[i][j + 1] == 0) num++; // RIGHT
+                }
+            }
+        }
+        return num;
+    }
+```
+
 3. [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
+
+方法一：BFS
+map<原来node, 对应的复制的node>，防止成环带来的重复
+遍历每个节点的neighbor
+要是没见过，就新建一个
+要是见过，就直接加到这个neighbor的neighbor里
+时间：O(N+M) N是node数量，M是edges数量
+空间：O(N)
+```Java
+    public Node cloneGraph(Node node) {
+        if (node == null) {
+            return node;
+        }
+        HashMap<Node, Node> visited = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(node);
+        visited.put(node, new Node(node.val, new ArrayList()));
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+            for (Node neighbor : cur.neighbors) {
+                if (!visited.containsKey(neighbor)) { // Clone the neighbor and put in the visited, if not present already
+                    visited.put(neighbor, new Node(neighbor.val, new ArrayList()));
+                    queue.offer(neighbor);
+                }
+                visited.get(cur).neighbors.add(visited.get(neighbor)); // Add the clone of the neighbor to the neighbors of the clone node "n".
+            }
+        }
+        return visited.get(node);
+    }
+```
 
 4. [317. Shortest Distance from All Buildings](https://leetcode.com/problems/shortest-distance-from-all-buildings/)
 
 5. [127. Word Ladder](https://leetcode.com/problems/word-ladder/)
 
+6. [1293. Shortest Path in a Grid with Obstacles Elimination](https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/)
