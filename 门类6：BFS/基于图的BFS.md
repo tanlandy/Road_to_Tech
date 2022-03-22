@@ -33,7 +33,293 @@ int BFS(Node root, Node target) {
 }
 ```
 
+另一个模板：8个方向
+```Java
+
+directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+
+define function get_neighbors(row, col):
+neighbors = a container to put the neighbors of (row, col) in
+    for each (row_direction, col_direction) pair in directions:
+        neighbor_row = row + row_direction
+        neighbor_col = col + col_direction
+        if (neighbor_row, neighbor_col) is NOT over the edge of the grid AND is 0:
+            add (neighbor_row, neighbor_col) to neighbors
+    return neighbors
+```
+
+
 1. [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+思路一：
+
+直接在原来的grid上改，每个格子记录当前的distance，每次走一个就+1
+queue每次把满足条件的放进来，放进来之后更新这个格子的distance
+时间：O(n)
+空间：O(n)
+```Java
+    private static final int[][] directions = 
+        new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        
+        // Firstly, we need to check that the start and target cells are open.
+        if (grid[0][0] != 0 || grid[grid.length - 1][grid[0].length - 1] != 0) {
+            return -1;
+        }
+        
+        // Set up the BFS.
+        Queue<int[]> queue = new ArrayDeque<>();
+        grid[0][0] = 1;
+        queue.add(new int[]{0, 0});
+        
+        // Carry out the BFS
+        while (!queue.isEmpty()) {
+            int[] cell = queue.remove();
+            int row = cell[0];
+            int col = cell[1];
+            int distance = grid[row][col];
+            if (row == grid.length - 1 && col == grid[0].length - 1) {
+                return distance;
+            }
+            for (int[] neighbour : getNeighbours(row, col, grid)) {
+                int neighbourRow = neighbour[0];
+                int neighbourCol = neighbour[1];
+                queue.add(new int[]{neighbourRow, neighbourCol});
+                grid[neighbourRow][neighbourCol] = distance + 1;
+            }
+        }
+        
+        // The target was unreachable.
+        return -1;
+    }
+    
+    private List<int[]> getNeighbours(int row, int col, int[][] grid) {
+        List<int[]> neighbours = new ArrayList<>();
+        for (int i = 0; i < directions.length; i++) {
+            int newRow = row + directions[i][0];
+            int newCol = col + directions[i][1];
+            if (newRow < 0 || newCol < 0 || newRow >= grid.length 
+                    || newCol >= grid[0].length
+                    || grid[newRow][newCol] != 0) {
+                continue;    
+            }
+            neighbours.add(new int[]{newRow, newCol});
+        }
+        return neighbours; 
+     }
+```
+
+
+思路一overwriting的弊端：
+
+1. That the algorithm is running in a *multithreaded* environment, and it does not have exclusive access to the grid. Other threads might need to read the grid too, and might not expect it to be modified.
+在多线程环境中读取，不止有自己在读，所以不能更改
+
+
+2. That there is only a single thread or the algorithm has exclusive access to the grid while running, but the grid might need to be reused later or by another thread once the lock has been released.
+这个grid之后可能被复用
+
+
+思路二： 
+用一个visited，并且把distance直接存储在queue里
+
+```Java 
+    private static final int[][] directions = 
+        new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    
+    
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        
+        // Firstly, we need to check that the start and target cells are open.
+        if (grid[0][0] != 0 || grid[grid.length - 1][grid[0].length - 1] != 0) {
+            return -1;
+        }
+        
+        // Set up the BFS.
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{0, 0, 1}); // Put distance on the queue
+        boolean[][] visited = new boolean[grid.length][grid[0].length]; // Used as visited set.
+        visited[0][0] = true;
+        
+        // Carry out the BFS
+        while (!queue.isEmpty()) {
+            int[] cell = queue.remove();
+            int row = cell[0];
+            int col = cell[1];
+            int distance = cell[2];
+            // Check if this is the target cell.
+            if (row == grid.length - 1 && col == grid[0].length - 1) {
+                return distance;
+            }
+            for (int[] neighbour : getNeighbours(row, col, grid)) {
+                int neighbourRow = neighbour[0];
+                int neighbourCol = neighbour[1];
+                if (visited[neighbourRow][neighbourCol]) {
+                    continue;
+                }
+                visited[neighbourRow][neighbourCol] = true;
+                queue.add(new int[]{neighbourRow, neighbourCol, distance + 1});
+            }
+        }
+        
+        // The target was unreachable.
+        return -1;  
+    }
+    
+    private List<int[]> getNeighbours(int row, int col, int[][] grid) {
+        List<int[]> neighbours = new ArrayList<>();
+        for (int i = 0; i < directions.length; i++) {
+            int newRow = row + directions[i][0];
+            int newCol = col + directions[i][1];
+            if (newRow < 0 || newCol < 0 || newRow >= grid.length 
+                    || newCol >= grid[0].length
+                    || grid[newRow][newCol] != 0) {
+                continue;    
+            }
+            neighbours.add(new int[]{newRow, newCol});
+        }
+        return neighbours; 
+    }
+```
+
+思路三： A*
+feel free to briefly mention A* as a possibility in the initial "approaches" discussion, but unless the interviewer encourages you to pursue it, then you should point out that BFS is a far simpler approach, ideal for this particular problem. If you coded your BFS very quickly, then explaining and possibly implementing A* is a possible follow up question you could be asked.
+
+We'll keep track of potential options into cells that we haven't yet visited using a priority queue. To keep track of distances, we'll simply use the "distances on queue" method from Approach 2. This means that we'll be putting 4 values onto the queue for each option; row, column, distance so far, and estimate of the total distance.
+
+伪代码
+```Java
+total_rows = number of rows in grid
+total_cols = number of cols in gird
+
+visited = a new set
+queue = a new PRIORITY queue
+enqueue (0, 0, 1, max of total_rows and total_cols)
+add (0, 0) to visited
+
+while the queue is not empty:
+
+    row, col, distance, estimate = dequeue and unpack an option
+    if (row, col) is the bottom right cell:
+        return distance
+
+    if (row, col) in visited:
+        skip processing this option
+    
+    add (row, col) to visited
+
+    for each unvisited neighbor of (row, col):
+        otherwise calculate best case estimate to end
+        enqueue option
+            (neighbor_row, neighbor_col, distance + 1, estimate + distance + 1)
+
+return -1
+```
+
+时间：O(NlogN)
+空间：O(N)
+```Java
+   
+    // Candidate represents a possible option for travelling to the cell
+    // at (row, col).
+    class Candidate {
+        
+        public int row;
+        public int col;
+        public int distanceSoFar;
+        public int totalEstimate;
+        
+        public Candidate(int row, int col, int distanceSoFar, int totalEstimate) {
+            this.row = row;
+            this.col = col;
+            this.distanceSoFar = distanceSoFar;
+            this.totalEstimate = totalEstimate;
+        }
+    }
+    
+    
+    private static final int[][] directions = 
+        new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    
+    
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        
+        // Firstly, we need to check that the start and target cells are open.
+        if (grid[0][0] != 0 || grid[grid.length - 1][grid[0].length - 1] != 0) {
+            return -1;
+        }
+        
+        // Set up the A* search.
+        Queue<Candidate> pq = new PriorityQueue<>((a,b) -> a.totalEstimate - b.totalEstimate);
+        pq.add(new Candidate(0, 0, 1, estimate(0, 0, grid)));
+        
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        
+        // Carry out the A* search.
+        while (!pq.isEmpty()) {
+            
+            Candidate best = pq.remove();
+            
+            // Is this for the target cell?
+            if (best.row == grid.length - 1 && best.col == grid[0].length - 1) {
+                return best.distanceSoFar;
+            }
+            
+            // Have we already found the best path to this cell?
+            if (visited[best.row][best.col]) {
+                continue;
+            }
+            
+            visited[best.row][best.col] = true;
+            
+            for (int[] neighbour : getNeighbours(best.row, best.col, grid)) {
+                int neighbourRow = neighbour[0];
+                int neighbourCol = neighbour[1];
+                
+                // This check isn't necessary for correctness, but it greatly
+                // improves performance.
+                if (visited[neighbourRow][neighbourCol]) {
+                    continue;
+                }
+                
+                // Otherwise, we need to create a Candidate object for the option
+                // of going to neighbor through the current cell.
+                int newDistance = best.distanceSoFar + 1;
+                int totalEstimate = newDistance + estimate(neighbourRow, neighbourCol, grid);
+                Candidate candidate = 
+                    new Candidate(neighbourRow, neighbourCol, newDistance, totalEstimate);
+                pq.add(candidate);
+            }   
+        }
+        // The target was unreachable.
+        return -1;  
+    }
+    
+    private List<int[]> getNeighbours(int row, int col, int[][] grid) {
+        List<int[]> neighbours = new ArrayList<>();
+        for (int i = 0; i < directions.length; i++) {
+            int newRow = row + directions[i][0];
+            int newCol = col + directions[i][1];
+            if (newRow < 0 || newCol < 0 || newRow >= grid.length 
+                    || newCol >= grid[0].length
+                    || grid[newRow][newCol] != 0) {
+                continue;    
+            }
+            neighbours.add(new int[]{newRow, newCol});
+        }
+        return neighbours; 
+    }
+    
+    // Get the best case estimate of how much further it is to the bottom-right cell.
+    private int estimate(int row, int col, int[][] grid) {
+        int remainingRows = grid.length - row - 1;
+        int remainingCols = grid[0].length - col - 1;
+        return Math.max(remainingRows, remainingCols);
+    }
+
+```
+
 
 2. [463. Island Perimeter](https://leetcode.com/problems/island-perimeter/)
 
