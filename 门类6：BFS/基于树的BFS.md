@@ -43,7 +43,7 @@ class Solution {
 }
 ```
 
-2. [103](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
+2. [103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
 
 ```Java
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
@@ -77,7 +77,7 @@ class Solution {
     }
 ```
 
-3. [297](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+3. [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
 
 ```Java
     // Encodes a tree to a single string.
