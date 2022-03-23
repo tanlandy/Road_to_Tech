@@ -2345,11 +2345,137 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
 # 3.22
 1. [252. Meeting Rooms](https://leetcode.com/problems/meeting-rooms/)
 
+思路：
+用一个comparator，排序之后一个一个比较
+时间：O(NlogN) 排序用到的时间
+空间：O(1)
+```Java
+    public boolean canAttendMeetings(int[][] intervals) {
+        Arrays.sort(intervals, 
+                   new Comparator<int[]>() {
+                       public int compare(int[] a, int[] b) {
+                           return a[0] - b[0];
+                       }
+                   });
+        for (int i = 0; i < intervals.length - 1; i++) {
+            if (intervals[i + 1][0] < intervals[i][1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+```
 
 2. [253. Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
 
+Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.
+
+Input: intervals = [[0,30],[5,10],[15,20]]
+Output: 2
+
+思路：
+用一个minHeap存储当前的end值，每次遇见一个新的meeting，和最小值来比较，最后minHeap的size就是room数量
+
+时间：O(NlogN)
+空间：O(N)
+
+```Java
+
+    public int minMeetingRooms(int[][] intervals) {
+        // 先sort一下intervals
+        Arrays.sort(intervals,
+                   new Comparator<int[]>() {
+                       public int compare(int[] a, int[] b) {
+                           return a[0] - b[0];
+                       }
+                   });
+        // 用minHeap，把end放在堆顶，每次都更新end
+        PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>(
+            intervals.length,                               // 注意初始化方式
+            new Comparator<Integer>() {
+                public int compare(Integer a, Integer b) {  // 注意这里用的是Integer
+                    return a - b;
+                }
+            });
+        
+        minHeap.add(intervals[0][1]);                       // 先放进去第一个end
+        for (int i = 1; i < intervals.length; i++) {       
+            if (intervals[i][0] >= minHeap.peek()) {        // 如果不冲突，就可以释放一个房间
+                minHeap.poll();
+            }
+            minHeap.add(intervals[i][1]);                   // 每次都更新end值
+        }
+        return minHeap.size();
+    }
+
+```
 
 3. [273. Integer to English Words](https://leetcode.com/problems/integer-to-english-words/)
+
+```Java
+
+    private final String[] belowTen = new String[] {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+    private final String[] belowTwenty = new String[] {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    private final String[] belowHundred = new String[] {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    
+    public String numberToWords(int num) {
+        if (num == 0) {
+            return "Zero";
+        }
+        return helper(num);
+    }
+    
+    private String helper(int num) {
+        String res = new String();
+        if (num < 10) {
+            res = belowTen[num];
+        } else if (num < 20) {
+            res = belowTwenty[num - 10];
+        } else if (num < 100) {
+            res = belowHundred[num / 10] + " " + helper(num % 10);
+        } else if (num < 1000) {
+            res = helper(num / 100) + " Hundred " + helper(num % 100); // 1000 以下用百计数
+        } else if (num < 1000000) {
+            res = helper(num / 1000) + " Thousand " + helper(num % 1000);
+        } else if (num < 1000000000) {
+            res = helper(num / 1000000) + " Million " + helper(num % 1000000);
+        } else {
+            res = helper(num / 1000000000) + " Billion " + helper(num % 1000000000);
+        }
+        return res.trim(); // 把开头结尾的空格给删掉
+    }
+
+```
+
+
+4. [332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
+
+First keep going forward until you get stuck. That's a good main path already. Remaining tickets form cycles which are found on the way back and get merged into that main path. By writing down the path backwards when retreating from recursion, merging the cycles into the main path is easy - the end part of the path has already been written, the start part of the path hasn't been written yet, so just write down the cycle now and then keep backwards-writing the path.
+
+```Java
+
+    Map<String, PriorityQueue<String>> flights;
+    LinkedList<String> path;
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        flights = new HashMap<>();
+        path = new LinkedList<>();
+        for (List<String> ticket : tickets) {
+            flights.putIfAbsent(ticket.get(0), new PriorityQueue<>());
+            flights.get(ticket.get(0)).add(ticket.get(1));
+        }
+        dfs("JFK");
+        return path;
+    }
+
+    public void dfs(String departure) {
+        PriorityQueue<String> arrivals = flights.get(departure);
+        while (arrivals != null && !arrivals.isEmpty())
+            dfs(arrivals.poll());
+        path.addFirst(departure);
+    }
+
+```
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)

@@ -6,4 +6,5 @@
 
 4. [126. Word Ladder II](https://leetcode.com/problems/word-ladder-ii/)
 
-4. [79. Word Search](https://leetcode.com/problems/word-search/)
+5. [79. Word Search](https://leetcode.com/problems/word-search/)
+
