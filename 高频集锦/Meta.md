@@ -291,18 +291,6 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
 
 ```
 
-12. [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
-
-Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
-
-Input: nums = [1,1,1], k = 2
-Output: 2
-
-```Java
-
-
-
-```
 
 
 13. [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
@@ -2342,6 +2330,30 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
     }
 ```
 
+思路二：DFS
+```Java
+    List<Integer> rightside = new ArrayList();
+    
+    public void helper(TreeNode node, int level) {
+        if (level == rightside.size()) 
+            rightside.add(node.val);
+        
+        if (node.right != null) 
+            helper(node.right, level + 1);  
+        if (node.left != null) 
+            helper(node.left, level + 1);
+    }    
+    
+    public List<Integer> rightSideView(TreeNode root) {
+        if (root == null) return rightside;
+        
+        helper(root, 0);
+        return rightside;
+    }
+
+
+```
+
 # 3.22
 1. [252. Meeting Rooms](https://leetcode.com/problems/meeting-rooms/)
 
@@ -2476,6 +2488,106 @@ First keep going forward until you get stuck. That's a good main path already. R
     }
 
 ```
+
+# 3.23
+
+1. [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
+
+Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
+
+A palindrome string is a string that reads the same backward as forward.
+
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+
+
+思路：
+
+"aab" 
+"a"       |"aa" | "aab"
+"a", "ab" |"b"
+"b"
+
+时间：O(2^N) 当所有的substrings都是palindrome
+空间：O(N) n is s.length()
+```Java
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        dfs(res, s, 0, new ArrayList<String>());
+        return res;
+    }
+    private void dfs(List<List<String>> res, String s, int start, List<String> oneRes) {
+        if (s.length() == start) {
+            res.add(new ArrayList<>(oneRes));
+            return;
+        }
+
+        for (int end = start; end < s.length(); i++) { 
+            String curS = s.substring(start, end + 1);       
+            if (isValid(curS)) {
+                oneRes.add(curS);
+                dfs(res, s, end + 1, oneRes);
+                oneRes.remove(oneRes.size() - 1);
+            }
+        }
+    }
+    private boolean isValid(String s) {
+        int l = 0;
+        int r = s.length() - 1;
+        while (l < r) {
+            if (s.charAt(l) != s.charAt(r)) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+
+```
+
+
+1. [415. Add Strings](https://leetcode.com/problems/add-strings/)
+
+Given two non-negative integers, num1 and num2 represented as string, return the sum of num1 and num2 as a string.
+
+You must solve the problem without using any built-in library for handling large integers (such as BigInteger). You must also not convert the inputs to integers directly.
+
+Input: num1 = "456", num2 = "77"
+Output: "533"
+
+
+2. [346]
+
+
+3. [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+
+```Java
+
+
+
+```
+
+4. [146]
+
+
+5. [1331]
+
+
+6. [1868. Product of Two Run-Length Encoded Arrays](https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/)
+
+
+7. [1570. Dot Product of Two Sparse Vectors](https://leetcode.com/problems/dot-product-of-two-sparse-vectors/)
+
+
+
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
