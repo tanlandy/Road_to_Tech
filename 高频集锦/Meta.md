@@ -2723,6 +2723,92 @@ class Solution {
 
 ```
 
+## 3.24
+
+
+2. [863. All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/)
+
+Given the root of a binary tree, the value of a target node target, and an integer k, return an array of the values of all nodes that have a distance k from the target node.
+
+You can return the answer in any order.
+
+思路：
+用一个HashMap<>存储<Parent Node, cur Node>
+然后针对从target，找出来距离为K的每一个点
+```Java
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+   
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        Map<TreeNode, TreeNode> parent = new HashMap<>();
+        dfs(root, null, parent);
+
+        Queue<TreeNode> queue = new LinkedList();
+        queue.add(null);
+        queue.add(target);
+
+        Set<TreeNode> seen = new HashSet();
+        seen.add(target);
+        seen.add(null);
+
+        int dist = 0;
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node == null) {
+                if (dist == K) {
+                    List<Integer> ans = new ArrayList();
+                    for (TreeNode n: queue)
+                        ans.add(n.val);
+                    return ans;
+                }
+                queue.offer(null);
+                dist++;
+            } else {
+                if (!seen.contains(node.left)) {
+                    seen.add(node.left);
+                    queue.offer(node.left);
+                }
+                if (!seen.contains(node.right)) {
+                    seen.add(node.right);
+                    queue.offer(node.right);
+                }
+                TreeNode par = parent.get(node);
+                if (!seen.contains(par)) {
+                    seen.add(par);
+                    queue.offer(par);
+                }
+            }
+        }
+
+        return new ArrayList<Integer>();
+    }
+
+    private void dfs(TreeNode node, TreeNode par, Map<TreeNode, TreeNode> parent) {
+        if (node != null) {
+            parent.put(node, par);
+            dfs(node.left, node, parent);
+            dfs(node.right, node, parent);
+        }
+    }
+}
+
+```
+
+
+3. [865. Smallest Subtree with all the Deepest Nodes](https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/)
+
+
+
+
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
 [括号相关](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247487246&idx=1&sn=4a514020ce9dc8777e2d1d503188b62b&scene=21#wechat_redirect)

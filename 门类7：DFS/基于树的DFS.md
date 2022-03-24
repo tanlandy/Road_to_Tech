@@ -205,7 +205,7 @@ class Solution {
     }
 ```
 
-1. [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
+2. [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
 
 ```Java
 /**
