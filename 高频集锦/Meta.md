@@ -139,28 +139,24 @@ class PickWithWeight{
         return -1;
     }
 
-    public int pickIndex() { // Time: O(logn) Space: O(1)
-        // generate random num [0,1)
-        // find the first prefix sum that's larger than target
-        // return that index
-        double target = this.totalSum * Math.random();
-        return binarySearch(target, 0, prefixSums.length);
+    public int pickIndex() {
+        double target = sum * Math.random();
+        return binarySearch(target, 0, preSum.length - 1);
     }
     
-    private int binarySearch(double target, int left, int right) {
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            if (target > this.prefixSums[mid]) {
-                left = mid + 1;
+    private int binarySearch(double target, int l, int r) {
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (preSum[mid] == target) {
+                return mid;
+            } else if (preSum[mid] < target) {
+                l = mid + 1;
             } else {
-                right = mid;
+                r = mid - 1;
             }
         }
-        return left;
+        return l;
     }
-
-
-
 }
 
 ```
@@ -236,14 +232,14 @@ class CheckValidAbbr{
                 j++;
                 continue;
             }
-            if (abbr.charAt(j) <= '0' || abbr.charAt(j) > '9') {
+            if (abbr.charAt(j) <= '0' || abbr.charAt(j) > '9') { // 有一个=0， 因为不能是先为0
                 return false;
             }
             int start = j;
             while (j < abbr.length() && abbr.charAt(j) <= '9' && abbr.charAt(j) >= '0') {
                 j++;
             }
-            int num = Integer.valueOf(abbr.substring(start, j));
+            int num = Integer.valueOf(abbr.substring(start, j)); // 要走10几步
             i += num;
         }
         return i == word.length() && j == abbr.length();
@@ -2583,11 +2579,110 @@ Output: 2
 
 6. [1868. Product of Two Run-Length Encoded Arrays](https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/)
 
+```Java
+    public List<List<Integer>> findRLEArray(int[][] encoded1, int[][] encoded2) {
+        
+        List<List<Integer>> result = new ArrayList<>();
+        
+        int e1 = 0, e2 = 0;
+        
+        while(e1 < encoded1.length) {
+            int[] first = encoded1[e1];
+            int[] second = encoded2[e2];
+            
+            
+            int common = Math.min(first[1], second[1]);
+            int mul = first[0] * second[0];
+            
+            if(!result.isEmpty() && result.get(result.size() - 1).get(0) == mul) {
+                List<Integer> prev = result.get(result.size() - 1);
+                int prevFreq = prev.get(1);
+                prev.set(1, prevFreq + common);
+                result.set(result.size() - 1, prev);
+            } else {
+                List<Integer> current = new ArrayList<>();
+                current.add(mul);
+                current.add(common);
+                result.add(current);
+            }
+            
+            first[1] -= common;
+            second[1] -= common;
+            
+            if(first[1] == 0) e1++;
+            if(second[1] == 0) e2++;
+        }
+        
+        return result;
+    }
+```
+
 
 7. [1570. Dot Product of Two Sparse Vectors](https://leetcode.com/problems/dot-product-of-two-sparse-vectors/)
 
+方法一：
+最朴实无华的
+```Java
+class SparseVector {
+    int[] array;
+    
+    SparseVector(int[] nums) {
+        array = nums;
+    }
+    
+	// Return the dotProduct of two sparse vectors
+    public int dotProduct(SparseVector vec) {
+        int res = 0;
+        for (int i = 0; i < array.length; i++) {
+            res += array[i] * vec.array[i];
+        }
+        return res;
+    }
+}
+```
 
-8. [448. Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
+方法二：
+用双指针
+```Java
+    // use ArrayList to store res
+    List<int[]> pairs;
+    
+    // [[0,1], [3,2],[4,3]]
+    // [[1,3],[3,4]]
+    SparseVector(int[] nums) {
+        pairs = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                pairs.add(new int[]{i, nums[i]});
+            }
+        }
+    }
+    
+	// Return the dotProduct of two sparse vectors
+    // [[0,1], [3,2],[4,3]]
+    //           p1
+    // [[1,3], [3,4]]
+    //           p2
+    public int dotProduct(SparseVector vec) {
+        int res = 0;
+        int p1 = 0;
+        int p2 = 0;
+        while (p1 < this.pairs.size() && p2 < vec.pairs.size()) {
+            if (this.pairs.get(p1)[0] == vec.pairs.get(p2)[0]) {
+                res += this.pairs.get(p1)[1] * vec.pairs.get(p2)[1];
+                p1++;
+                p2++;
+            } else if (this.pairs.get(p1)[0] > vec.pairs.get(p2)[0]) {
+                p2++;
+            } else {
+                p1++;
+            }
+        }
+        return res;
+    }
+```
+
+1. [448. Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
 
 ```Java
     public List<Integer> findDisappearedNumbers(int[] nums) {
@@ -2604,7 +2699,29 @@ Output: 2
         return res;
     }
 ```
+9. [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
 
+```Java
+class Solution {
+    public int diameter;
+    public int diameterOfBinaryTree(TreeNode root) {
+        diameter = 0;
+        dfs(root);
+        return diameter;
+    }
+    
+    private int dfs(TreeNode node) { // 返回该节点左右子树的最大深度
+        if (node == null) {
+            return 0;
+        }
+        int leftPath = dfs(node.left);
+        int rightPath = dfs(node.right);
+        diameter = Math.max(diameter, leftPath + rightPath);
+        return Math.max(leftPath, rightPath)  + 1;
+    }
+}
+
+```
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
