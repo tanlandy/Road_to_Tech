@@ -291,6 +291,8 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
 
 13. [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
 
+inorder每次返回pre的那个node，传进去当前和pre两个node
+
 ```Java
     public Node treeToDoublyList(Node root) {
         if (root == null) {
@@ -661,7 +663,7 @@ The next permutation of an array of integers is the next lexicographically great
 
 
 
-26. [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/) DONE
+1.  [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/)
 
 There are n buildings in a line. You are given an integer array heights of size n that represents the heights of the buildings in the line.
 
@@ -742,6 +744,7 @@ Output: [1,2,2,3,5,6]
 ```
 
 29. [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+    
 Given an integer array nums and an integer k, return the kth largest element in the array.
 
 Note that it is the kth largest element in the sorted order, not the kth distinct element.
@@ -1188,6 +1191,49 @@ A clear path in a binary matrix is a path from the top-left cell (i.e., (0, 0)) 
 All the visited cells of the path are 0.
 All the adjacent cells of the path are 8-directionally connected (i.e., they are different and they share an edge or a corner).
 The length of a clear path is the number of visited cells of this path.
+
+```Java
+class Solution {
+    private int dir[][] = new int[][]{{0,1},{0,-1},{1,0},{-1,0},{1,-1},{-1,1},{-1,-1},{1,1}};
+
+    public int shortestPathBinaryMatrix(int[][] grid) {
+
+        int m = grid.length;
+        int n = grid[0].length;
+
+        if(grid[0][0]==1 || grid[m-1][n-1]==1) {
+            return -1;
+        }
+
+        boolean[][] visited = new boolean[m][n];
+        visited[0][0] = true;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{0,0});
+
+        int ans=0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for(int i=0;i<size;i++) {
+                int[] pop = queue.remove();
+                if(pop[0]==m-1 && pop[1]==n-1) {
+                    return ans+1;
+                }
+                for (int k=0;k<8;k++) {
+                    int nextX = dir[k][0]+pop[0];
+                    int nextY = dir[k][1]+pop[1];
+
+                    if(nextX>=0 && nextX<m && nextY>=0 && nextY<n && !visited[nextX][nextY] && grid[nextX][nextY]==0) {
+                        queue.add(new int[]{nextX,nextY});
+                        visited[nextX][nextY]=true;
+                    }
+                }
+            }
+            ans++;
+        }
+        return -1;
+    }
+}
+```
 
 
 # 查缺补漏
@@ -3188,3 +3234,115 @@ A: 我看了本书讲xxx，想往这个方向提升，方法是1.看书 2. 多�
                                 他就会问一个follow up：那第二点你做了吗？你去找其他sde聊了吗？哪个公司的？都聊了些什么？
 
 2. Q: 和队友conflict，需要细节到你用几次meeting解决了？每次大概都聊了什么？有其他人engage吗？怎么解决第三人的问题
+
+
+
+
+## 3.25 OA1
+
+### Q1
+We have two sorted arrays of integers: A and B. A has empty slots at the end of it. 
+It has exactly as many empty slots as there are elements in B.
+Your goal is to merge the elements from B into A so that array A contains all of the elements in sorted order. 
+Input:
+A = [1, 2, 3, _, _, _, _]
+B = [2, 4, 6, 100]
+Expected output:
+A = [1, 2, 2, 3, 4, 6, 100]
+
+
+3 pointers: Time: O(n) Space: O(1)
+
+A = [1, 2, 3, _, _, _, _]
+    pA  p
+        2   2   3  4   6 100
+B = [2, 4, 6, 100]
+  pB
+
+```Java
+
+public int[] mergeArrays(int[] A, int[] B) {
+    int n = B.length;
+    int m = A.length - n; // m is valid
+    int pA = m - 1;
+    int pB = n - 1;
+    int p = A.length - 1;
+    for (; p >= 0; p--) {
+      if (pA < 0 || pB < 0) {
+        break;
+      }
+      if (A[pA] >= B[pB]) {
+        A[p] = A[pA];
+        pA--;
+      } else {
+        A[p] = B[pB];
+        pB--;
+      }
+    }
+    while (pB > 0) {
+      A[p] = B[pB];
+      p--;
+      pB--;
+    }
+    return A;
+}
+
+```
+
+### Q2
+
+You're given a calendar year represented as a char array that contains either H or W where:
+H = Holiday W = Workday
+Given a number of Personal Time-Off days (PTO), maximize the length of the longest consecutive vacation you can take.
+*Example*
+Start with an example: [W, H, H, W, W, H, W], PTO = 2 --> Your maximum consecutive vacation is 5 days.
+
+// right: (PTO > 0 )when H: count++
+          when W: PTO--; count++
+// move left: (PTO != 0)when W: PTO++, count--; stop
+          when H: count--
+Time: O(N)
+Space: O(1)
+
+
+[W, H, H, W, W, H, W], PTO = 2 
+    l
+             r
+PTO = 0
+count = 4
+max = 4
+
+```Java
+
+public int getLongestVacation(int[] days, int PTO) {
+  int l = 0;
+  int r = 0;
+  int count = 0;
+  int max = 0;
+  while (r < days.length) {
+      // move r to the right
+      while (PTO >= 0 && r < days.length) {
+        if (days.charAt(r) == 'H') {
+          count++;
+        } else {
+          count++;
+          PTO--;
+        }
+        max = Math.max(max, count);
+        r++;
+      }
+      // move l to the right
+      while (PTO != 0) {
+        if (days.charAt(l) == 'H') {
+          count--;
+        } else {
+          count--;
+          PTO++;
+        }
+        l++;
+      }
+  }
+  return max;
+}
+
+```

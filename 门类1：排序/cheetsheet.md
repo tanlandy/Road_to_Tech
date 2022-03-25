@@ -274,6 +274,74 @@ edge case: when the array consists of only zeroes, so if the most significant nu
 
 [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
 
+Given an integer array nums and an integer k, return the kth largest element in the array.
+
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+
+思路1: 用heap，size总是k，这样堆顶就是kth largest
+时间 O(nlogk) 每次放数字需要O(logk)，一共n次
+空间 O(K)
+```Java
+    public int findKthLargest(int[] nums, int k) {
+        // min-heap 注意定义方式
+        PriorityQueue<Integer> heap = new PriorityQueue<Integer>((n1, n2) -> n1 - n2);
+        // 堆顶总是kth largest
+        for (int n : nums) {
+            heap.add(n);
+            if (heap.size() > k) {
+                heap.poll();
+            }
+        }
+        return heap.poll();
+    }
+```
+
+思路2: Quickselect
+时间 O(n)
+空间 O(1)
+```Java
+    public int findKthLargest(int[] nums, int k) {
+        k = nums.length - k;
+        int l = 0;
+        int r = nums.length - 1;
+        while (l < r) {
+            int j = partition(nums, l, r);
+            if (j < k) {
+                l = j + 1;
+            } else if (j > k) {
+                r = j - 1;
+            } else {
+                break;
+            }
+        }
+        return nums[k];
+    }
+    
+    private int partition(int[] nums, int l, int r) {
+        int mid = nums[r];
+        int i = l;
+        for (int j = l; j < r; j++) {
+            if (nums[j] <= mid) {
+                swap(nums, i, j);
+                i++;
+            }
+        }
+        swap(nums, i, r);
+        return i;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    } 
+
+```
+
+
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
 
 
