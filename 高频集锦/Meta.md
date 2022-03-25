@@ -809,9 +809,6 @@ Output: 5
 
 ```
 
-30. [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
-
-
 
 ## Top 31-40
 31. [1344. Angle Between Hands of a Clock](https://leetcode.com/problems/angle-between-hands-of-a-clock/)
@@ -3000,10 +2997,176 @@ Given an array of integers nums and an integer k, return the total number of sub
 Input: nums = [1,1,1], k = 2
 Output: 2
 
+思路一：
+双指针，第一个指针一次走一步，另一个指针走到头
+时间：O(n^2)
+空间：O(1)
 ```Java
 
+    public int subarraySum(int[] nums, int k) {
+        int count = 0;
+        for (int start = 0; start < nums.length; start++) {
+            int sum = 0;
+            for (int end = start; end < nums.length; end++) {
+                sum += nums[end];
+                if (sum == k) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 
+```
 
+思路二：
+HashMap存前缀和以及和的个数
+每次看前缀和-k是否在HashMap里面，如果在的话就说明找到了
+时间：O(N)
+空间：O(N)
+
+```Java
+    public int subarraySum(int[] nums, int k) {
+        int count = 0; 
+        int curSum = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        for (int i = 0; i < nums.length; i++) {
+            curSum += nums[i];
+            if (map.containsKey(curSum - k)) {
+                count += map.get(curSum - k);
+            }
+            map.put(curSum, map.getOrDefault(curSum, 0) + 1);
+        }
+        return count;
+    }
+```
+
+10. [227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
+
+思路一：
+用Stack存数字，每次如果是+-就直接压进去，如果是*/就压进去相对应的数，最后弹栈相加
+时间：O(N)
+空间：O(N)
+
+```Java
+    public int calculate(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int len = s.length();
+        Stack<Integer> stack = new Stack<>();
+        int curNum = 0;
+        char ope = '+';
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                curNum = (curNum * 10) + (c - '0');
+            }
+            if (!Character.isDigit(c) && !Character.isWhitespace(c) || i == len - 1) { // 注意条件：不是数字，不是空格，也不是最后一位
+                if (ope == '-') {
+                    stack.push(-curNum);
+                } else if (ope == '+') {
+                    stack.push(curNum);
+                } else if (ope == '*') {
+                    stack.push(stack.pop() * curNum);
+                } else if (ope == '/') {
+                    stack.push(stack.pop() / curNum);
+                }
+                ope = c;
+                curNum = 0;
+            }
+        }
+        int res = 0;
+        while (!stack.isEmpty()) {
+            res += stack.pop();
+        }
+        return res;
+    }
+```
+
+思路二：
+用一个lastNum来记录上一个数
+时间：O(N)
+空间：O(1)
+
+```Java
+    public int calculate(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int len = s.length();
+        int res = 0;
+        int lastNum = 0;
+        Stack<Integer> stack = new Stack<>();
+        int curNum = 0;
+        char ope = '+';
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                curNum = (curNum * 10) + (c - '0');
+            }
+            if (!Character.isDigit(c) && !Character.isWhitespace(c) || i == len - 1) {
+                
+                if (ope == '-') {
+                    res += lastNum;
+                    lastNum = -curNum;
+                } else if (ope == '+') {
+                    res += lastNum;
+                    lastNum = curNum;
+                } else if (ope == '*') {
+                    lastNum *= curNum;
+                } else if (ope == '/') {
+                    lastNum /= curNum;
+                }
+                ope = c;
+                curNum = 0;
+            }
+        }
+        res += lastNum;
+        return res;
+    }
+
+```
+
+11. [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+
+方法一： maxHeap
+只保留Heap size是k的大小
+时间：O(NlogK)
+空间：O(k)
+```Java
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        // Use a lambda comparator to sort the PQ by farthest distance
+        Queue<int[]> maxPQ = new PriorityQueue<>((a, b) -> b[0] - a[0]);
+        for (int i = 0; i < points.length; i++) {
+            int[] entry = {squaredDistance(points[i]), i};
+            if (maxPQ.size() < k) {
+                // Fill the max PQ up to k points
+                maxPQ.add(entry);
+            } else if (entry[0] < maxPQ.peek()[0]) {
+                // If the max PQ is full and a closer point is found,
+                // discard the farthest point and add this one
+                maxPQ.poll();
+                maxPQ.add(entry);
+            }
+        }
+        
+        // Return all points stored in the max PQ
+        int[][] answer = new int[k][2];
+        for (int i = 0; i < k; i++) {
+            int entryIndex = maxPQ.poll()[1];
+            answer[i] = points[entryIndex];
+        }
+        return answer;
+    }
+    
+    private int squaredDistance(int[] point) {
+        // Calculate and return the squared Euclidean distance
+        return point[0] * point[0] + point[1] * point[1];
+    }
+};
 ```
 
 

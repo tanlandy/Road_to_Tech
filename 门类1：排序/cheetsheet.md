@@ -268,9 +268,12 @@ edge case: when the array consists of only zeroes, so if the most significant nu
 
 ```
 
+## Selection sort
 
 [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 
 [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
 
-[295]
+[973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+
+
