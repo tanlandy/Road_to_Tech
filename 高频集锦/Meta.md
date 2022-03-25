@@ -2558,18 +2558,7 @@ Output: "533"
 2. [346]
 
 
-3. [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
 
-Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
-
-Input: nums = [1,1,1], k = 2
-Output: 2
-
-```Java
-
-
-
-```
 
 4. [146]
 
@@ -3001,6 +2990,19 @@ class Solution {
             return root;
         }
     }
+
+```
+
+9. [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+
+```Java
+
+
 
 ```
 
