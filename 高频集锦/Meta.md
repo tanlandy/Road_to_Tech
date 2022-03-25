@@ -661,7 +661,7 @@ The next permutation of an array of integers is the next lexicographically great
 
 
 
-26. [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/)
+26. [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/) DONE
 
 There are n buildings in a line. You are given an integer array heights of size n that represents the heights of the buildings in the line.
 
@@ -2148,7 +2148,7 @@ Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8
     }
 ```
 
-15. [314. Binary Tree Vertical Order Traversal](https://leetcode.com/problems/binary-tree-vertical-order-traversal/)
+15. [314. Binary Tree Vertical Order Traversal](https://leetcode.com/problems/binary-tree-vertical-order-traversal/) DONE
 
 Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).
 
@@ -2643,6 +2643,7 @@ class SparseVector {
 
 方法二：
 用双指针
+用ArrayList<>()存一个int[]， [idx, nums[idx]]然后双指针比较idx
 ```Java
     // use ArrayList to store res
     List<int[]> pairs;
@@ -2807,6 +2808,201 @@ class Solution {
 3. [865. Smallest Subtree with all the Deepest Nodes](https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/)
 
 
+4. [680. Valid Palindrome II](https://leetcode.com/problems/valid-palindrome-ii/)
+
+Two Pointer
+```Java
+class Solution {
+    public boolean validPalindrome(String s) {
+        int l = 0;
+        int r = s.length() - 1;
+        while (l < r) {
+            if (s.charAt(l) == s.charAt(r)) {
+                l++;
+                r--;
+            } else {
+                return isValid(s, l + 1, r) || isValid(s, l, r - 1);
+            }
+        }
+        return true;
+    }
+    
+    private boolean isValid(String s, int l, int r) {
+        while (l < r) {
+            if (s.charAt(l) == s.charAt(r)) {
+                l++;
+                r--;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+Follow up：如果可以删除n个
+```Java
+
+class Solution {
+    public boolean validPalindrome(String s) {
+        return helper(s, 0, s.length() - 1, 1);
+    }
+    
+    boolean helper(String s, int i, int j, int count) {
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                if (count == 0) return false; 
+                return helper(s, i + 1, j, count - 1) || helper(s, i, j - 1, count - 1);
+            } 
+            i++;
+            j--;
+        }
+        return true;
+    }
+}
+```
+5. [938. Range Sum of BST](https://leetcode.com/problems/range-sum-of-bst/)
+
+Given the root node of a binary search tree and two integers low and high, return the sum of values of all nodes with a value in the inclusive range [low, high].
+
+思路：
+利用好BST的性质，只看小于大于就可以
+```Java
+    public int rangeSumBST(TreeNode root, int low, int high) {
+        int[] sum = {0};
+        dfs(root, low, high, sum);
+        return sum[0];
+    }
+    
+    private void dfs(TreeNode node, int low, int high, int[] sum) {
+        if (node == null) {
+            return;
+        }
+        
+        if (low <= node.val && node.val <= high) {
+            sum[0] += node.val;
+        }
+        
+        if (low < node.val) {
+            dfs(node.left, low, high, sum);
+        }
+        
+        if (node.val < high) {
+            dfs(node.right, low, high, sum);
+        }   
+    }
+```
+
+6. [1650. Lowest Common Ancestor of a Binary Tree III](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/)
+
+求各自深度，到相同深度，然后往上走
+
+```Java
+    public Node lowestCommonAncestor(Node p, Node q) {
+        int pDepth = getDepth(p);
+        int qDepth = getDepth(q);
+        // get depth
+        // make them at the same level
+        // go up to find LCA
+        while (pDepth > qDepth) {
+            p = p.parent;
+            pDepth--;
+        }
+        while (pDepth < qDepth) {
+            q = q.parent;
+            qDepth--;
+        }
+        while (p != q) {
+            p = p.parent;
+            q = q.parent;
+        }
+        return p;
+    }
+    
+    private int getDepth(Node node) {
+        int depth = 0;
+        while (node != null) {
+            depth++;
+            node = node.parent;
+        }
+        return depth;
+    }
+```
+
+7. [1249. Minimum Remove to Make Valid Parentheses](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/)
+
+思路：
+用stack存inValid的'(',')'的index
+如何判断inValid：每次看到(就压栈，看到)要么弹要么直接放到set里
+再把多余的(都放到set里面
+最后用stringbuilder来构建新的东东
+```Java
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        // find out the invalid index
+        // build s
+        // use stack: see '(': push the index into it
+                    //see ')': delete the '(' OR store its invalid index
+        // finally may have extra '(', keep track of their indexes
+        Stack<Integer> stack = new Stack<>();
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                stack.push(i);
+            } if (c == ')') {
+                if (stack.isEmpty()) {
+                    // store its index
+                    set.add(i);
+                } else {
+                    stack.pop();
+                }
+            }
+        }
+        
+        // extra '('s in the stack
+        while (!stack.isEmpty()) {
+            set.add(stack.pop());
+        }
+        
+        // build a new string
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (!set.contains(i)) {
+                sb.append(s.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+}
+```
+
+8. [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+```Java
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        //base case
+        if (root == null || root == p || root == q) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        //result
+        if(left == null) {
+            return right;
+        }
+        else if(right == null) {
+            return left;
+        }
+        else { //both left and right are not null, we found our result
+            return root;
+        }
+    }
+
+```
 
 
 ### Todo

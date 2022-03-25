@@ -347,3 +347,31 @@ class Solution {
         }    
     }
 ```
+
+4. [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+从根节点开始考察，如果p,q都比root小，则root移动至其左子树；否则，root移动至其右子树。直到发现p,q在root节点的两侧，则root是最低共同节点。
+
+```Java
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        //base case
+        if (root == null || root == p || root == q) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        //result
+        if(left == null) {
+            return right;
+        }
+        else if(right == null) {
+            return left;
+        }
+        else { //both left and right are not null, we found our result
+            return root;
+        }
+    }
+
+```
