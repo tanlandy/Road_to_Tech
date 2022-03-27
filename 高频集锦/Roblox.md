@@ -1,0 +1,1 @@
+https://mconsultingprep.com/mckinsey-problem-solving-game-digital-assessment/ 

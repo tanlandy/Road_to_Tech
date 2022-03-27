@@ -2370,24 +2370,42 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
 ```
 
 思路二：DFS
+先走右边，再走左边，当res.size() == level的时候说明是第一次遇见，就添加进去
+     1
+   /   \
+  2     3
+ / \   /
+4   5 6 
+   /
+  7
+node        1    3      6          2        5       7        4
+res         []  [1]   [1,3]     [1,3,6]  [1,3,6] [1,3,6]  [1,3,6,7]
+res.size()  0    1      2          3        3       3        4
+level       0    1      2          1        2       3        2
+res         [1]  [1,3] [1,3,6]  [1,3,6]  [1,3,6] [1,3,6,7] [1,3,6,7]
 ```Java
-    List<Integer> rightside = new ArrayList();
-    
-    public void helper(TreeNode node, int level) {
-        if (level == rightside.size()) 
-            rightside.add(node.val);
-        
-        if (node.right != null) 
-            helper(node.right, level + 1);  
-        if (node.left != null) 
-            helper(node.left, level + 1);
-    }    
-    
     public List<Integer> rightSideView(TreeNode root) {
-        if (root == null) return rightside;
+        List<Integer> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        dfs(root, 0, res);
+        return res;
+    }
+
+    private void dfs(TreeNode node, int level, List<Integer> res) {
+        if (res.size() == level) {
+            res.add(node.val);
+        }
         
-        helper(root, 0);
-        return rightside;
+        if (node.right != null) { // 先看右边
+            dfs(node.right, level + 1, res);
+        }
+        
+        if (node.left != null) {
+            dfs(node.left, level + 1, res);
+        }
+        return;
     }
 
 
@@ -3215,6 +3233,50 @@ class Solution {
 };
 ```
 
+# 3.26 
+1. [791. Custom Sort String](https://leetcode.com/problems/custom-sort-string/)
+
+Input: order = "cba", s = "abcd"
+Output: "cbad"
+Explanation: 
+"a", "b", "c" appear in order, so the order of "a", "b", "c" should be "c", "b", and "a". 
+Since "d" does not appear in order, it can be at any position in the returned string. "dcba", "cdba", "cbda" are also valid outputs.
+
+先统计s各个字母出现次数，然后根据order的顺序放进res里，最后把剩下的放进来
+```Java
+class Solution {
+    public String customSortString(String order, String s) {
+        int[] count = new int[26];
+        // 先统计s里面有啥东西
+        // 走一遍s: count数组一个slot对应一个字母出现的次数
+        for (char c : s.toCharArray()) {
+            count[c - 'a']++;
+        }
+        StringBuilder sb = new StringBuilder();
+        // 走一遍Order: 按照order的顺序，一个一个往结果里面放
+        for (char c : order.toCharArray()) {
+            // 决定了这个c放进去几次
+            for (int i = 0; i < count[c - 'a']; i++) {
+                sb.append(c);
+            }
+            // 这个c彻底放完了，就把次数变成0
+            count[c - 'a'] = 0;
+        }
+        // 走一遍letter: 把没有order的放进来
+        for (char c = 'a'; c <= 'z'; c++) {
+            for (int i = 0; i < count[c - 'a']; i++) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+}
+```
+
+2. [65. Valid Number](https://leetcode.com/problems/valid-number/)
+
+
+
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)
@@ -3346,3 +3408,5 @@ public int getLongestVacation(int[] days, int PTO) {
 }
 
 ```
+
+
