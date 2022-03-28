@@ -3273,10 +3273,199 @@ class Solution {
 }
 ```
 
-2. [65. Valid Number](https://leetcode.com/problems/valid-number/)
+# 3.28 
+1. [71. Simplify Path](https://leetcode.com/problems/simplify-path/)
+
+Given a string path, which is an absolute path (starting with a slash '/') to a file or directory in a Unix-style file system, convert it to the simplified canonical path.
+
+In a Unix-style file system, a period '.' refers to the current directory, a double period '..' refers to the directory up a level, and any multiple consecutive slashes (i.e. '//') are treated as a single slash '/'. For this problem, any other format of periods such as '...' are treated as file/directory names.
+
+The canonical path should have the following format:
+
+The path starts with a single slash '/'.
+Any two directories are separated by a single slash '/'.
+The path does not end with a trailing '/'.
+The path only contains the directories on the path from the root directory to the target file or directory (i.e., no period '.' or double period '..')
+Return the simplified canonical path.
+
+思路：
+用一个stack
+先根据/分割
+如果是.或者空格，忽略
+如果是..，当非空的时候弹栈
+如果是文件夹，直接放进去
+最后从stack构建回String
+时间：
+空间：
+```Java
+class Solution {
+    public String simplifyPath(String path) {
+        Stack<String> stack = new Stack<>();
+        String[] components = path.split("/");
+        for (String s : components) {
+            if (s.equals(".") || s.isEmpty()) {
+                continue;
+            } else if (s.equals("..")) {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            } else {
+                stack.add(s);
+            }
+        }
+        
+        StringBuilder res = new StringBuilder();
+        for (String s : stack) {
+            res.append("/");
+            res.append(s);
+        }
+        
+        return res.length() > 0 ? res.toString() : "/";
+    }
+}
+```
+
+2. [8. String to Integer (atoi)](https://leetcode.com/problems/string-to-integer-atoi/)
+
+Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer (similar to C/C++'s atoi function).
+
+The algorithm for myAtoi(string s) is as follows:
+
+Read in and ignore any leading whitespace.
+Check if the next character (if not already at the end of the string) is '-' or '+'. Read this character in if it is either. This determines if the final result is negative or positive respectively. Assume the result is positive if neither is present.
+Read in next the characters until the next non-digit character or the end of the input is reached. The rest of the string is ignored.
+Convert these digits into an integer (i.e. "123" -> 123, "0032" -> 32). If no digits were read, then the integer is 0. Change the sign as necessary (from step 2).
+If the integer is out of the 32-bit signed integer range [-231, 231 - 1], then clamp the integer so that it remains in the range. Specifically, integers less than -231 should be clamped to -231, and integers greater than 231 - 1 should be clamped to 231 - 1.
+Return the integer as the final result.
+
+Input: s = "   -42"
+Output: -42
+
+Input: s = "4193 with words"
+Output: 4193
+
+思路：
+把String从前往后
+curRes = curRes * 10 + curDigit
+要处理的东西：
+1. 空格
+2. 数字
+3. 符号
+4. 其他
+
+时间：O(n)
+空间：O(1)
+```Java
+class Solution {
+    public int myAtoi(String s) {
+        // 注意如何从String取数字，以及如何转化为数字， 以及如何处理overflow
+        int sign = 1;
+        int res = 0;
+        int index = 0;
+        int n = s.length();
+        // 先删除之前的空格
+        while (index < n && s.charAt(index) == ' ') {
+            index++;
+        }
+        // 判断正负号
+        if (index < n && s.charAt(index) == '+') {
+            sign = 1;
+            index++;
+        } else if (index < n && s.charAt(index) == '-') {
+            sign = -1;
+            index++;
+        }
+        
+        // 接下来是数字的时候，往后走
+        while (index < n && Character.isDigit(s.charAt(index))) {
+            int digit = s.charAt(index) - '0'; // 注意是如何取数字的
+            // 检查过大或过小
+            // 1. res > Integer.MAX_VALUE / 10肯定会在下一个超过
+            // 2. res < Integer.MAX_VALUE / 10就不用担心
+            // 3. res == Integer.MAX_VALUE / 10，只有0-7可以满足，因为Integer.MAX_VALUE % 10 = 7
+            if ((res > Integer.MAX_VALUE / 10) ||
+                (res == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            res = 10 * res + digit;
+            index++;
+        }
+        return sign * res;
+    }
+}
+```
 
 
 
+3. [65. Valid Number](https://leetcode.com/problems/valid-number/)
+
+A valid number can be split up into these components (in order):
+
+A decimal number or an integer.
+(Optional) An 'e' or 'E', followed by an integer.
+A decimal number can be split up into these components (in order):
+
+(Optional) A sign character (either '+' or '-').
+One of the following formats:
+One or more digits, followed by a dot '.'.
+One or more digits, followed by a dot '.', followed by one or more digits.
+A dot '.', followed by one or more digits.
+An integer can be split up into these components (in order):
+
+(Optional) A sign character (either '+' or '-').
+One or more digits.
+For example, all the following are valid numbers: ["2", "0089", "-0.1", "+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93", "-123.456e789"], while the following are not valid numbers: ["abc", "1a", "1e", "e3", "99e2.5", "--6", "-+3", "95a54e53"].
+
+Given a string s, return true if s is a valid number.
+
+思路：
+要处理的东西
+1. digits
+2. sign('+', '-')：必须出现在开头，或者紧跟在'e', 'E'后面
+3. exponent：必须第一次见，而且见过digit
+4. dot：必须第一次见，而且不能在exponent后面
+5. other
+
+用seenDigit, seenExponent, seenDot来记录是否见过
+1. 见到digit
+2. 见到exponent
+3. 见到dot
+
+
+```Java
+
+    public boolean isNumber(String s) {
+        boolean seenDigit = false;
+        boolean seenExponent = false;
+        boolean seenDot = false;
+        for (int i = 0; i < s.length(); i++) {
+            char cur = s.charAt(i);
+            if (Character.isDigit(cur)) {
+                seenDigit = true;
+            } else if (cur == '+' || cur == '-') { // 判断‘+', '-’
+                if (i > 0 && s.charAt(i - 1) != 'e' && s.charAt(i - 1) != 'E') {
+                    return false;
+                }
+            } else if (cur == 'e' || cur == 'E') { // 判断'e', 'E'
+                if (seenExponent || !seenDigit) {
+                    return false;
+                }
+                seenExponent = true;
+                seenDigit = false;
+            } else if (cur == '.') {               // 判断'.'
+                if (seenDot || seenExponent) {
+                    return false;
+                }
+                seenDot = true;
+            } else {
+                return false;
+            }
+        }
+        return seenDigit;
+    }
+
+
+```
 
 ### Todo
 [二分查找子序列](https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484479&idx=1&sn=31a3fc4aebab315e01ea510e482b186a&scene=21#wechat_redirect)

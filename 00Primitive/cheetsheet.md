@@ -51,6 +51,13 @@ int first = Integer.parseInt(s.substring(0,2)) + 12;
 String n = first + s.substring(2,8);
 
 
+String s = "21312";
+int digit = s.charAt(0) - '0'; // digit = 2
+
+String s = "dfas";
+int c = s.charAt(0) - 'a'; // c = 0
+char c = s.charAt(0); // c = 'a'
+
 
 ```
 
