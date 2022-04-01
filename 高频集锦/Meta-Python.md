@@ -155,4 +155,197 @@ class Solution:
 
 
 
+[896. Monotonic Array](https://leetcode.com/problems/monotonic-array/)
 
+思路一：
+走两遍，all()函数返回真假all(nums[i]<=nums[i+1] for i in range(len(nums) - 1))
+```python
+class Solution:
+    def isMonotonic(self, nums: List[int]) -> bool:
+        return (all(nums[i] <= nums[i+1] for i in range(len(nums) - 1))) or all(nums[i] >= nums[i+1] for i in range(len(nums) - 1))
+```
+
+思路二：
+走一遍，用两个boolean值increase和decrease并设置成true，如果不满足就设置成false，最后返回其中一个是true就可以
+```python
+class Solution:
+    def isMonotonic(self, nums: List[int]) -> bool:
+        increase = decrease = True
+        for i in range(len(nums) - 1):
+            if nums[i] < nums[i + 1]:
+                decrease = False
+            if nums[i] > nums[i + 1]:
+                increase = False
+        return increase or decrease
+```
+
+[824. Goat Latin](https://leetcode.com/problems/goat-latin/)
+思路：
+straight forward；str.split()方法的使用；' '.join(str)的使用
+```python
+class Solution:
+    def toGoatLatin(self, sentence: str) -> str:
+        res=[]
+        for i in range(len(sentence.split())):
+            word=sentence.split()[i]
+            if word[0].lower() in ['a','e','i','o','u']: # 用了一个lower()用不用再加载AEIOU了
+                word+="ma"+'a'*(i+1)
+            else:
+                word=word[1:]+word[0]+"ma"+'a'*(i+1)
+            res.append(word)
+        return ' '.join(res)
+```
+
+[724. Find Pivot Index](https://leetcode.com/problems/find-pivot-index/)
+
+思路：
+分别表示出来l_sum和r_sum
+```python
+class Solution:
+    def pivotIndex(self, nums: List[int]) -> int:
+        # 直接表示出来就行了
+        l_sum = 0
+        r_sum = sum(nums)
+        for i in range(len(nums)):
+            r_sum -= nums[i]
+            if l_sum == r_sum:
+                return i
+            l_sum += nums[i]
+        return -1
+```
+
+[163. Missing Ranges](https://leetcode.com/problems/missing-ranges/)
+
+思路：
+用一个函数来把需要补充的值放进去，注意可能是需要补充一个值，或者是一系列值；用cur=nums[i]，一次比较pre+1和cur-1的大小，然后把pre=cur；同时走到底之后,cur=upper+1；注意lower的起点是lower - 1
+```python
+class Solution:
+    def findMissingRanges(self, nums: List[int], lower: int, upper: int) -> List[str]:
+        def formatRange(lower, upper):
+            if lower == upper:
+                return str(lower)
+            return str(lower) + "->" + str(upper)
+
+        res = []
+        prev = lower - 1
+        for i in range(len(nums) + 1):
+            cur = nums[i] if i < len(nums) else upper + 1
+            if prev + 1 <= cur - 1:
+                res.append(formatRange(prev + 1, cur - 1))
+            prev = cur
+        return res
+```
+
+
+
+[977. Squares of a Sorted Array](https://leetcode.com/problems/squares-of-a-sorted-array/)
+
+思路：
+相向two pointers，依次比较，res[]从后往前；声明大小为n的[]: res = [0] * n；从后往前for i in range(n-1, -1, -1): range(start, stop, step), stop not included
+
+```python
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        left = 0
+        right = len(nums) - 1
+        res = [0] * len(nums)
+        for i in range(len(nums) - 1, -1, -1):
+            if abs(nums[left]) < abs(nums[right]):
+                square = nums[right]
+                right -= 1
+            else:
+                square = nums[left]
+                left += 1
+            res[i] = square * square
+        return res
+```
+
+[605. Can Place Flowers](https://leetcode.com/problems/can-place-flowers/)
+
+思路：
+首位加[0]，然后检查bed[i], bed[i-1], bed[i+1]是否相等且为0，如果是就n-=1，然后把bed[i]=1
+
+```python
+class Solution:
+    def canPlaceFlowers(self, flowerbed: List[int], n: int) -> bool:
+        s = len(flowerbed)
+        bed = [0] + flowerbed + [0]
+        for i in range(1, s + 1):
+            if bed[i] == bed[i-1] == bed[i+1] == 0:
+                bed[i] = 1
+                n -= 1
+            if n <= 0:
+                return True
+        return False
+```
+
+思路二：
+也是首尾加0，用一个count来记录连续的0，如果count==3那就n-=1同时count=1
+
+```python
+    def canPlaceFlowers(self, flowerbed, n):
+		
+        flowerbed.insert(0, 0)
+        flowerbed.append(0)
+        count = 0
+        for f in flowerbed:
+            if f == 0:
+                count += 1
+            else:
+                count = 0
+            if count == 3:
+                n -= 1
+                count = 1
+            if n == 0:
+                return True
+        return False
+```
+
+[415. Add Strings](https://leetcode.com/problems/add-strings/)
+
+two pointers从后往前，用carry存进位的情况，value = (x1 + x2 + carry) % 10, carry = (x1 + x2 + carry) // 10. 走到头carry不为0就再append一下，最后reverse并且转换成string即可；ord(string)返回unicode值, x = ord(string) - ord('0')就把'5'存成5到x里；a // 10 地板除，向下取整; math.ceil(a/10)就是向上取整；res[]存的整数反过来导出成string: ''.join(str(x) for x in res[::-1])
+```python
+class Solution:
+    def addStrings(self, num1: str, num2: str) -> str:
+        res = []
+        carry = 0
+        p1 = len(num1) - 1
+        p2 = len(num2) - 1
+        while p1 >= 0 or p2 >= 0:
+            x1 = ord(num1[p1]) - ord('0') if p1 >= 0 else 0
+            x2 = ord(num2[p2]) - ord('0') if p2 >= 0 else 0
+            value = (x1 + x2 + carry) % 10
+            carry = (x1 + x2 + carry) // 10
+            res.append(value)
+            p1 -= 1
+            p2 -= 1
+        if carry:
+            res.append(carry)
+        
+        return ''.join(str(x) for x in res[::-1])
+```
+
+[67. Add Binary](https://leetcode.com/problems/add-binary/)
+
+和415一模一样，只是换成了2进制two pointers从后往前走直到头，res每次添加(p1+p2+carry)%2的，同时carry = (p1+p2+carry)//2，最后res翻转过来
+
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        p1 = len(a) - 1
+        p2 = len(b) - 1
+        res = []
+        carry = 0
+        
+        while p1 >= 0 or p2 >= 0 or carry:
+            x1 = ord(a[p1]) - ord('0') if p1 >= 0 else 0
+            x2 = ord(b[p2]) - ord('0') if p2 >= 0 else 0
+            value = (x1 + x2 + carry) % 2
+            carry = (x1 + x2 + carry) // 2
+            res.append(value)
+            p1 -=1
+            p2 -=1
+        if carry:
+            res.append(carry)
+        return ''.join(str(x) for x in res[::-1])
+```
