@@ -3,7 +3,25 @@
 s[i].isalnum() 看是否是string或者num
 s[i].lower() 返回一个小写
 ```python
-class Solution:
+def isPalindrome(s: str) -> bool:
+    i, j = 0, len(s) - 1
+    while i < j:
+        while i < j and not s[i].isalnum():
+            i += 1
+        while i < j and not s[j].isalnum():
+            j -= 1
+        if s[i].lower() != s[j].lower():
+            return False
+        i += 1
+        j -= 1
+    return True
+
+print(isPalindrome("dafsad"))
+
+```
+
+```python
+class IsValid:
     def isPalindrome(self, s: str) -> bool:
         i, j = 0, len(s) - 1
         while i < j:
@@ -16,8 +34,11 @@ class Solution:
             i += 1
             j -= 1
         return True
-        
+
+te = IsValid()
+print(te.isPalindrome("dafsas"))
 ```
+
 
 [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/)
 思路：用Stack，如果相同就pop，不同就放进来，最后转换成string
@@ -72,6 +93,8 @@ I'll leave it to you to think how you can extend this to fewer columns.
 用queue，每次记录当前的windowSum，如果size满足的话，来一个新数字就弹出末尾的，同时加进来新的，最后返回windowSum/len即可
 
 ```python
+from collections import deque
+
 class MovingAverage:
 
     def __init__(self, size: int):
@@ -85,6 +108,16 @@ class MovingAverage:
         self.queue.append(val)
         self.windowSum += val
         return self.windowSum / len(self.queue)
+
+obj = MovingAverage(2)
+param_1 = obj.next(3)
+param_2 = obj.next(5)
+param_3 = obj.next(9)
+param_4 = obj.next(1)
+param_5 = obj.next(2)
+param_6 = obj.next(3)
+
+print(param_3)
 
 
 # Your MovingAverage object will be instantiated and called as such:
