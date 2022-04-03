@@ -1,7 +1,5 @@
 [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)
-思路：用相向two pointer，当不是char时候就比较
-s[i].isalnum() 看是否是string或者num
-s[i].lower() 返回一个小写
+思路：用相向two pointer，当不是char时候就比较; s[i].isalnum() 看是否是string或者num; s[i].lower() 返回一个小写
 ```python
 def isPalindrome(s: str) -> bool:
     i, j = 0, len(s) - 1
@@ -41,7 +39,7 @@ print(te.isPalindrome("dafsas"))
 
 
 [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/)
-思路：用Stack，如果相同就pop，不同就放进来，最后转换成string
+用Stack，如果相同就pop，不同就放进来，最后转换成string
 
 ```python
 class Solution:
@@ -127,9 +125,7 @@ print(param_3)
 
 [246. Strobogrammatic Number](https://leetcode.com/problems/strobogrammatic-number/)
 思路：
-先确定满足条件的strobogrammatic nums
-然后用hashmap一一对应起来
-用相向two pointers一一比对，注意条件有2个：满足strobogrammatic num并且要pointers指向对应
+先确定满足条件的strobogrammatic nums; 然后用hashmap一一对应起来; 用相向two pointers一一比对，注意条件有2个：满足strobogrammatic num并且要pointers指向对应
 ```python
 class Solution:
     def isStrobogrammatic(self, num: str) -> bool:
@@ -147,9 +143,7 @@ class Solution:
 ```
 
 [266. Palindrome Permutation](https://leetcode.com/problems/palindrome-permutation/)
-思路：放进map里{char: count}数个数，如果偶数就可以，奇数的话只能至多一个是奇数
-
-注意map[item] = map.get[item, 0] + 1的使用方法
+放进map里{char: count}数个数，如果偶数就可以，奇数的话只能至多一个是奇数; 注意map[item] = map.get[item, 0] + 1的使用方法
 ```python
 class Solution:
     def canPermutePalindrome(self, s: str) -> bool:
@@ -381,4 +375,416 @@ class Solution:
         if carry:
             res.append(carry)
         return ''.join(str(x) for x in res[::-1])
+```
+
+[1249. Minimum Remove to Make Valid Parentheses](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/)
+
+思路：
+用stack存inValid的'(',')'的index; 如何判断inValid：每次看到(就压栈，看到)要么弹要么直接放到set里，或者直接换成""，再把多余的(都放到set里面（或者多余的（直接换成空）。最后把s导出成string
+```python
+class Solution:
+    def minRemoveToMakeValid(self, s: str) -> str:
+        s = list(s)
+        stack = []
+        for index, letter in enumerate(s):
+            if letter == "(":
+                stack.append(index)
+            elif letter == ")":
+                if stack:
+                    stack.pop()
+                else:
+                    s[index] = ""
+        while stack:
+            s[stack.pop()] = ""
+            
+        return "".join(s)
+```
+
+[680. Valid Palindrome II](https://leetcode.com/problems/valid-palindrome-ii/)
+
+two pointers分别从两头往中间走，如果不满足就再给个机会
+```python
+class Solution:
+    def validPalindrome(self, s: str) -> bool:        
+        left = 0
+        right = len(s) - 1
+        
+        def isValid(s, left, right): # 定义方式
+                while left < right:
+                    if s[left] == s[right]:
+                        left += 1
+                        right -= 1
+                    else:
+                        return False
+                return True #不要忘记return True
+                    
+        while left < right:
+            if s[left] == s[right]:
+                left += 1
+                right -= 1
+            else:
+                return isValid(s, left + 1, right) or isValid(s, left, right - 1)                 
+        return True #不要忘记return True
+```        
+
+[314. Binary Tree Vertical Order Traversal](https://leetcode.com/problems/binary-tree-vertical-order-traversal/)
+
+Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).
+
+If two nodes are in the same row and column, the order should be from left to right.
+
+思路：
+Queue存((node, col)), 用一个map{col, oneRes}, 遍历的时候，更新HashMap,最后用HashMap来导出，但是不知道最小值最大值，所以实时更新一下，这样就不用sort，时间复杂度O(N),空间：O(N); colTable=defaultlist(list); queue=deque([(root, 0)]); queue.append((node,col-1))
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+from collections import deque
+class Solution:
+    def verticalOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if root is None: # 不要忘了base case
+            return []
+        colTable = defaultdict(list) #When the list class is passed as the default_factory argument, then a defaultdict is created with the values that are list.
+        min_col = max_col = 0
+        queue = deque([(root, 0)]) # 初始化加是deque([(root, 0)])
+        res = []
+        while queue:
+            node, col = queue.popleft()
+            colTable[col].append(node.val)
+            min_col = min(min_col, col)
+            max_col = max(max_col, col)
+            if node.left:
+                queue.append((node.left, col - 1)) # 双[[]]
+            if node.right:
+                queue.append((node.right, col + 1)) 
+        for i in range(min_col, max_col + 1): # 左开右闭，需要加一
+            res.append(colTable[i])
+        return res
+
+        """
+        如果是直接colTable = {}
+            if col not in colTable:
+                colTable[col] = [node.val]
+            else:
+                colTable[col].append(node.val)
+        """
+```
+
+[1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/)
+
+There are n buildings in a line. You are given an integer array heights of size n that represents the heights of the buildings in the line.
+
+Input: heights = [4,2,3,1]
+Output: [0,2,3]
+
+从右往左走，每次记录最大值，比较最大值和当前值；当前值更大就更新最大值并且记录index；反过来走for index in reversed(range(len(list));翻转list: res.reverse()
+时间： O(n)
+空间： O(1)
+```python
+class Solution:
+    def findBuildings(self, heights: List[int]) -> List[int]:
+        n = len(heights)
+        res = []
+        curMax = -1
+        for cur in reversed(range(n)):
+            if curMax < heights[cur]:
+                curMax = heights[cur]
+                res.append(cur)
+        res.reverse()
+        return res
+```
+
+
+[1570. Dot Product of Two Sparse Vectors](https://leetcode.com/problems/dot-product-of-two-sparse-vectors/)
+
+方法一：
+直接按照array来算；
+时间O(n) 空间O(1)
+```python
+class SparseVector:
+    def __init__(self, nums: List[int]):
+        self.array = nums
+
+    # Return the dotProduct of two sparse vectors
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        res = 0
+        for num1, num2 in zip(self.array, vec.array): # zip function: Iterator objects that will be joined together, return a list of tuples
+            res += num1 * num2
+        return res
+```
+
+方法二：
+确定数组到底是多大，如果不是特别大就可以用dict{index, num}，然后遍历(key, value)比较如果index也同时在vec.dict里面，就res+=；遍历dict：for key, value in dic.items()；查看某个key是否在dict里: if key in dict；从dict取key对应的value：dict[key]
+时间：建立dict用O(N)，计算dot是O(L)L是非0个数
+空间：建立dict是O(L)，计算dot是O(1)
+```python
+class SparseVector:
+    def __init__(self, nums: List[int]):
+        self.nonzeroes = {}
+        for i, n in enumerate(nums):
+            if n != 0:
+                self.nonzeroes[i] = n
+
+    # Return the dotProduct of two sparse vectors
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        res = 0
+        for i, n in self.nonzeroes.items(): #The items() method returns a view object that displays a list of a given dictionary's (key, value) tuple pair
+            if i in vec.nonzeroes:
+                res += n * vec.nonzeroes[i]
+        return res
+            
+
+```
+
+方法三：
+同向双指针，存成pairs[(index, num)]只存不是0的index和num，当同时都没到终点，只用pairs中的index相同就res+=，否则根据index大小移动指针；
+时间：建立pairsO(N)，计算dot O(L1+L2)；其中L1, L2是非0个数
+空间：建立pairsO(L)，计算dot O(1)
+```python
+class SparseVector:
+    def __init__(self, nums: List[int]):
+        self.pairs = []
+        for i, n in enumerate(nums):
+            if n != 0:
+                self.pairs.append([i, n])
+
+    # Return the dotProduct of two sparse vectors
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        res = 0
+        p = q = 0
+        while p < len(self.pairs) and q < len(vec.pairs):
+            if self.pairs[p][0] == vec.pairs[q][0]: #当index相同
+                res += self.pairs[p][1] * vec.pairs[q][1]
+                p += 1  # 不要忘了+= 1
+                q += 1
+            elif self.pairs[p][0] < vec.pairs[q][0]:
+                p += 1
+            else:
+                q += 1
+        return res
+```
+
+[938. Range Sum of BST](https://leetcode.com/problems/range-sum-of-bst/)
+
+Given the root node of a binary search tree and two integers low and high, return the sum of values of all nodes with a value in the inclusive range [low, high].
+
+思路：
+利用好BST的性质，只看小于大于就可以；需要用self.res的全局变量
+时间：O(N)， N是nodes数量
+空间：O(N)
+```python
+class Solution:
+    def rangeSumBST(self, root: Optional[TreeNode], L: int, R: int) -> int:
+        if root is None:
+            return 0
+        self.res = 0
+        def dfs(node):
+            if node:
+                if L <= node.val <= R:
+                    self.res += node.val
+                if L < node.val:
+                    dfs(node.left)
+                if node.val < R:
+                    dfs(node.right)
+        dfs(root)
+        return self.res
+```
+
+[1650. Lowest Common Ancestor of a Binary Tree III](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/)
+
+先求各自深度，再把深的往上走直到当前深度相同，最后一起往上走找parent
+时间：O(H)
+空间：O(1)
+```python
+   def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+        def get_depth(node):
+            depth = 0
+            while node.parent: # 条件是node.parent
+                node = node.parent
+                depth += 1
+            return depth
+        
+        dp, dq = get_depth(p), get_depth(q)
+        if dp < dq:
+            for _ in range(dq - dp):
+                q = q.parent
+        else:
+            for _ in range(dp - dq):
+                p = p.parent
+        # now p and q are the same level
+        while p != q:
+            p = p.parent
+            q = q.parent
+        return p
+```
+
+8. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
+
+You are given a 0-indexed array of positive integers w where w[i] describes the weight of the ith index.
+
+You need to implement the function pickIndex(), which randomly picks an index in the range [0, w.length - 1] (inclusive) and returns it. The probability of picking an index i is w[i] / sum(w).
+
+Example
+Input
+["Solution","pickIndex","pickIndex","pickIndex","pickIndex","pickIndex"]
+[[[1,3]],[],[],[],[],[]]
+Output
+[null,1,1,1,1,0]
+
+Explanation
+Solution solution = new Solution([1, 3]);
+solution.pickIndex(); // return 1. It is returning the second element (index = 1) that has a probability of 3/4.
+solution.pickIndex(); // return 1
+solution.pickIndex(); // return 1
+solution.pickIndex(); // return 1
+solution.pickIndex(); // return 0. It is returning the first element (index = 0) that has a probability of 1/4.
+
+
+
+```Java
+
+    public int pickIndex() {
+        double target = sum * Math.random();
+        return binarySearch(target, 0, preSum.length - 1);
+    }
+    
+    private int binarySearch(double target, int l, int r) {
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (preSum[mid] == target) {
+                return mid;
+            } else if (preSum[mid] < target) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return l;
+    }
+}
+```
+
+
+用list存所有的前缀和。概率是w[i]/total_sum，可以用找到第一个preSum来代替；用random.random()来获得[0,1)
+时间：构造O(N)，找数O(N)
+空间：构造O(N)，找数O(1)
+```python
+class Solution:
+
+    def __init__(self, w: List[int]):
+        self.prefix_sums = []
+        pre_sum = 0
+        for weight in w:
+            pre_sum += weight
+            self.prefix_sums.append(pre_sum)
+        self.total_sum = pre_sum
+
+    def pickIndex(self) -> int:
+        target = self.total_sum * random.random()
+        for i, pre_sum in enumerate(self.prefix_sums):
+            if target < pre_sum:
+                return i
+
+# Your Solution object will be instantiated and called as such:
+# obj = Solution(w)
+# param_1 = obj.pickIndex()
+```
+
+用list存所有的前缀和。概率是w[i]/total_sum，可以用二分查找找到第一个preSum来代替；用random.random()来获得[0,1)
+时间：构造O(N)，找数O(NlogN)
+空间：构造O(N)，找数O(1)
+```python 
+class Solution:
+    def __init__(self, w: List[int]):
+        self.prefix_sums = []
+        pre_sum = 0
+        for weight in w:
+            pre_sum += weight
+            self.prefix_sums.append(pre_sum)
+        self.total_sum = pre_sum
+
+    def pickIndex(self) -> int:
+        target = self.total_sum * random.random()
+        low, high = 0, len(self.prefix_sums) - 1
+        while low <= high:
+            mid = low + (high - low) // 2 # 要地板除
+            if (target > self.prefix_sums[mid]):
+                low = mid + 1
+            else: 
+                high = mid - 1
+        return low
+
+# Your Solution object will be instantiated and called as such:
+# obj = Solution(w)
+# param_1 = obj.pickIndex()
+```
+
+[408. Valid Word Abbreviation](https://leetcode.com/problems/valid-word-abbreviation/)
+
+从前往后依次比较：如果相同就往后走，如果j第一个是0就False，如果j是其他数字：当一直是数字的时候就一直往后走，同时记住总数字，然后把i也移动那么多；最后判断是否都走到底了；判断j是否是数字: abbr[i].isnumeric()，把string s="dd23ss"的转换成数字int(s[2:4])；注意if else关系；
+时间：O(N), N is word.length()
+空间：O(k), k is size of the largest num
+```python
+class Solution:
+    def validWordAbbreviation(self, word, abbr):
+        i = j = 0
+        m, n = len(word), len(abbr)
+        while i < m and j < n:
+            if word[i] == abbr[j]:
+                i += 1
+                j += 1
+            elif abbr[j] == "0":
+                return False
+            elif abbr[j].isnumeric():
+                k = j
+                while k < n and abbr[k].isnumeric():
+                    k += 1
+                i += int(abbr[j:k])
+                j = k
+            else:
+                return False
+        return i == m and j == n
+```
+
+[339. Nested List Weight Sum](https://leetcode.com/problems/nested-list-weight-sum/)
+
+用dfs，如果是数字就total +=，如果不是就深度加一继续。
+时间：O(N), N is size of nestedList
+空间：O(K), K is largest List
+```python
+class Solution:
+    def depthSum(self, nestedList: List[NestedInteger]) -> int:
+        def dfs(nestedList, depth):
+            total = 0
+            for nested in nestedList:
+                if nested.isInteger():
+                    total += nested.getInteger() * depth
+                else:
+                    total += dfs(nested.getList(), depth + 1)
+            return total
+        return dfs(nestedList, 1)
+```
+
+[921. Minimum Add to Make Parentheses Valid](https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/)
+
+用left, right两个分别记录需要valid的'('和')'，如果见到'('就right++，如果见到')'就要么right--要么left++，最后返回left+right
+时间O(N)
+空间O(1)
+```python
+class Solution:
+    def minAddToMakeValid(self, s: str) -> int:
+        left = right = 0
+        for c in s:
+            if c == "(":
+                right += 1
+            elif c == ")":
+                if right > 0:
+                    right -= 1
+                else:
+                    left += 1
+        return left + right
 ```

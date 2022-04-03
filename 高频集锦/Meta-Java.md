@@ -158,7 +158,6 @@ class PickWithWeight{
         return l;
     }
 }
-
 ```
 9. [921. Minimum Add to Make Parentheses Valid](https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/)
 
@@ -283,7 +282,6 @@ Explanation: Four 1's at depth 2, one 2 at depth 1. 1*2 + 1*2 + 2*1 + 1*2 + 1*2 
     }
     // Time: O(n), n is size of nestedList
     // Space: O(k), k is largest List
-
 
 ```
 
