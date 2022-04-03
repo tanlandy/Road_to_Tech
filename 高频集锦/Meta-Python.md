@@ -143,7 +143,7 @@ class Solution:
 ```
 
 [266. Palindrome Permutation](https://leetcode.com/problems/palindrome-permutation/)
-放进map里{char: count}数个数，如果偶数就可以，奇数的话只能至多一个是奇数; 注意map[item] = map.get[item, 0] + 1的使用方法
+放进map里{char: count}数个数，如果偶数就可以，奇数的话只能至多一个是奇数; 注意map[item] = map.get(item, 0) + 1的使用方法
 ```python
 class Solution:
     def canPermutePalindrome(self, s: str) -> bool:
@@ -788,3 +788,116 @@ class Solution:
                     left += 1
         return left + right
 ```
+
+[139. Word Break](https://leetcode.com/problems/word-break/)
+
+用dp[]存每个index能否满足条件，从后往前来更新dp[]，对于每个起点i，从长度满足的wordDict来找能走到的：s[i:i+len(w)] == w，找到就能退出看下一个i
+时间：O(N*M*N) N is len(s), M is len(wordDict)
+空间：O(1)
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        
+        dp = [False] * (len(s) + 1)
+        dp[len(s)] = True
+
+        for i in range(len(s) - 1, -1, -1):
+            for w in wordDict:
+                if (i + len(w)) <= len(s) and s[i : i + len(w)] == w:
+                    dp[i] = dp[i + len(w)]
+                if dp[i]:
+                    break
+        return dp[0]
+```
+
+[140. Word Break II](https://leetcode.com/problems/word-break-ii/)
+
+
+```python
+class Solution(object):
+    def wordBreak(self, s, wordDict):
+        """
+        :type s: str
+        :type wordDict: Set[str]
+        :rtype: List[str]
+        """
+        return self.helper(s, wordDict, {})
+
+    def helper(self, s, wordDict, memo):
+        if s in memo: return memo[s]
+        if not s: return []
+
+        res = []
+        for word in wordDict:
+            if not s.startswith(word):
+                continue
+            if len(word) == len(s):
+                res.append(word)
+            else:
+                resultOfTheRest = self.helper(s[len(word):], wordDict, memo)
+                for item in resultOfTheRest:
+                    item = word + ' ' + item
+                    res.append(item)
+        memo[s] = res
+        return res
+```
+
+[124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+
+dfs()在左右子树不分分叉的情况下，返回左子树path最大值和右子树path最大值:return node.val + max(leftMax, rightMax); basecase是走到null的0，同时更新res[0], res[0]=max(res[0], node.val+leftMax+rightMax)
+时间: O(N) n is num of nodes
+空间: O(H) if balanced tree
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        res = [root.val]
+        
+        # 子树本身，返回不分叉时候的最大值
+        def dfs(node) -> int:
+            if not node:
+                return 0
+            leftMax = max(dfs(node.left), 0)
+            rightMax = max(dfs(node.right), 0)
+            res[0] = max(res[0], node.val + leftMax + rightMax)
+            return node.val + max(leftMax, rightMax)
+        dfs(root)
+        return res[0]
+```
+
+[347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/) 之后要看看heap的方法
+bucket sort
+i(count)  0 |  1  | 2  | 3 | 4 | 5 | ... | len(input) 
+values       [100]     [1,2]
+
+用map来记录num: count的数量，之后构建一个count:values的array，；最后array从后往前往res里加，直到len(res) == k；构建array: freq = [[] for i in range(len(nums) + 1)]; 从后往前遍历: for i in range(len(freq) -1, 0, -1)
+时间：O(N)
+空间：O(N)
+```python
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        count = {}
+        freq = [[] for i in range(len(nums) + 1)] # 大小是len(nums) + 1，注意如何构建values是list的list
+
+        for n in nums:
+            count[n] = count.get(n, 0) + 1
+        for n, count in count.items():
+            freq[count].append(n)
+
+        res = []
+        for i in range(len(freq) -1, 0, -1): # 注意如何从后往前遍历
+            for n in freq[i]:
+                res.append(n)
+                if len(res) == k:
+                    return res 
+```
+
+heap
+O(KlogN)

@@ -315,15 +315,14 @@ inorder每次返回pre的那个node，传进去当前和pre两个node
         return pre;
     }
 ```
-14. [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
 
 
 
-15. [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
+1.  [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 
 
 
-16. [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+2.  [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
 
 Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 
