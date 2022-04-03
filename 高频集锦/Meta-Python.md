@@ -901,3 +901,168 @@ class Solution:
 
 heap
 O(KlogN)
+
+
+
+[236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+自下而上，这个函数就返回自己左右子树满足条件的node：返回自己或者不为None的一边。base case就是找到了
+时间：O(N)
+空间：O(N)
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if root is None: # base case
+            return root
+        if root == p or root == q: # base case
+            return root
+
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+        
+        if left is None:
+            return right
+        elif right is None:
+            return left
+        else:
+            return root
+```
+
+[560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+
+思路一：
+双指针，第一个指针一次走一步，另一个指针走到头
+时间：O(n^2)
+空间：O(1)
+
+用一个{}存{preSum:count}前缀和以及出现的次数，同时把{0:1}放进去，然后每次看curSum-K在不在map里，在的话就res+=count；更新res：res+=preSum.get(diff, 0); 形成{preSum:count}的dict：preSum[curSum]=1+preSum.get(curSum, 0)
+时间：O(N)
+空间：O(N)
+```python
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        res = 0
+        curSum = 0
+        prefixSums = { 0 : 1 }
+
+        for n in nums:
+            curSum += n
+            diff = curSum - k
+
+            res += prefixSums.get(diff, 0)
+            prefixSums[curSum] = 1 + prefixSums.get(curSum, 0)
+
+        return res 
+```
+
+[227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
+
+用Stack存数字，每次如果是+-就直接压进去，如果是*/就压进去相对应的数，最后弹栈相加；-3//2地板除会得到-2而不是想要的-1，所以用int(-3/2)这样就可以得到-1;检查是否是数字: s[i].isdigit()；把长串string转成对应的数字num=num*10+int(s[i]);如果是"+-*/": if s[i] in "+-*/"；sign的条件：如果是sign或者走到最后一位；相加stack的所有数字：sum(stack)；每次检查完sign之后要更新num和sign；最后还有把最后的数放进stack里
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def calculate(self, s):
+        def update(sign, num):
+            if sign == "+":
+                stack.append(num)
+            elif sign == "-":
+                    stack.append(-num)
+            elif sign == "*":
+                stack.append(stack.pop()*num)
+            else:
+                stack.append(int(stack.pop()/num))
+        
+        idx, num, stack, sign = 0, 0, [], "+"
+        while idx < len(s):
+            if s[idx].isdigit():
+                num = num * 10 + int(s[idx])
+            elif s[idx] in "+-*/":
+                update(sign, num)
+                num = 0
+                sign = s[idx]
+            idx += 1
+        update(sign, num)
+        return sum(stack)
+```
+
+[224. Basic Calculator](https://leetcode.com/problems/basic-calculator/)
+
+当看到"("就从下一位call自己，看到")"就返回"()"之间的值
+
+```python
+class Solution:
+    def calculate(self, s):
+        def update(sign, num):
+            if sign == "+":
+                stack.append(num)
+            elif sign == "-":
+                stack.append(-num)
+        
+        idx, num, stack, sign = 0, 0, [], "+"
+        while idx < len(s):
+            if s[idx].isdigit():
+                num = num * 10 + int(s[idx])
+            elif s[idx] in "+-":
+                update(sign, num)
+                num = 0
+                sign = s[idx]
+            elif s[idx] == "(":
+                num, j = self.calculate(s[idx + 1:]) # 需要返回（）内部的值和当前的idx位置
+                idx = idx + j
+            elif s[idx] == ")":
+                update(sign, num)
+                return sum(stack), idx + 1 # 看到了“）”，返回（）里面的值和idx的位置
+            idx += 1                       # 别忘了idx += 1
+        update(sign, num)                  # 别忘了最后一个数的处理
+        return sum(stack)
+```
+
+[772. Basic Calculator III](https://leetcode.com/problems/basic-calculator-iii/)
+
+```python
+class Solution:
+    def calculate(self, s: str) -> int:
+        def update(sign, num):
+            if sign == "+":
+                stack.append(num)
+            elif sign == "-":
+                stack.append(-num)
+            elif sign == "*": # BC II,III
+                stack.append(stack.pop() * num)
+            elif sign == "/": # BC II,III
+                stack.append(int(stack.pop() / num))
+        
+        idx, num, stack, sign = 0, 0, [], "+"
+        
+        while idx < len(s):
+            if s[idx].isdigit():
+                num = num * 10 + int(s[idx])
+            elif s[idx] in "+-*/":
+                update(sign, num)
+                sign = s[idx]
+                num = 0
+            elif s[idx] == "(": # BC I,III
+                num, j = self.calculate(s[idx+1:])
+                idx += j
+            elif s[idx] == ")": # BC I,III
+                update(sign, num)
+                return sum(stack), idx + 1
+            idx += 1
+        update(sign, num)
+        return sum(stack)
+```

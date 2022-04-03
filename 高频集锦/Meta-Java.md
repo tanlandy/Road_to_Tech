@@ -3124,7 +3124,7 @@ HashMap存前缀和以及和的个数
             if (Character.isDigit(c)) {
                 curNum = (curNum * 10) + (c - '0');
             }
-            if (!Character.isDigit(c) && !Character.isWhitespace(c) || i == len - 1) { // 注意条件：不是数字，不是空格，也不是最后一位
+            if (!Character.isDigit(c) && !Character.isWhitespace(c) || i == len - 1) { // 注意条件：不是数字，不是空格，是最后一位
                 if (ope == '-') {
                     stack.push(-curNum);
                 } else if (ope == '+') {
@@ -3159,7 +3159,6 @@ HashMap存前缀和以及和的个数
         int len = s.length();
         int res = 0;
         int lastNum = 0;
-        Stack<Integer> stack = new Stack<>();
         int curNum = 0;
         char ope = '+';
         for (int i = 0; i < len; i++) {
