@@ -474,6 +474,41 @@ class Solution:
         """
 ```
 
+[987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
+
+The vertical order traversal of a binary tree is a list of top-to-bottom orderings for each column index starting from the leftmost column and ending on the rightmost column. There may be multiple nodes in the same row and same column. In such a case, sort these nodes by their values.
+
+与上一题唯一不同就是每一层新建一个map，然后排序好之后加到最终的map里
+```python
+class Solution(object):
+    def verticalTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """    
+        mapping = collections.defaultdict(list) 
+        queue = collections.deque([(root, 0)])
+        x_min, x_max = 0, 0
+        while queue:
+            tmp = collections.defaultdict(list)  # 每层之前先另外搞一个map
+            for _ in range(len(queue)):
+                node, x = queue.popleft()
+                tmp[x].append(node.val) 
+                if node.left:
+                    queue.append((node.left, x-1))
+                    x_min = min(x_min, x-1)
+                if node.right: 
+                    queue.append((node.right, x+1)) 
+                    x_max = max(x_max, x+1)
+            for i in tmp: # 走完一层再把map按顺序加进去
+                mapping[i] += sorted(tmp[i])
+
+        res = []
+        for i in range(min_col, max_col + 1): # 左开右闭，需要加一
+            res.append(mapping[i])
+        return res
+```
+
 [1762. Buildings With an Ocean View](https://leetcode.com/problems/buildings-with-an-ocean-view/)
 
 There are n buildings in a line. You are given an integer array heights of size n that represents the heights of the buildings in the line.
@@ -622,7 +657,7 @@ class Solution:
         return p
 ```
 
-8. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
+1. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
 
 You are given a 0-indexed array of positive integers w where w[i] describes the weight of the ith index.
 
@@ -1065,4 +1100,121 @@ class Solution:
             idx += 1
         update(sign, num)
         return sum(stack)
+```
+
+[50. Pow(x, n)](https://leetcode.com/problems/powx-n/)
+
+Input: x = 2.00000, n = 10
+Output: 1024.00000
+
+如果n%2是奇数，就res*=x，否则就x*=x，同时n//=2；另外一开始n<0的情况要注意；询问是否特别小或者特别大
+A = x^n
+n是偶数：x^2n = A * A
+n是奇数：x^2n = A * A * 2
+时间O(logn)
+空间O(logn)
+```python
+class Solution:
+    def myPow(self, x, n):
+        if n < 0:   # 如果n小于0，n变号，x取倒数
+            x = 1 / x
+            n = -n
+        res = 1 # 最后的结果
+        while n:
+            if n % 2 == 1: # 是奇数
+                res *= x
+            x *= x
+            n //= 2 # 每次 n = n // 2
+        return res
+```
+
+[215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+    
+Given an integer array nums and an integer k, return the kth largest element in the array.
+
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+
+heapify这个array到maxHeap：O(N)，然后pop()共k次=>时间O(N+KlogN)
+
+思路1: 用maxHeap，size总是k，这样堆顶就是kth largest，然后一个一个pop()共k次，每次pop()时间是logN
+时间 O(N+Nlogk) 每次pop数字需要O(logk)，一共n次
+空间 O(K)
+
+partition: cut to two halves，左边的数都比右边的小，pivot就选最右的数，这个数字就是左右两边数的分界: p从最左index开始一直往右走，如果这个数比pivot小，那就放进来，然后p+=1，最后把p和pivot呼唤，效果就是pivot左边的数都比pivot小
+
+Quickselect
+时间 O(N)；如果每次的pivot都刚好是最大值，那每次都需要走一遍，所以那就是O(N^2)
+空间 O(1)
+```python
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        k = len(nums) - k # 把k变成sorted情况下的第k位
+
+        def quickSelect(l, r): # l, r告诉跑quickSelect的范围
+            pivot, p = nums[r], l
+            for i in range(l, r):
+                if nums[i] <= pivot: # 如果当前这个数<=pivot，就放到左边
+                    nums[p], nums[i] = nums[i], nums[p] # python不用一个swap()
+                    p += 1
+            nums[p], nums[r] = nums[r], nums[p]
+
+            if k < p: 
+                return quickSelect(l, p - 1)
+            elif k > p:
+                return quickSelect(p + 1, r)
+            else:
+                return nums[p]
+
+        return quickSelect(0, len(nums) - 1)
+
+```
+
+[71. Simplify Path](https://leetcode.com/problems/simplify-path/)
+
+
+用stack: 对于每个如果是.或者空，忽略; 如果是..，当非空的时候弹栈; 如果是文件夹，直接放进去; 分割: for part in path.split("/")；最后返回"/" + "/".join(stack)
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def simplifyPath(self, path: str) -> str:
+        stack = []
+        for part in path.split("/"):
+            if part == "..":
+                if stack:
+                    stack.pop()
+            elif part == "." or not part: # 如果是空格
+                continue
+            else: # 说明是文件名字
+                stack.append(part)
+        res = "/" + "/".join(stack)
+        return res
+```
+
+[973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+
+
+minHeap，先计算每个点的距离。放进minHeap，然后pop K次; 初始化minHeap.append([dist, x, y]); heap化:heapq.heapify(minHeap)，弹出dist, x, y = heapq.heappop(minHeap_
+
+时间：O(N + KlogN)
+空间：O(K)
+```python
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        minHeap = []
+        for x, y in points:
+            dist = (x ** 2) + (y ** 2)
+            minHeap.append([dist, x, y]) # dist是minHeap的key
+        
+        heapq.heapify(minHeap)
+        res = []
+        while k > 0:
+            dist, x, y = heapq.heappop(minHeap)
+            res.append([x, y])
+            k -= 1
+        return res
 ```
