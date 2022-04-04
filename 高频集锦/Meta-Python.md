@@ -1218,3 +1218,117 @@ class Solution:
             k -= 1
         return res
 ```
+
+[791. Custom Sort String](https://leetcode.com/problems/custom-sort-string/)
+
+先统计s各个字母出现次数，然后根据order的顺序放进res里，最后把不在order里但在s里的放进去 ：统计次数：count = collections.Counter(s), count[c]就会返回char在s出现的次数
+
+时间：O(len(s)+len(order))
+空间：O(len(s))
+
+```python
+class Solution:
+    def customSortString(self, order: str, s: str) -> str:
+        count = collections.Counter(s) # count[char] will be the number of occurrences of 'char' in T.
+        res = []
+        # 走一遍order，根据order把对应的char更新到res里
+        for c in order:
+            res.append(c * count[c])
+            count[c] = 0 # 因为最后还要把不在order里但在s里的放进去
+        # 走一遍count，把不在order里但在s里的放进去    
+        for c in count:
+            res.append(c * count[c])
+        return "".join(res)
+```
+
+[65. Valid Number](https://leetcode.com/problems/valid-number/)
+
+
+要处理的东西 1. digits; 2. sign('+', '-')：必须出现在开头，或者紧跟在'e', 'E'后面; 3. exponent：必须第一次见，而且见过digit；合理的expo之后要把seenDigit改为没见过; 4. dot：必须第一次见，而且不能在exponent后面; 5. other
+
+时间：O(N)
+空间：O(1)
+```python
+class Solution:
+    def isNumber(self, s: str) -> bool:
+        seenDigit = seenExpo = seenDot = False
+        for i, c in enumerate(s):
+            if c.isdigit():
+                seenDigit = True
+            elif c in "+-":
+                if i > 0 and s[i-1] != "e" and s[i-1] != "E":
+                    return False
+            elif c in "eE":
+                if seenExpo or not seenDigit:
+                    return False
+                seenExpo = True
+                seenDigit = False
+            elif c == ".":
+                if seenDot or seenExpo:
+                    return False
+                seenDot = True
+            else:
+                return False
+        return seenDigit
+```
+
+[56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+先根据start把intervals排序，然后一个一个看，如果重叠就更新，不重叠就加进去；排序: intervals.sort(key = lambda i : i[0]); lastEnd = res[-1][1]；遍历的时候是for start, end in intervals[1:]:
+时间：O(nlogn)
+空间：O(logn) if sorted in place
+
+```python
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        intervals.sort(key = lambda i : i[0])  # i代表interval，：后面表示按照排序i[0]
+        res = [intervals[0]] # 一开始把第一个放进去
+
+        for start, end in intervals[1:]: # 注意是 in intervals[1:]
+            lastEnd = res[-1][1]
+            if start <= lastEnd:
+                res[-1][1] = max(lastEnd, end)
+            else:
+                res.append([start, end])
+        
+        return res 
+```
+
+[721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+```python
+class Solution(object):
+    def accountsMerge(self, accounts):
+        from collections import defaultdict
+        visited_accounts = [False] * len(accounts)
+        emails_accounts_map = defaultdict(list)
+        res = []
+        # Build up the graph.
+        for i, account in enumerate(accounts):
+            for j in range(1, len(account)):
+                email = account[j]
+                emails_accounts_map[email].append(i)
+        # DFS code for traversing accounts.
+        def dfs(i, emails):
+            if visited_accounts[i]:
+                return
+            visited_accounts[i] = True
+            for j in range(1, len(accounts[i])):
+                email = accounts[i][j]
+                emails.add(email)
+                for neighbor in emails_accounts_map[email]:
+                    dfs(neighbor, emails)
+        # Perform DFS for accounts and add to results.
+        for i, account in enumerate(accounts):
+            if visited_accounts[i]:
+                continue
+            name, emails = account[0], set()
+            dfs(i, emails)
+            res.append([name] + sorted(emails))
+        return res
+```
+
+
+[670. Maximum Swap](https://leetcode.com/problems/maximum-swap/)

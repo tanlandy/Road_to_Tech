@@ -316,13 +316,7 @@ inorder每次返回pre的那个node，传进去当前和pre两个node
     }
 ```
 
-
-
-1.  [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
-
-
-
-2.  [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+1.  [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
 
 Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 
@@ -1051,12 +1045,7 @@ Here N is the number of accounts and K is the maximum length of an account.
 
 ```
 
-
-方法二：Union Find
-```
-```
-
-17. [323. Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
+1.  [323. Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
 
 You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.
 
