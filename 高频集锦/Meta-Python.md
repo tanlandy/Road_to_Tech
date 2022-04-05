@@ -1298,6 +1298,53 @@ class Solution:
         return res 
 ```
 
+[8. String to Integer (atoi)](https://leetcode.com/problems/string-to-integer-atoi/)
+
+用sign, res, idx，idx一直往后走，先删除空格，然后记录正负号， 最后处理数字，每次数字检查是否越界，否则res = 10*res + curDigit；越界的条件>INT_MAX // 10，或者== INT_MAX同时curDit>INT_MAX % 10，越界了就返回最大值或者最小值；最大值pow(2, 31)-1；最小值-pow(2, 31)
+
+时间：O(n)
+空间：O(1)
+
+```python
+class Solution:
+    def myAtoi(self, s: str) -> int:
+        sign = 1
+        res = 0
+        idx = 0
+        n = len(s)
+        
+        INT_MAX = pow(2, 31) - 1
+        INT_MIN = -pow(2, 31)
+        
+        # 先删除空格
+        while idx < n and s[idx] == " ":
+            idx += 1
+        
+        # 判断正负号
+        if idx < n and s[idx] == "+":
+            sign = 1
+            idx += 1
+        elif idx < n and s[idx] == "-":
+            sign = -1
+            idx += 1
+    
+        # 接下来都是数字
+        while idx < n and s[idx].isdigit():
+            digit = int(s[idx])
+            # 检查过大或过小：如果过大或过小，就返回最大值或最小值
+            # 1. res > Integer.MAX_VALUE / 10肯定会在下一个超过
+            # 2. res < Integer.MAX_VALUE / 10就不用担心
+            # 3. res == Integer.MAX_VALUE / 10，只有0-7可以满足，因为Integer.MAX_VALUE % 10 = 7
+            if (res > INT_MAX // 10) or (res == INT_MAX // 10 and digit > INT_MAX % 10):
+                return INT_MAX if sign == 1 else INT_MIN
+            res = 10 * res + digit
+            idx += 1
+        return sign * res
+```
+
+
+
+
 [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
 
 ```python
@@ -1334,3 +1381,4 @@ class Solution(object):
 
 
 [670. Maximum Swap](https://leetcode.com/problems/maximum-swap/)
+
