@@ -1107,25 +1107,27 @@ class Solution:
 Input: x = 2.00000, n = 10
 Output: 1024.00000
 
-如果n%2是奇数，就res*=x，否则就x*=x，同时n//=2；另外一开始n<0的情况要注意；询问是否特别小或者特别大
+如果n < 0; n % 2 ==1, 返回x * pow(x, n-1); 如果是偶数返回pow(x*x, n/2)
 A = x^n
 n是偶数：x^2n = A * A
 n是奇数：x^2n = A * A * 2
 时间O(logn)
 空间O(logn)
 ```python
-class Solution:
-    def myPow(self, x, n):
-        if n < 0:   # 如果n小于0，n变号，x取倒数
-            x = 1 / x
-            n = -n
-        res = 1 # 最后的结果
-        while n:
-            if n % 2 == 1: # 是奇数
-                res *= x
-            x *= x
-            n //= 2 # 每次 n = n // 2
-        return res
+# if n % 2 == 0
+# x^n = x**2 ^ (n/2)
+# elif
+# x^n = x * x^(n-1)
+
+def pow(x, n):
+    if n == 0:
+        return 1
+    if n < 0:
+        return pow(1/x, -n)
+    if n % 2 == 1:
+        return x * pow(x, n-1)
+    else:
+        return pow(x * x, n /2)
 ```
 
 [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
@@ -1143,7 +1145,7 @@ heapify这个array到maxHeap：O(N)，然后pop()共k次=>时间O(N+KlogN)
 时间 O(N+Nlogk) 每次pop数字需要O(logk)，一共n次
 空间 O(K)
 
-partition: cut to two halves，左边的数都比右边的小，pivot就选最右的数，这个数字就是左右两边数的分界: p从最左index开始一直往右走，如果这个数比pivot小，那就放进来，然后p+=1，最后把p和pivot呼唤，效果就是pivot左边的数都比pivot小
+partition: cut to two halves，左边的数都比右边的小，pivot就选最右的数，这个数字就是左右两边数的分界: p从最左index开始一直往右走，如果这个数比pivot小，那就放进来，然后p+=1，最后把p和pivot互唤，效果就是pivot左边的数都比pivot小
 
 Quickselect
 时间 O(N)；如果每次的pivot都刚好是最大值，那每次都需要走一遍，所以那就是O(N^2)
