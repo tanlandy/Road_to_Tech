@@ -657,51 +657,7 @@ class Solution:
         return p
 ```
 
-1. [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
-
-You are given a 0-indexed array of positive integers w where w[i] describes the weight of the ith index.
-
-You need to implement the function pickIndex(), which randomly picks an index in the range [0, w.length - 1] (inclusive) and returns it. The probability of picking an index i is w[i] / sum(w).
-
-Example
-Input
-["Solution","pickIndex","pickIndex","pickIndex","pickIndex","pickIndex"]
-[[[1,3]],[],[],[],[],[]]
-Output
-[null,1,1,1,1,0]
-
-Explanation
-Solution solution = new Solution([1, 3]);
-solution.pickIndex(); // return 1. It is returning the second element (index = 1) that has a probability of 3/4.
-solution.pickIndex(); // return 1
-solution.pickIndex(); // return 1
-solution.pickIndex(); // return 1
-solution.pickIndex(); // return 0. It is returning the first element (index = 0) that has a probability of 1/4.
-
-
-
-```Java
-
-    public int pickIndex() {
-        double target = sum * Math.random();
-        return binarySearch(target, 0, preSum.length - 1);
-    }
-    
-    private int binarySearch(double target, int l, int r) {
-        while (l <= r) {
-            int mid = l + (r - l) / 2;
-            if (preSum[mid] == target) {
-                return mid;
-            } else if (preSum[mid] < target) {
-                l = mid + 1;
-            } else {
-                r = mid - 1;
-            }
-        }
-        return l;
-    }
-}
-```
+[528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
 
 
 用list存所有的前缀和。概率是w[i]/total_sum，可以用找到第一个preSum来代替；用random.random()来获得[0,1)
