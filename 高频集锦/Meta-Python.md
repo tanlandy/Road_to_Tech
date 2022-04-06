@@ -87,9 +87,10 @@ I'll leave it to you to think how you can extend this to fewer columns.
 
 [346. Moving Average from Data Stream](https://leetcode.com/problems/moving-average-from-data-stream/)
 
-思路：
-用queue，每次记录当前的windowSum，如果size满足的话，来一个新数字就弹出末尾的，同时加进来新的，最后返回windowSum/len即可
+用queue，每次记录当前的windowSum，如果size满足的话，来一个新数字就弹出末尾的，同时加进来新的，最后返回windowSum/len即可：python用deque: from collections import deque；queue删除头部: queue.popleft()；queue加数字: queue.append(val)
 
+时间：O(1)
+空间：O(N)N is the size of window
 ```python
 from collections import deque
 
@@ -380,7 +381,7 @@ class Solution:
 [1249. Minimum Remove to Make Valid Parentheses](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/)
 
 思路：
-用stack存inValid的'(',')'的index; 如何判断inValid：每次看到(就压栈，看到)要么弹要么直接放到set里，或者直接换成""，再把多余的(都放到set里面（或者多余的（直接换成空）。最后把s导出成string
+先把s变成list，用stack存inValid的'(',')'的index; 如何判断inValid：每次看到(就压栈，看到)要么弹要么直接换成""，最后多余在stack里的（直接换成空）。最后把s导出成string：直接换成空：s[idx] = ""， 最后list变成str: "".join(s)
 ```python
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
@@ -631,30 +632,35 @@ class Solution:
 
 [1650. Lowest Common Ancestor of a Binary Tree III](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/)
 
-先求各自深度，再把深的往上走直到当前深度相同，最后一起往上走找parent
+先求各自深度，再把深的往上走直到当前深度相同，最后一起往上走找parent；注意找深度是while p
 时间：O(H)
 空间：O(1)
 ```python
-   def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-        def get_depth(node):
+
+    def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+        def get_depth(p):
             depth = 0
-            while node.parent: # 条件是node.parent
-                node = node.parent
+            while p:
+                p = p.parent
                 depth += 1
             return depth
+    
+        d1 = get_depth(p)
+        d2 = get_depth(q)
         
-        dp, dq = get_depth(p), get_depth(q)
-        if dp < dq:
-            for _ in range(dq - dp):
-                q = q.parent
-        else:
-            for _ in range(dp - dq):
-                p = p.parent
-        # now p and q are the same level
+        while d1 > d2:
+            p = p.parent
+            d1 -= 1
+                
+        while d1 < d2:
+            q = q.parent
+            d2 -= 1
+        
         while p != q:
             p = p.parent
             q = q.parent
-        return p
+        
+        return p      
 ```
 
 [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
@@ -1300,7 +1306,177 @@ class Solution:
 
 
 
+[21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
 
+用两个指针分别往后走，比较小的就放进来；用一个dummy，避免插入到空的链表中；需要注意其中一个没走到头。；别忘了更新自己pre = pre.next
+
+时间：O(N+M)
+空间：O(1)
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode(-1)
+        pre = dummy
+        while l1 and l2:
+            if l1.val <= l2.val:
+                pre.next = l1
+                l1 = l1.next
+            else:
+                pre.next = l2
+                l2 = l2.next
+            pre = pre.next
+        
+        pre.next = l1 if l1 is not None else l2
+        
+        return dummy.next
+```
+
+
+
+[23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
+
+类似mergesort，当len(lists)>1的时候两两个分别比较：用一个新的onepassMerge[]然后merge到自己，这样lists的大小越来越小，时间O(logK * N)：比较了logK次，每次O(N)：最后返回lists[0]；每次走2步：for i in range(0, len(lists), 2);要判断l2不越界：l2 = lists[i + 1] if (i+1)<len(lists) else None
+
+时间：O(NlogK)
+空间：O(1)
+```python
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if not lists or len(lists) == 0: # 检查是否符合条件：空或者不是list
+            return None
+
+        while len(lists) > 1:
+            mergedLists = []
+
+            for i in range(0, len(lists), 2): 
+                l1 = lists[i]
+                l2 = list[i + 1] if (i + 1) < len(lists) else None # edge case
+                mergedLists.append(self.mergeList(l1, l2)) 
+
+            lists = mergedLists
+       
+        return lists[0]
+
+
+    def mergeList(self, l1, l2):
+        dummy = ListNode(-1)
+        pre = dummy
+
+        while l1 and l2:
+            if l1.val  <= l2.val:
+                pre.next = l1
+                l1 = l1.next
+            else:
+                pre.next = l2
+                l2 = l2.next
+            pre = pre.next
+        
+        if l1:
+            pre.next = l1
+        elif l2:
+            pre.next = l2
+        
+        return dummy.next
+
+
+```
+
+[1891. Cutting Ribbons](https://leetcode.com/problems/cutting-ribbons/)
+
+转化思路，题目要求最多切成n次，那n=1到max(ribbon)，这样满足条件的是n最大的那个时候，相当于每次都看是否满足条件，直到找到最后满足条件的值。可以用二分查找找最右侧边界；count >= k是满足的条件，count表示可以提供的数量；最后return right，因为跳出的时候left = right + 1了
+时间：O(Nlog(max(Length))) 
+空间：O(1)
+```python
+class Solution:
+    def maxLength(self, ribbons: List[int], k: int) -> int:
+        left = 1
+        right = max(ribbons)
+        
+        while left <= right: # 左闭右闭
+            mid = left + (right - left) // 2
+            if self.isValid(ribbons, k, mid):
+                left = mid + 1
+            else:
+                right = mid - 1
+        
+        return right # 最后要return right，因为while的终止条件是left += 1
+    
+    def isValid(self, ribbons, k, mid):
+        count = 0
+        for num in ribbons:
+            count += num // mid
+        return count >= k  # 满足的情况，count表示可以提供的数量
+```
+
+[146. LRU Cache](https://leetcode.com/problems/lru-cache/)
+
+需要记录的：capacity;Node: key, val, pre, next; LRU class: cap, left, right, cache还要把left, right连起来 ;如果要get在O(1)：HashMap：{val: pointer to the node}；用left, right pointer来记录LRU和Most freqently used：double linkedlist;当第三个node来了：更新hashMap， 更新left, right pointer，更新第二使用的node和这个node的双向链接；每次get: 删除，添加操作；每次put：如果存在要删除，总要添加操作，如果大小不够，就找到lru(最左），然后删除
+
+```python
+
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.prev = self.next = None
+
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = {} # map key to node
+
+        self.left, self.right = Node(0, 0), Node(0, 0)
+        self.left.next, self.right.prev = self.right, self.left # left = LRU, right = most recent
+
+    # remove from the linkedlist
+    def remove(self, node):
+        prev, next = node.prev, node.next
+        prev.next, next.prev = next, prev
+
+    # insert node at right
+    def insert(self, node):
+        # insert at the right most position, before the right pointer
+        prev, next = self.right.prev, self.right
+        prev.next = next.prev = node
+        node.next, node.prev = next, prev
+
+    def get(self, key: int) -> int:
+        if key in self.cache:
+            # remove + insert为了更新顺序
+            self.remove(self.cache[key])
+            self.insert(self.cache[key])
+            return self.cache[key].val
+        return -1
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.remove(self.cache[key])
+        self.cache[key] = Node(key, value)
+        self.insert(self.cache[key])
+
+        if len(self.cache) > self.cap:
+            # remove from the list and delete the LRU from the hashmap
+            lru = self.left.next
+            self.remove(lru)
+            del self.cache[lru.key]
+
+
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+```
+
+
+## 没会的
 [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
 
 ```python
@@ -1336,5 +1512,9 @@ class Solution(object):
 ```
 
 
+
+
 [670. Maximum Swap](https://leetcode.com/problems/maximum-swap/)
+
+
 

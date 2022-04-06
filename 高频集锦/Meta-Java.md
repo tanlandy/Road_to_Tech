@@ -1799,7 +1799,7 @@ Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
 
 3. [1891. Cutting Ribbons](https://leetcode.com/problems/cutting-ribbons/)
 
-思路：找最右侧边界。一个一个往右尝试
+找最右侧边界。一个一个往右尝试
 时间：O(Nlog(max(Length))) 
 空间：O(1)
 ```Java
@@ -1919,10 +1919,8 @@ arr[idx]的missing个数是arr[idx] - 1 - idx
 
 ```
 
-6. [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/) BFS图遍历+堆；之后再看
 
-
-7. [1060. Missing Element in Sorted Array](https://leetcode.com/problems/missing-element-in-sorted-array/)
+1. [1060. Missing Element in Sorted Array](https://leetcode.com/problems/missing-element-in-sorted-array/)
 Given an integer array nums which is sorted in ascending order and all of its elements are unique and given also an integer k, return the kth missing number starting from the leftmost number of the array.
 
 Input: nums = [4,7,9,10], k = 3
