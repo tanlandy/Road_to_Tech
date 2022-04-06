@@ -1475,8 +1475,198 @@ class LRUCache:
 # obj.put(key,value)
 ```
 
+[253. Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
+
+2个[]，分别存所有的start和end；双指针比较，如果start<end就count+=1同时start往后走；如果start>=end，就移动end的指针同时count -= 1；双指针走到头的情况就是start到头了；[]存start的方法：sorted([i[0] for i in intervals])
+
+时间：O(NlogN)
+空间：O(N)
+
+```python
+class Solution:
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        start = sorted([i[0] for i in intervals])
+        end = sorted([i[1] for i in intervals])
+
+        res, count = 0, 0
+
+        s, e = 0, 0
+
+        while s < len(intervals):
+            if start[s] < end[e]:
+                count += 1
+                s += 1
+                res = max(res, count)
+            else:
+                e += 1
+                count -= 1
+        
+        return res
+
+```
+
+[88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/)
+
+三个指针，每次把更小的数往前走，注意走到头的情况
+
+时间：O(M+N)
+空间：O(1)
+
+```python
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        
+        # Set p1 and p2 to point to the end of their respective arrays.
+        p1 = m - 1
+        p2 = n - 1
+    
+        # And move p backwards through the array, each time writing
+        # the smallest value pointed at by p1 or p2.
+        for p in range(n + m - 1, -1, -1):
+            if p2 < 0:
+                break
+            if p1 >= 0 and nums1[p1] > nums2[p2]:
+                nums1[p] = nums1[p1]
+                p1 -= 1
+            else:
+                nums1[p] = nums2[p2]
+                p2 -= 1
+                
+```
+[249. Group Shifted Strings](https://leetcode.com/problems/group-shifted-strings/)
+
+用map来存{(diff):[oneRes]}:diff是字母之间的区别比如:{(1,1):["abc", "efg"]}，最后直接导出list(map.values())就可以；key用元组：key = ()，添加的时候是key += (diff % 26,)；取得字母之间的区别：diff = ord(s[i+1]) - ord(s[i])；更新map: map[key] = map.get(key, []) + [s]
+
+时间：O(N*K)
+空间：O(N*K)
+
+```python
+
+def groupStrings(self, strings: List[str]) -> List[List[str]]:
+	hashmap = {}
+    # 对于每一个s：每一个字母串abd；或者dfs
+	for s in strings:
+		key = ()
+        # 算出来这个字母串的key，然后添加到对应的map里
+		for i in range(len(s) - 1):
+			circular_difference = ord(s[i+1]) - ord(s[i])
+			key += (circular_difference % 26,)
+		hashmap[key] = hashmap.get(key, []) + [s]
+	return list(hashmap.values())
+
+```
+
+
+[670. Maximum Swap](https://leetcode.com/problems/maximum-swap/)
+
+先把num变成一个list，从后往前，i是index，如果这个值更小，就说明可以和max_idx互换，就把他们换一下；如果这个值更大，就说明更新max_idx；最后把list转换成num；num变成list：num = [int(x) for x in str(num)]；list变num：int("".join([str(x) for x in num])
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def maximumSwap(self, num: int) -> int:
+        num = [int(x) for x in str(num)]
+        max_idx = len(num) - 1
+        
+        x_min = 0
+        x_max = 0
+        
+        # 从后往前，i是index，如果这个值更小，就说明可以和max_idx互换，就把他们换一下；如果这个值更大，就说明更新max_idx
+        for i in range(len(num) - 1, -1, -1):
+            # 如果这个值更大，就更新max的idx
+            if num[i] > num[max_idx]:
+                max_idx = i
+            # 如果这个值更小，就说明可以和max_idx互换，就把他们换一下
+            elif num[i] < num[max_idx]:
+                x_min = i
+                x_max = max_idx
+        
+        num[x_min], num[x_max] = num[x_max], num[x_min]
+        
+        return int("".join([str(x) for x in num]))
+```
+
+
+[138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+
+Two Passes: 第一遍只复制node，不管指针，形成一个map{old : new}；第二遍把node的指针连起来；注意连的map里没考虑最后是None的情况，所以一开始map={ None : None}
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        oldToCopy = {None : None} # 为了在复制的时候，如果cur.next是None， copy.next也可以是None
+
+        cur = head
+        while cur:
+            copy = Node(cur.val)
+            oldToCopy[cur] = copy
+            cur = cur.next
+        
+        cur = head
+        while cur:
+            copy = oldToCopy[cur]
+            copy.next = oldToCopy[cur.next]
+            copy.random = oldToCopy[cur.random]
+            cur = cur.next
+
+        return oldToCopy[head]
+
+
+```
+
+
+
+
+
+
+
+
 
 ## 没会的
+
+
+[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+
+inorder每次返回pre的那个node，传进去当前和pre两个node
+
+```Java
+    public Node treeToDoublyList(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Node dummy = new Node(-1, null, null);
+        Node pre = dummy;
+        pre = inorderDFS(root, pre);
+        pre.right = dummy.right; // 连起来,dummy.right就是head
+        dummy.right.left = pre;
+        return dummy.right;
+    }
+    
+    private Node inorderDFS(Node node, Node pre) {
+        if (node == null) { // 最后为空的时候要返回pre
+            return pre;
+        }
+        pre = inorderDFS(node.left, pre);
+        node.left = pre;
+        pre.right = node;
+        pre = inorderDFS(node.right, node); //这时候node就是pre
+        return pre;
+    }
+```
+
+
+
+[301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)
+
+
 [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
 
 ```python
@@ -1510,11 +1700,6 @@ class Solution(object):
             res.append([name] + sorted(emails))
         return res
 ```
-
-
-
-
-[670. Maximum Swap](https://leetcode.com/problems/maximum-swap/)
 
 
 
