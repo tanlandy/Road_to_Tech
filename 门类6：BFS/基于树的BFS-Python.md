@@ -1,83 +1,78 @@
+树的深度是从0开始
 
 ## 二叉树遍历
 
 ### level-order(BFS)
+
+queue放元素：queue = deque([root])
+
 1. []()
-```Java
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
+```python
+class Node:
+    def __init__(self, val, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-//  单Queue法，牢记于心
-class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) {
-            return res;
-        }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        while (!queue.isEmpty()) { // 一次走一层
-            List<Integer> oneRes = new ArrayList<>(); // 走一层，那就要每次新建一层
-            int size = queue.size();
-            for (int i = 0; i < size; i++) { // 一次走一个node
-                TreeNode node = queue.poll(); // 走一个node，那就要每次新建一个node
-                if (node.left != null) {
-                    queue.offer(node.left);
-                }
-                if (node.right != null) {
-                    queue.offer(node.right);
-                }
-                oneRes.add(node.val);
-            }
-            res.add(oneRes);
-        }
-        return res;
-    }
-}
+def level_order_traversal(root: Node) -> List[List[int]]:
+    res = [] 
+    if root is None:
+        return res
+    
+    queue = deque([root])
+    
+    while queue:
+        oneRes = []
+        size = len(queue)
+        for _ in range(size):
+            node = queue.popleft()
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+            oneRes.append(node.val)
+        res.append(oneRes)
+                      
+    
+    return res
 ```
 
-2. [103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
+[103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
 
-```Java
-    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) {
-            return res;
-        }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        boolean isOdd = true;
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            List<Integer> oneRes = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                TreeNode node = queue.poll();
-                if (node.left != null) {
-                    queue.offer(node.left);
-                }
-                if (node.right != null) {
-                    queue.offer(node.right);
-                }
-                oneRes.add(node.val);
-            }
-            if (!isOdd) {
-                Collections.reverse(oneRes);
-            }
-            isOdd = !isOdd;
-            res.add(oneRes);
-        }
-        return res;
-    }
+反转list: oneRes.reverse()；翻转isOdd: isOdd = not isOdd
+
+```python
+def zig_zag_traversal(root: Node) -> List[List[int]]:
+    res = []
+    isOdd = True
+    
+    if root is None:
+        return res
+    
+    queue = deque([root])
+    
+    while queue:
+        oneRes = []
+        size = len(queue)
+        
+        for _ in range(size):
+            node = queue.popleft()
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+            oneRes.append(node.val)
+       
+        if not isOdd:
+            oneRes.reverse()
+        
+        isOdd = not isOdd
+        res.append(oneRes)
+     
+    return res
 ```
 
-3. [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+1. [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
 
 ```Java
     // Encodes a tree to a single string.
@@ -130,117 +125,57 @@ class Solution {
     }
 ```
 
-4. [314. Binary Tree Vertical Order Traversal](https://leetcode.com/problems/binary-tree-vertical-order-traversal/)
 
-Given the root of a binary tree, return the vertical order traversal of its nodes' values. (i.e., from top to bottom, column by column).
+[199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
 
-If two nodes are in the same row and column, the order should be from left to right.
+from collections import deque; queue放元素：queue = deque([root])
 
-思路：
-Queue存<node, col>
-用一个HashMap<col, oneRes>
-遍历的时候，更新HashMap
-最后用HashMap来导出，但是不知道最小值最大值，所以实时更新一下
 时间：O(N)
-空间：O(N)
-
-```Java
-    public List<List<Integer>> verticalOrder(TreeNode root) {
-        // HashMap<col, oneRes>
-        // Queue<TreeNode, col>
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) {
-            return res;
-        }
-        Queue<Pair<TreeNode, Integer>> queue = new LinkedList<>(); // 注意如何定义
-        Map<Integer, ArrayList> map = new HashMap<>();
-        int col = 0;
-        int minCol = 0;
-        int maxCol = 0;
-        queue.offer(new Pair(root, col)); // 注意如何offer pair
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                Pair<TreeNode, Integer> top = queue.poll();
-                TreeNode node = top.getKey();
-                col = top.getValue();
-                if (!map.containsKey(col)) {
-                    map.put(col, new ArrayList<>());
-                }
-                map.get(col).add(node.val);
-                if (node.left != null) {
-                    queue.offer(new Pair(node.left, col - 1)); // 加左边
-                }
-                if (node.right != null) {
-                    queue.offer(new Pair(node.right, col + 1)); // 加右边
-                }
-                minCol = Math.min(minCol, col); // 为了帮助最后的导出
-                maxCol = Math.max(maxCol, col);
-            }                               
-        }
-        for (int i = minCol; i <= maxCol; i++) {
-            res.add(map.get(i));
-        }
-        return res;
-    }
-```
-4. [958. Check Completeness of a Binary Tree](https://leetcode.com/problems/check-completeness-of-a-binary-tree/)
-
-思路：
-对于完全二叉树，level order遍历时候，如果遇到一个empty node，之后就不能有node
-
-```Java
-    public boolean isCompleteTree(TreeNode root) {
-        if (root == null) {
-            return true;
-        }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        boolean seenEmpty = false;
-        while (!queue.isEmpty()) {
-            TreeNode node = queue.poll();
-            if (node == null) {
-                seen = true;
-                continue;
-            } else if (seenEmpty) {
-                return false;
-            }
-            queue.offer(node.left);
-            queue.offer(node.right);
-        }
-        return true;
-    }
-```
-
-5. [515. Find Largest Value in Each Tree Row](https://leetcode.com/problems/find-largest-value-in-each-tree-row/)
-
-思路：
-每一层都保留最大的
-```Java
-    public List<Integer> largestValues(TreeNode root) {
-        List<Integer> res = new ArrayList<>();
-        if (root == null) {
-            return res;
-        }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
+空间：O(D) D is diameter
+```python
+def binary_tree_right_side_view(root: Node) -> List[int]:
+    # WRITE YOUR BRILLIANT CODE HERE
+    res = []
+    if root is None:
+        return res
+    
+    queue = deque([root])
+    
+    while queue:
+        size = len(queue)
         
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            int max = Integer.MIN_VALUE;
-            for (int i = 0; i < size; i++) {
-                TreeNode node = queue.poll();
-                max = Math.max(max, node.val);
-                if (node.left != null) {
-                    queue.offer(node.left);
-                }
-                if (node.right != null) {
-                    queue.offer(node.right);
-                }
-                
-            }
-            res.add(max);
-        }
-        return res;
-    }
+        for i in range(size):
+            node = queue.popleft()
+            if i == size - 1:
+                res.append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+    
+    return res
+```
+
+binary tree min depth:
+
+树的深度从0开始，所以res的起点是-1
+
+```python
+def binary_tree_min_depth(root: Node) -> int:
+    res = -1
+    if root is None:
+        return res
+    queue = deque([root])
+    
+    while queue:
+        size = len(queue)
+        res += 1
+        for _ in range(size):
+            node = queue.popleft()
+            if node.left is None and node.right is None:
+                return res
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
 ```
