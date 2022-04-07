@@ -554,9 +554,10 @@ class Solution:
             min_col = min(min_col, col)
             max_col = max(max_col, col)
             if node.left:
-                queue.append((node.left, col - 1)) # 双[[]]
+                queue.append((node.left, col - 1)) # 双(())
             if node.right:
                 queue.append((node.right, col + 1)) 
+
         for i in range(min_col, max_col + 1): # 左开右闭，需要加一
             res.append(colTable[i])
         return res
@@ -590,12 +591,14 @@ class Solution(object):
             for _ in range(len(queue)):
                 node, x = queue.popleft()
                 tmp[x].append(node.val) 
+                x_min = min(x_min, x)
+                x_max = max(x_max, x)
+
                 if node.left:
                     queue.append((node.left, x-1))
-                    x_min = min(x_min, x-1)
                 if node.right: 
                     queue.append((node.right, x+1)) 
-                    x_max = max(x_max, x+1)
+                    
             for i in tmp: # 走完一层再把map按顺序加进去
                 mapping[i] += sorted(tmp[i])
 
@@ -2209,7 +2212,31 @@ class BSTIterator:
 
 ```
 
+[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
 
+inorder每次返回pre的那个node，传进去当前和pre两个node
 
+```python
+class Solution:
+        def treeToDoublyList(self, root: 'Node') -> 'Node':
+        
+            # inorder traversal sol - recursion
+            if not root:
+                return None
 
+            dummy = Node(-1)
+            prev = dummy
+
+            def inorder(root):
+                nonlocal prev
+                if not root:
+                    return
+                inorder(root.left)
+                prev.right, root.left, prev = root, prev, root
+                inorder(root.right)
+
+            inorder(root)
+            dummy.right.left, prev.right = prev, dummy.right
+            return dummy.right
+```
 
