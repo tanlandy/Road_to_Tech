@@ -247,21 +247,32 @@ class Solution:
 
 [953. Verifying an Alien Dictionary](https://leetcode.com/problems/verifying-an-alien-dictionary/)
 用map存{letter: rank}，然后比较相邻的word，不符合的条件有两个：1，前面相同时len(words[i]) > len(words[i+1]；2，不同时候rank不对。如果不同但是满足，可以就直接break这两个word的比较；enumerate(string)返回(index, val)
+
+时间：O(M)； M is total number of char in words
+空间：O(1)
+
 ```python
 class Solution:
     def isAlienSorted(self, words: List[str], order: str) -> bool:
         order_map = {}
-        for index, val in enumerate(order):
-            order_map[val] = index
         
+        for idx, val in enumerate(order):
+            order_map[val] = idx
+        
+        # 两两比较
         for i in range(len(words) - 1):
-            for j in range(len(words[i])):
-                if j >= len(words[i + 1]): # 要有'='，因为words[i+1]取不到len，只能到len-1
-                    return False
-                if words[i][j] != words[i + 1][j]:
-                    if order_map[words[i][j]] > order_map[words[i + 1][j]]:
+            w1, w2 = words[i], words[i+1]
+            minLen = min(len(w1), len(w2))
+            # edge case：两个前缀一样，但是第一个更长
+            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
+                return False
+            # 正常比较
+            for j in range(minLen):
+                if w1[j] != w2[j]:
+                    if order_map[w1[j]] > order_map[w2[j]]:
                         return False
                     break
+                    
         return True
 ```
 
@@ -1939,17 +1950,266 @@ class Solution:
 
 [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
 
+Dijkstra's：用一个minHeap存Front-tier:(Height, r, c)，再用一个visit来存走过的，每次存的Height是见过的最大值；每次minHeap pop出来之后看四周的neighbor；Heap取出来数字：heapq.heappop(minH)；Heap加东西：heapq.heappush(minH, [要加的])
+
+时间：O(N^2logN)
+空间：O(N^2)
 
 ```python
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
+        rows = cols = len(grid)
+        visit = set()
+        minH = [[grid[0][0], 0, 0]]  # (max_height, r, c)
+        visit.add((0,0))
+        dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
+
+        while minH:
+            height, r, c = heapq.heappop(minH)
+
+            if r == rows - 1 and c == cols - 1:
+                return height
+            
+            for dr, dc in dirs:
+                neiR, neiC = r + dr, c + dc
+                if (neiR < 0 or neiR == rows or neiC < 0 or neiC == cols or (neiR, neiC) in visit):
+                    continue
+                visit.add((neiR, neiC))
+                heapq.heappush(minH, [max(height, grid[neiR][neiC]), neiR, neiC])
         
+```
+
+[269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
+
+先建adj{ch:set()}：两两word比较，得到两两letter的顺序；之后用postDFS放进来，DFS需要一个visit{ch:T/F}，每次看是否在里面，在的话就返回visit[c]，然后在dfs内部看ch的nei，如果dfs(nei)返回true就说明这条路不通，最后把res加进去；从adj的任意一个ch走dfs，最后reverse这个结果
+
+时间：O(M), M is number of char of words，决定了graph大小
+空间：O(1)
+
+```python
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        # adj list存储两两字母之间的order
+        # 对于words里的每个w，对于w里的每个character
+        # {c : set()}
+        adj = {c:set() for w in words for c in w}
+
+        for i in range(len(words) - 1):
+            w1, w2 = words[i], words[i+1]
+            minLen = min(len(w1), len(w2))
+            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
+                return ""
+            for j in range(minLen):
+                if w1[j] != w2[j]:
+                    adj[w1[j]].add(w2[j])
+                    break
+        
+        # DFS来遍历，根据排好的顺序来画图
+        # 用visit来看是否有loop->
+        # visit{character: False/True} 给每个字母一个映射
+        # False说明已经visit过了
+        # True说明是在当前路径里
+        visit = {} # False = visited, True = visited & current path
+        res = []
+
+        # post-order traversal
+        def dfs(c): # 如果dfs返回True，说明这个ch已经看过并且是在当前路径，也就是cycle
+            if c in visit:
+                return visit[c] #如果返回true: cycle
+
+            visit[c] = True
+
+            for nei in adj[c]: # 看这个ch的每一个neighbor
+                if dfs(nei):
+                    return True
+            
+            visit[c] = False # 已经看过，但是不在当前路径了就
+            res.append(c)
+        
+        for c in adj:
+            if dfs(c):
+                return ""
+        
+        res.reverse()
+        return "".join(res)
+```
+
+[332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
+
+建立adj list{source:[des]]}，同时[des]需要排好序；更简单的是先把input排序，然后放进adj，这样就自动排好序了；建好表之后DFS：返回能否找到validPath，从每个src走，然后遍历这个src的nei；遍历nei的时候回溯；删除特定位置的值adj[src].pop(idx)，在特定位置插入adj[src].insert(idx, nei)
+
+时间：O(V+E)^2
+空间：O(E)
+
+```python
+class Solution:
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
+        adj = {src:[] for src, dst in tickets}
+
+        tickets.sort()
+        for src, dst in tickets:
+            adj[src].append(dst)
+        
+        res = ["JFK"]
+        # 返回是否找到valid path
+        def dfs(src):
+            if len(res) == len(tickets) + 1:
+                return True
+            if src not in adj:
+                return False
+            
+            temp = list(adj[src]) # 因为需要变更adj，所以遍历一个copy
+            for idx, nei in enumerate(temp):
+                adj[src].pop(idx)
+                res.append(nei)
+
+                if dfs(nei):
+                    return True
+                
+                adj[src].insert(idx, nei)
+                res.pop()
+            
+            return False
+        
+        dfs("JFK")
+        return res
+
+
+
+```
+
+[42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
+
+对于位置i能存储的水: min(maxL, maxR) - h[i]；相向双指针，加上两个变量maxL, maxR来时刻保存左右两边的最大值；每次移动maxL, maxR之间较小那个数的指针，然后新位置i能存储的水：被移动指针之前的值-h[i]：不用考虑另外一个值，因为那个值肯定比较大；移动指针之后计算这个指针所在位置能存储的水
+
+时间：O(N)
+空间：O(1) -> two pointers
+```python
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        res = 0
+        if not height: # input is empty
+            return res
+        
+        l, r = 0, len(height) - 1
+        max_l, max_r = height[l], height[r]
+        
+        while l < r:
+            if max_l < max_r:
+                l += 1
+                max_l = max(max_l, height[l])
+                res += max_l - height[l]
+            else:
+                r -= 1
+                max_r = max(max_r, height[r])
+                res += max_r - height[r]
+        
+        return res
+```
+
+[543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
+
+从leaf来找每个节点的diameter和height；最下面的leaf的height=0；Diameter = leftHeight + rightHeight + 1 + 1(两个edge);dfs()返回树高max(leftHeight, rightHeight) + 1
+
+时间：O(N)
+空间：O(1)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        res = [0]
+
+        def dfs(root):
+            if not root:
+                return -1 # return height
+            
+            left_hei = dfs(root.left) # 找到左子树的高
+            right_hei = dfs(root.right)
+            
+            diameter = 2 + left_hei + right_hei
+            res[0] = max(res[0], diameter)
+
+            return 1 + max(left_hei, right_hei)
+        
+        dfs(root)
+        return res[0]
+
+
+```
+
+[523. Continuous Subarray Sum](https://leetcode.com/problems/continuous-subarray-sum/)
+
+map:{remainder:end_index} remainder是前缀和的mod的结果，最开始map={0:-1}这样第一个数如果能整除但不会返回true；对于每个数，计算前缀和的mode结果，如果不在map里就加进来，如果在的话：只有距离大于一才是真的满足
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+        remainder = {0: -1} # map remainder -> end index
+        total = 0
+        
+        for i, n in enumerate(nums):
+            total += n
+            r = total % k
+            if r not in remainder:
+                remainder[r] = i
+            elif i - remainder[r] > 1: # r在remiander里
+                return True
+        
+        return False
+
+```
+
+[173. Binary Search Tree Iterator](https://leetcode.com/problems/binary-search-tree-iterator/)
+
+inorder遍历；用一个栈，建立obj的时候就把所有左子树放进来；next()就是弹栈，然后把右子节点的左右左子树压栈；只要stack不为空，就说明hasNext()
+
+时间：hasNext是O(1);next平均是O(1)，最坏是O(N)
+空间：O(H)当树是链表时候
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class BSTIterator:
+
+    def __init__(self, root: Optional[TreeNode]):
+        self.stack = []
+
+        while root:
+            self.stack.append(root)
+            root = root.left
+
+    def next(self) -> int:
+        node = self.stack.pop()
+        cur = node.right
+        while cur:
+            self.stack.append(cur)
+            cur = cur.left
+        return node.val
+
+    def hasNext(self) -> bool:
+        return self.stack != []
+
+
+# Your BSTIterator object will be instantiated and called as such:
+# obj = BSTIterator(root)
+# param_1 = obj.next()
+# param_2 = obj.hasNext()
+
 ```
 
 
 
 
-Todo:
-Swim
-Alien Dic
-Itinerary
+

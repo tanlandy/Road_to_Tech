@@ -44,8 +44,39 @@ class Solution:
         self.dfs(root.left, res)
         res.append(root.val)
         self.dfs(root.right, res)
-
 ```
+
+iterative:关键是什么时候压栈，什么时候弹栈
+压栈：走左子树的时候，非空就加进来
+弹栈：左子树空的时候，同时加到res，然后走右子树，同时加到res
+
+一直走左子树，边走边压栈。直到左边走空了，pop并加到res里，然后走一个右子树，然后压一个右节点进栈
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        stack = []
+        cur = root
+
+        while cur or stack:
+            while cur:
+                stack.append(cur)
+                cur = cur.left
+            cur = stack.pop()
+            res.append(cur.val)
+            cur = cur.right
+
+        return res
+```
+
+
 ### Post
 ```python
 class Solution:
