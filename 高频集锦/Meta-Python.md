@@ -1,3 +1,87 @@
+
+
+
+
+
+
+
+## 没会的
+
+
+[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+
+inorder每次返回pre的那个node，传进去当前和pre两个node
+
+```Java
+    public Node treeToDoublyList(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Node dummy = new Node(-1, null, null);
+        Node pre = dummy;
+        pre = inorderDFS(root, pre);
+        pre.right = dummy.right; // 连起来,dummy.right就是head
+        dummy.right.left = pre;
+        return dummy.right;
+    }
+    
+    private Node inorderDFS(Node node, Node pre) {
+        if (node == null) { // 最后为空的时候要返回pre
+            return pre;
+        }
+        pre = inorderDFS(node.left, pre);
+        node.left = pre;
+        pre.right = node;
+        pre = inorderDFS(node.right, node); //这时候node就是pre
+        return pre;
+    }
+```
+
+
+
+[301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)
+
+
+[721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+```python
+class Solution(object):
+    def accountsMerge(self, accounts):
+        from collections import defaultdict
+        visited_accounts = [False] * len(accounts)
+        emails_accounts_map = defaultdict(list)
+        res = []
+        # Build up the graph.
+        for i, account in enumerate(accounts):
+            for j in range(1, len(account)):
+                email = account[j]
+                emails_accounts_map[email].append(i)
+        # DFS code for traversing accounts.
+        def dfs(i, emails):
+            if visited_accounts[i]:
+                return
+            visited_accounts[i] = True
+            for j in range(1, len(accounts[i])):
+                email = accounts[i][j]
+                emails.add(email)
+                for neighbor in emails_accounts_map[email]:
+                    dfs(neighbor, emails)
+        # Perform DFS for accounts and add to results.
+        for i, account in enumerate(accounts):
+            if visited_accounts[i]:
+                continue
+            name, emails = account[0], set()
+            dfs(i, emails)
+            res.append([name] + sorted(emails))
+        return res
+```
+
+
+
+
+## 会的
+
+
 [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)
 思路：用相向two pointer，当不是char时候就比较; s[i].isalnum() 看是否是string或者num; s[i].lower() 返回一个小写
 ```python
@@ -1618,88 +1702,254 @@ class Solution:
             cur = cur.next
 
         return oldToCopy[head]
-
-
 ```
 
+[200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
 
+用set()记录走过的点，然后如果是“1”而且没走过，就从该点开始bfs()：把这个点放到queue里，然后如果queue不为空，就走上下左右四个方向，四个方向走的条件是不越界，是“1”而且没走过；把2d的点放进queue的办法：queue.append((r, c))；visit = set(), visit.add((r, c))；最开始检查是否是grid: if not grid: return 0；上下左右到处走的条件: for dr, dc in dirs: r, c = row + dr, col + dc; if (r in range(rows) and c in range(cols) and grid[r][c] == "1" and (r, c) not in visit
 
-
-
-
-
-
-
-## 没会的
-
-
-[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
-
-inorder每次返回pre的那个node，传进去当前和pre两个node
-
-```Java
-    public Node treeToDoublyList(Node root) {
-        if (root == null) {
-            return null;
-        }
-        Node dummy = new Node(-1, null, null);
-        Node pre = dummy;
-        pre = inorderDFS(root, pre);
-        pre.right = dummy.right; // 连起来,dummy.right就是head
-        dummy.right.left = pre;
-        return dummy.right;
-    }
-    
-    private Node inorderDFS(Node node, Node pre) {
-        if (node == null) { // 最后为空的时候要返回pre
-            return pre;
-        }
-        pre = inorderDFS(node.left, pre);
-        node.left = pre;
-        pre.right = node;
-        pre = inorderDFS(node.right, node); //这时候node就是pre
-        return pre;
-    }
-```
-
-
-
-[301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)
-
-
-[721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+时间：O(M*N)
+空间：O(min(M, N))
 
 ```python
-class Solution(object):
-    def accountsMerge(self, accounts):
-        from collections import defaultdict
-        visited_accounts = [False] * len(accounts)
-        emails_accounts_map = defaultdict(list)
-        res = []
-        # Build up the graph.
-        for i, account in enumerate(accounts):
-            for j in range(1, len(account)):
-                email = account[j]
-                emails_accounts_map[email].append(i)
-        # DFS code for traversing accounts.
-        def dfs(i, emails):
-            if visited_accounts[i]:
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid:
+            return 0
+        
+        rows, cols = len(grid), len(grid[0])
+        visit = set()
+        count = 0
+
+        def bfs(r, c):
+            queue = collections.deque()
+            visit.add((r, c))
+            queue.append((r,c))
+
+            while queue:
+                row, col = queue.popleft()
+                directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+
+                for dr, dc in directions:
+                    r, c = row + dr, col + dc
+                    if (r in range(rows) and
+                        c in range(cols) and
+                        grid[r][c] == "1" and
+                        (r, c) not in visit):
+                        queue.append((r, c))
+                        visit.add((r, c))
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "1" and (r, c) not in visit:
+                    bfs(r, c)
+                    count += 1
+        return count
+
+```
+
+[133. Clone Graph](https://leetcode.com/problems/clone-graph/)
+
+HashMap:{oldNode:newNode}；dfs(node)返回node对应的copy， 每次如果在map里面就直接返回copy后的node，如果不在就copy然后copy自己的neighbors；复制neighbors: for nei in node.neighbors: copy.neighbors.append(dfs(nei))
+
+时间：O(V+E)
+空间：O(V)
+
+```python
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        if node is None:
+            return None
+        oldToNew = {}
+
+        def dfs(node):
+            if node in oldToNew:
+                return oldToNew[node]
+
+            copy = Node(node.val)
+            oldToNew[node] = copy
+
+            for nei in node.neighbors:
+                copy.neighbors.append(dfs(nei))
+            
+            return copy
+        
+        return dfs(node)
+```
+
+[695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+
+在每个点都做一遍dfs，一个dfs返回这个点对应岛的大小：因为每个点都走一遍，所以判断是否是0就在base case来判断；dfs返回值：return (1 + dfs(r + 1, c) + dfs(r - 1, c) + dfs(r, c + 1) + dfs(r, c - 1))；每个点走的时候就area = max(area, dfs(r, c))
+
+时间：O(M*N)
+空间：O(M*N)
+```python
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        visit = set()
+
+        # dfs返回area
+        def dfs(r, c):
+            # base case
+            if (r < 0 or r == rows or c < 0 or c == cols or 
+            grid[r][c] == 0 or (r, c) in visit):
+                return 0
+            
+            visit.add((r, c))
+
+            return (1 + dfs(r + 1, c) +
+                        dfs(r - 1, c) +
+                        dfs(r, c + 1) +
+                        dfs(r, c - 1))
+        
+        area = 0
+        for r in range(rows):
+            for i in range(cols):
+                area = max(area, dfs(r, c))
+
+        return area
+```
+
+[417. Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
+
+分别从pacific和atlantic ocean来找能到的点，而不是从每个点出发来找能否同时到ocean；然后同时pacific和Atlantic能到的点就是要找的点：从第一行来看其他行能否走到Pacific ocean， 从最后一行开始来看其他行能否走到Atlantic ocean：能否走到的条件就在base case里: heights[r][c] < preHeight；dfs参数：dfs(r, c, visited, preHeight)
+
+时间：O(N*M)
+空间：O(N*M)
+
+```python
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        rows, cols = len(heights), len(heights[0])
+        pac, atl = set(), set()
+
+        def dfs(r, c, visit, prevHeight):
+            if ((r, c) in visit or r < 0 or r == rows or c < 0 or c == cols or heights[r][c] < prevHeight):
                 return
-            visited_accounts[i] = True
-            for j in range(1, len(accounts[i])):
-                email = accounts[i][j]
-                emails.add(email)
-                for neighbor in emails_accounts_map[email]:
-                    dfs(neighbor, emails)
-        # Perform DFS for accounts and add to results.
-        for i, account in enumerate(accounts):
-            if visited_accounts[i]:
-                continue
-            name, emails = account[0], set()
-            dfs(i, emails)
-            res.append([name] + sorted(emails))
+            visit.add((r, c))
+            dfs(r + 1, c, visit, heights[r][c])
+            dfs(r - 1, c, visit, heights[r][c])
+            dfs(r, c + 1, visit, heights[r][c])
+            dfs(r, c - 1, visit, heights[r][c])
+
+        for c in range(cols): 
+            dfs(0, c, pac, heights[0][c]) # 走第一行
+            dfs(rows - 1, c, atl, heights[rows - 1][c]) # 走最后一行
+        
+        for r in range(rows):
+            dfs(r, 0, pac, heights[r][0]) # 第一列
+            dfs(r, cols - 1, atl, heights[r][cols - 1]) # 最后一列
+        
+        res = []
+        for r in range(rows):
+            for c in range(cols):
+                if (r, c) in pac and (r, c) in atl:
+                    res.append([r, c])
+        
         return res
 ```
 
+[286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/)
+
+从Gate来做bfs。先把Gate都放在queue和Visit里面，然后逐层bfs，每一层bfs做的就是取出来queue的一层的值然后变成dist，然后addRoom周围四个点，一层走完dist += 1
+
+时间：O(M*N)
+空间：O(M*N)
+
+```python
+class Solution:
+    def wallsAndGates(self, rooms: List[List[int]]) -> None:
+        """
+        Do not return anything, modify rooms in-place instead.
+        """
+        rows, cols = len(rooms), len(rooms[0])
+        visit = set()
+        queue = collections.deque()
+
+        def addRoom(r, c):
+            if (r < 0 or r == rows or c < 0 or c == cols or (r, c) in visit or rooms[r][c] == -1):
+                return 
+            visit.add((r, c))
+            queue.append((r, c))
+
+        for r in range(rows):
+            for c in range(cols):
+                if rooms[r][c] == 0:
+                    queue.append([r, c])
+                    visit.add((r, c))
+        
+        dist = 0
+        while queue:
+            size = len(queue)
+            for i in range(size): # Gate layer
+                r, c = queue.popleft()
+                rooms[r][c] = dist
+                addRoom(r + 1, c) # 把周围四个room放到queue里
+                addRoom(r - 1, c)
+                addRoom(r, c + 1)
+                addRoom(r, c - 1)
+            dist += 1 # 第二层: 距离Gate为1的layer
+
+```
+
+[127. Word Ladder](https://leetcode.com/problems/word-ladder/)
+
+先用nested loop建一个adjacent list：O(N*M ^ 2)，然后用BFSO(N^2\*M)；adj: {pattern: [words]} : {\*ot: [hot, dot, lot]}；找pattern = word[:j] + "*" + word[j+1:]；res起点是1；visited和queue一开始要把beginWord放进来：visit.add([beginWord]); queue.append([beginWord])
+
+时间：O(M^2*N), M is len(word)
+空间：O(M^2*N)
+
+```python
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        if endWord not in wordList:
+            return 0
+        
+        nei = collections.defaultdict(list)
+        wordList.append(beginWord)
+        
+        # 对于wordList的每个word，把每一个pattern都找到，然后构建adj
+        for word in wordList:
+            for j in range(len(word)):
+                pattern = word[:j] + "*" + word[j+1:]
+                nei[pattern].append(word)
+        
+        visit = set([beginWord])
+        queue = collections.deque([beginWord])
+        res = 1
+        
+        while queue:
+            for i in range(len(queue)):
+                word = queue.popleft()
+                if word == endWord:
+                    return res
+                
+                # 对于每一个word, 如果在map对应的pattern里面，说明是一个选择，就queue加进去visited加进去
+                for j in range(len(word)):
+                    pattern = word[:j] + "*" + word[j+1:]
+                    for neiWord in nei[pattern]:
+                        if neiWord not in visit:
+                            visit.add(neiWord)
+                            queue.append(neiWord)
+            res += 1
+        
+        return 0
+```
+
+[778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
 
 
+```python
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        
+```
+
+
+
+
+Todo:
+Swim
+Alien Dic
+Itinerary
