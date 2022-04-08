@@ -2388,34 +2388,219 @@ class Solution:
 
 ```
 
+[78. Subsets](https://leetcode.com/problems/subsets/)（子集 元素无重不可复选）
+   
+Given an integer array nums of unique elements, return all possible subsets (the power set).
+Input: nums = [1,2,3]
+Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]   
+
+backtrack基本结构，区别有：每次调用都装进来，为了剪枝：for i in range(start, len(nums))
+
+时间：O(N*2^N)
+空间：O(N)
+
+```python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        oneRes = []
+        res = []
+        
+        def backtrack(start):
+            res.append(oneRes.copy())
+            
+            for i in range(start, len(nums)):
+                oneRes.append(nums[i])
+                backtrack(i+1)
+                oneRes.pop()
+        
+        backtrack(0)
+        return res
+```
 
 
 
+[77. Combinations](https://leetcode.com/problems/combinations/) （组合 元素无重不可复选）
+
+Given two integers n and k, return all possible combinations of k numbers out of the range [1, n].
+
+You may return the answer in any order.
+
+Input: n = 4, k = 2
+Output:
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
 
 
+```python
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        def backtrack(start):
+            if len(oneRes) == k:
+                res.append(oneRes.copy())
+                return
+            
+            for i in range(start, n + 1):
+                oneRes.append(i)
+                backtrack(i+1)
+                oneRes.pop()
+                
+        oneRes = []
+        res = []
+        backtrack(1)
+        return res
+
+```
+
+[46. Permutations](https://leetcode.com/problems/permutations/) 排列（元素无重不可复选）
+
+Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+
+Input: nums = [1,2,3]
+Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
 
 
+```python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        oneRes = []
+        n = len(nums)
+        
+        def backtrack():
+            if len(oneRes) == n:
+                res.append(oneRes.copy())
+                return
+            
+            for i in range(0, n):
+                if nums[i] in oneRes: # 如果没有的话，结果有[1,1,1],[1,1,2]...
+                    continue
+                
+                oneRes.append(nums[i])
+                backtrack()
+                oneRes.pop()
+                
+        backtrack()
+        return res
+```
 
 
+[90. Subsets II](https://leetcode.com/problems/subsets-ii/)
+
+Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+
+Input: nums = [1,2,2]
+Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+
+需要先进行排序，让相同的元素靠在一起，如果发现nums[i] == nums[i-1]，则跳过
 
 
+```python
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        oneRes = []
+        res = []
+        
+        def backtrack(start):
+            res.append(oneRes.copy()) # 每次都加进来
+            
+            for i in range(start, len(nums)): # i = start：子集问题
+                if i > start and nums[i] == nums[i-1]:
+                    continue
+                oneRes.append(nums[i])
+                backtrack(i+1)
+                oneRes.pop()
+        
+        backtrack(0)
+        return res
+```
 
 
+[380. Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/)
+
+用HashMap存{数字:index}，这样查看是否存在的时间是O(1)，index是用一个list存的数字对应的位置。删除的操作：拿到list里的位置，然后把list最后一个数覆盖到这个要删除的树上，然后更新hashmap里最后一个数对应的index
+
+```python
+class RandomizedSet:
+
+    def __init__(self):
+        self.num_map = {}
+        self.num_list = []
+
+    def insert(self, val: int) -> bool:
+        not_in_map = val not in self.num_map
+        if not_in_map:
+            self.num_map[val] = len(self.num_list) # val会放到list的最后一位，然后对应的index就是len(self.num_list)
+            self.num_list.append(val)
+        return not_in_map
+
+    def remove(self, val: int) -> bool:
+        in_map = val in self.num_map
+        if in_map:
+            idx = self.num_map[val]
+            last_val = self.num_list[-1]
+            self.num_list[idx] = last_val
+            self.num_list.pop()
+            self.num_map[last_val] = idx
+            del self.num_map[val]
+
+        return in_map
+
+    def getRandom(self) -> int:
+        return random.choice(self.num_list)
+
+    # 随机数的另一个办法
+    # def getRandom(self) -> int:
+    #     idx = random.randint(0, len(self.num_list) - 1)
+    #     return self.num_list[idx]
+
+# Your RandomizedSet object will be instantiated and called as such:
+# obj = RandomizedSet()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()
+
+```
 
 
+[34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
 
+```python
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        left = self.binSearch(nums, target, True)
+        right = self.binSearch(nums, target, False)
+        return [left, right]
+
+    def binSearch(self, nums, target, firstPos):
+        l, r = 0, len(nums) - 1
+        i = -1
+        while l <= r:
+            mid = l + (r - l) // 2
+            if target > nums[mid]:
+                l = mid + 1
+            elif target < nums[mid]:
+                r = mid - 1
+            else:
+                i = mid
+                if firstPos:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+        return i
+    
 
 
-
-
-
-
-
-
-
-
-
+```
 
 
 
