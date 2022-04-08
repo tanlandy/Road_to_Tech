@@ -2573,6 +2573,7 @@ class RandomizedSet:
 
 [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
+二分查找，用一个boolean来判断是查左边还是右边，如果是左边就r=mid-1；另外用一个idx来记录最终值
 
 ```python
 class Solution:
@@ -2597,18 +2598,101 @@ class Solution:
                 else:
                     l = mid + 1
         return i
-    
-
 
 ```
 
+[739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+
+单调递减栈（非增）monotonic decreasing stack；如果下一个数更大，就一直弹栈，直到找到能把这个数放进去；弹栈的时候就可以idx的差值就是被删除栈的output；如果下一个数更大，就压栈
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        res = [0] * len(temperatures)
+        stack = [] # pair:[temp, index]
+
+        for idx, t = enumerate(temperatures):
+            while stack and t > stack[-1][0]:
+                stackTemp, stackIdx = stack.pop()
+                res[stackIdx] = (i - stackIdx)
+            stack.append([t, idx])
+        
+        return res    
+```
+
+[43. Multiply Strings](https://leetcode.com/problems/multiply-strings/)
+
+81%10=1, carry:81//10=8 用array来存结果；计算数字：取出来digit，然后res[i1+i2]+=digit, res[i1+i2+1]=res[i1+i2]//10, res[i1+i2]%=10
+
+时间：O(N*M)
+空间：O(N+M)
+
+```python 
+class Solution:
+    def multiply(self, num1: str, num2: str) -> str:
+        if "0" in [num1, num2]:
+            return "0"
+        
+        res = [0] * (len(num1) + len(num2))
+        num1, num2 = num1[::-1], num2[::-1] # 把num翻过来
+
+        for i1 in range(len(num1)):
+            for i2 in range(len(num2)):
+                digit = int(num1[i1]) * int(num2[i2])
+                res[i1+i2] += digit
+                res[i1+i2+1] += res[i1+i2] // 10
+                res[i1+i2] = res[i1+i2] % 10
+        
+        res = res[::-1]
+
+        # 处理前面是0的情况
+        idx = 0
+        while idx < len(res) and res[idx] == 0:
+            idx += 1
+        
+        res = map(str, res[idx:])
+        return "".join(res)
+```
 
 
+[76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
 
+用一个dict记录每个字母的出现次数，然后用counter记录剩下需要的，滑动窗口如果dict剩余的次数>0就counter-=1，每次也要更新dict；初始化countMap = collections.Counter(t)
 
+时间：O(S+T)
+空间：O(S+T)
 
-
-
-
-
+```python
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        countMap = collections.Counter(t)
+        
+        l = r = 0
+        minStart = 0
+        minLen = float("inf")
+        counter = len(t)
+        
+        while r < len(s):
+            ch = s[r]
+            if countMap[ch] > 0:
+                counter -= 1
+            countMap[ch] -= 1
+            r += 1
+            
+            while counter == 0:
+                if minLen > r - l:
+                    minStart = l
+                    minLen = r - l
+                ch2 = s[l]
+                countMap[ch2] += 1
+                if countMap[ch2] > 0:
+                    counter += 1
+                l += 1
+        
+        return s[minStart: minStart + minLen] if minLen != float("inf") else ""
+        
+```
 
