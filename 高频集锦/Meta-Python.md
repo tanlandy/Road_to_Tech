@@ -2236,7 +2236,7 @@ class Solution:
                 inorder(root.right)
 
             inorder(root)
-            dummy.right.left, prev.right = prev, dummy.right
+            dummy.right.left, prev.right = prev, dummy.right # 看不太懂
             return dummy.right
 ```
 
