@@ -2310,17 +2310,83 @@ class Codec:
 
 [129. Sum Root to Leaf Numbers](https://leetcode.com/problems/sum-root-to-leaf-numbers/)
 
-preorder因为要先
+preorder因为要先处理父节点，dfs()返回sum值
+时间：O(N)
+空间：O(H)
 
 ```python
+class Solution:
+    def sumNumbers(self, root: Optional[TreeNode]) -> int:
+        def dfs(cur, num):
+            if not cur:
+                return 0
+            
+            num = num * 10 + cur.val
+            if not cur.left and not cur.right:
+                return num
+            
+            return dfs(cur.left, num) + dfs(cur.right, num)
+        
+        return dfs(root, 0)
 
+```
+
+[647. Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
+
+从每个位置开始，两个指针从该位置往左往右走，这样只走了所有的奇数，然后再走所有的偶数
+
+时间：O(N^2)奇数 + O(N^2)偶数
+空间：O(1)
+
+```python
+class Solution:
+    def countSubstrings(self, s: str) -> int:
+        res = 0
+        
+        def countPali(s, l, r):
+            res = 0
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                res += 1
+                l -= 1
+                r += 1
+            return res
+        
+        for i in range(len(s)):
+            l = r = i
+            res += countPali(s, l ,r)
+            l = i
+            r = i + 1
+            res += countPali(s, l ,r)
+        
+        return res
+            
 
 ```
 
 
+[658. Find K Closest Elements](https://leetcode.com/problems/find-k-closest-elements/)
 
+二分查找；r = len(arr) - k, 如果x > (arr[mid] + arr[mid+10] // 2，就l+=1
 
+时间：O(logN)
+空间：O(1)
 
+```python
+class Solution:
+    def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
+        l, r = 0, len(arr) - k
+        
+        while l < r:
+            mid = l + (r - l) // 2
+            # x > (arr[mid] + arr[mid+10] // 2
+            if x - arr[mid] > arr[mid + k] - x:
+                l = mid + 1
+            else:
+                r = mid
+        
+        return arr[l:l+k]
+
+```
 
 
 
