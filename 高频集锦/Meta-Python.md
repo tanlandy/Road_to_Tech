@@ -2794,42 +2794,106 @@ class Solution:
 
 [827. Making A Large Island](https://leetcode.com/problems/making-a-large-island/)
 
+先计算每个点对应island的area的值，然后计算所有0的附近左右岛面积的和；计算每个点对应island的值的时候，只覆盖该点的岛屿的idx，然后用map映射岛的大小idx_area{idx:area}。等计算0周围的和的时候，就可以直接用set来看是否是不同的岛，然后用idx_area[idx]来相加;res = max(idx_area.values() or [0])
+
+时间：O(M*N)
+空间：O(M*N)
 
 ```python 
 class Solution:
     def largestIsland(self, grid: List[List[int]]) -> int:
-        dirs = [[1, 0], [-1, 0],[0, 1],[0, -1]]
-        rows, cols, nextColor = len(grid), len(grid[0]), 2
-        componentSize = defaultdict(int)
+        rows, cols = len(grid), len(grid[0])
+        idx = 2
+        # idx_area -> {idx : area}
+        idx_area = collections.defaultdict(int)
+        dirs = [[1,0],[-1,0],[0,1],[0,-1]]
 
-        def paint(r, c, color):
-            if r < 0 or r == rows or c < 0 or c == cols or grid[r][c] != 1: 
+        # dfs把每个位置都变成了该小岛的idx
+        def dfs(r, c, idx):
+            if r < 0 or r == rows or c <  0 or c == cols or grid[r][c] != 1:
                 return
-            grid[r][c] = color
-            componentSize[color] += 1
+            grid[r][c] = idx
+            idx_area[idx] += 1
             for dr, dc in dirs:
-                paint(r + dr, c + dc, color)
-
+                dfs(r + dr, c + dc, idx)
+        
         for r in range(rows):
             for c in range(cols):
-                if grid[r][c] == 1:   # Only paint when it's an island cell
-                    paint(r, c, nextColor)
-                    nextColor += 1
-
-        ans = max(componentSize.values() or [0])
+                if grid[r][c] == 1:
+                    dfs(r, c, idx)
+                    idx += 1
+        
+        res = max(idx_area.values() or [0])
+        # 对于所有的“0”，把四周小岛加起来
         for r in range(rows):
             for c in range(cols):
                 if grid[r][c] == 0:
-                    neiColors = set()
+                    # 用set()，避免重复加同一个岛，set()里面放所有的idx                    
+                    nei_idx = set()
                     for dr, dc in dirs:
-                        nr, nc = r + dr, c + dc
-                        if nr < 0 and nr == rows and nc < 0 and nc == cols and grid[nr][nc] == 1: 
-                            neiColors.add(grid[nr][nc])
-                        
-                    sizeFormed = 1  # Start with 1, which is matrix[r][c] when turning from 0 into 1
-                    for color in neiColors:
-                        sizeFormed += componentSize[color]
-                    ans = max(ans, sizeFormed)
+                        nei_r, nei_c = r + dr, c + dc
+                        if nei_r in range(rows) and nei_c in range(cols) and grid[nei_r][nei_c] != 0:
+                            nei_idx.add(grid[nei_r][nei_c])
+                    
+                    one_res = 1
+                    for idx in nei_idx:
+                    # 只用加idx对应的area
+                        one_res += idx_area[idx]
+                    res = max(one_res, res)
+        
+        return res
+```
 
-        return ans
+[1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+就是八个方向的dfs,queue里面放dist：queue=deque([(0,0,1)])
+
+时间：O(N*N)
+空间：O(N*N)
+
+```python
+class Solution:
+    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        if grid[0][0] or grid[n-1][n-1]:
+            return -1
+        
+        dirs = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,-1],[-1,1]]
+        queue = collections.deque([(0,0,1)])
+        visit = set()
+        visit.add((0,0))
+        
+        while queue:
+            r, c, dist = queue.popleft()
+            if r == n - 1 and c == n - 1:
+                return dist
+            
+            for dr, dc in dirs:
+                nei_r, nei_c = r + dr, c + dc
+                
+                if nei_r in range(n) and nei_c in range(n) and grid[nei_r][nei_c] == 0 and (nei_r, nei_c) not in visit:
+                    queue.append((nei_r, nei_c, dist + 1))
+                    visit.add((nei_r, nei_c))
+        
+        return -1
+```
+
+[162. Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+
+二分查找。当nums[mid]>nums[mid+1]时候，r=mid；否则l = mid + 1
+
+时间：O(logN)
+空间：O(1)
+```python
+class Solution:
+    def findPeakElement(self, nums: List[int]) -> int:
+        l, r = 0, len(nums) - 1
+        while l < r:
+            mid = l + (r - l) // 2
+            if nums[mid] > nums[mid + 1]:
+                r = mid
+            else:
+                l = mid + 1
+        return l
+        
 ```
