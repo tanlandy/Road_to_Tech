@@ -2795,53 +2795,6 @@ class Solution:
 [827. Making A Large Island](https://leetcode.com/problems/making-a-large-island/)
 
 
-```python
-class Solution:
-    def largestIsland(self, grid: List[List[int]]) -> int:
-        rows, cols = len(grid), len(grid[0])
-        
-        def dfs(r, c):
-            if r < 0 or r == rows or c < 0 or c == cols or grid[r][c] == 0 or (r, c) in visit:
-                return 0
-            visit.add((r, c))
-            
-            return (1 +
-                   dfs(r+1, c)+
-                   dfs(r-1, c)+
-                   dfs(r, c+1)+
-                   dfs(r, c-1)
-                   )
-            
-        idx_area = {}
-        
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] == 1:
-                    visit = set()
-                    area = dfs(r, c)
-                    idx_area[(r, c)] = (area)
-                            
-        res = 0
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] == 0:
-                    nei_area = set()
-                    dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]]
-                    for dr, dc in dirs:
-                        neiR, neiC = r + dr, c + dc
-                        if neiR in range(rows) and neiC in range(cols) and grid[neiR][neiC] != 1:
-                            nei_area.add((neiR,neiC))
-                            
-                    size_formed = 1
-                    for neiR, neiC in nei_area:
-                        size_formed += idx_area[(neiR, neiC)]
-                    res = max(res, size_formed)       
-        
-        return res
-        
-```
-
-
 ```python 
 class Solution:
     def largestIsland(self, grid: List[List[int]]) -> int:
