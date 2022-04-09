@@ -2696,3 +2696,36 @@ class Solution:
         
 ```
 
+[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
+
+inorder遍历。用一个全局的prev来作为prev; 用dummy来防止为空的情况；nonlocal prev来帮助遍历里面；最后把最开始和最后的连起来: dummy.right.left = prev, prev.right = dummy.right
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def treeToDoublyList(self, root: 'Optional[Node]') -> 'Optional[Node]':
+        dummy = Node(-1)
+        prev = dummy
+        
+        def inorder(node):
+            nonlocal prev
+            if not node:
+                return
+            inorder(node.left)
+            prev.right = node
+            node.left = prev
+            prev = node
+            inorder(node.right)
+        
+        inorder(root)
+        dummy.right.left = prev
+        prev.right = dummy.right
+        
+        return dummy.right
+```
+
+[31. Next Permutation](https://leetcode.com/problems/next-permutation/)
+
+从后往前找
