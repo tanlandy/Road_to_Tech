@@ -1762,6 +1762,34 @@ class Solution:
 
 ```
 
+```python
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        visit = set()
+        
+        def dfs(r, c):
+            if (r < 0 or r == rows or c < 0 or c == cols or (r, c) in visit or grid[r][c] != "1"):
+                return
+            
+            visit.add((r, c))
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+            
+        count = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "1" and (r, c) not in visit:
+                    dfs(r, c)
+                    count += 1
+        
+        return count
+```
+
+
+
 [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
 
 HashMap:{oldNode:newNode}；dfs(node)返回node对应的copy， 每次如果在map里面就直接返回copy后的node，如果不在就copy然后copy自己的neighbors；复制neighbors: for nei in node.neighbors: copy.neighbors.append(dfs(nei))
@@ -1819,8 +1847,9 @@ class Solution:
         
         area = 0
         for r in range(rows):
-            for i in range(cols):
-                area = max(area, dfs(r, c))
+            for c in range(cols):
+                if grid[r][c] == 1 and (r, c) not in visit:
+                    area = max(area, dfs(r, c))
 
         return area
 ```
@@ -2728,4 +2757,126 @@ class Solution:
 
 [31. Next Permutation](https://leetcode.com/problems/next-permutation/)
 
-从后往前找
+从后往前找，找到下降序列左边的值k；找到k右边最后一个比k小的数，交换；把k右边的数倒序排列
+
+时间：O(N)
+空间：O(1)
+```python
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        i = len(nums)-1
+        
+        # step1: find the last "ascending" position: k
+        while i > 0 and nums[i-1] >= nums[i]:
+            i -= 1 
+        if i == 0:   # nums are in descending order
+            nums.reverse()
+            return 
+        k = i - 1   
+        
+        # step2: 找到k右边比k小的第一个数，和k交换
+        j = len(nums) - 1
+        while nums[j] <= nums[k]:
+            j -= 1 
+        nums[k], nums[j] = nums[j], nums[k]  
+        
+        # step3: 把k右边的树倒序排列
+        l, r = k+1, len(nums)-1  
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l +=1 ; r -= 1
+
+```
+
+
+[827. Making A Large Island](https://leetcode.com/problems/making-a-large-island/)
+
+
+```python
+class Solution:
+    def largestIsland(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        
+        def dfs(r, c):
+            if r < 0 or r == rows or c < 0 or c == cols or grid[r][c] == 0 or (r, c) in visit:
+                return 0
+            visit.add((r, c))
+            
+            return (1 +
+                   dfs(r+1, c)+
+                   dfs(r-1, c)+
+                   dfs(r, c+1)+
+                   dfs(r, c-1)
+                   )
+            
+        idx_area = {}
+        
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    visit = set()
+                    area = dfs(r, c)
+                    idx_area[(r, c)] = (area)
+                            
+        res = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 0:
+                    nei_area = set()
+                    dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+                    for dr, dc in dirs:
+                        neiR, neiC = r + dr, c + dc
+                        if neiR in range(rows) and neiC in range(cols) and grid[neiR][neiC] != 1:
+                            nei_area.add((neiR,neiC))
+                            
+                    size_formed = 1
+                    for neiR, neiC in nei_area:
+                        size_formed += idx_area[(neiR, neiC)]
+                    res = max(res, size_formed)       
+        
+        return res
+        
+```
+
+
+```python 
+class Solution:
+    def largestIsland(self, grid: List[List[int]]) -> int:
+        dirs = [[1, 0], [-1, 0],[0, 1],[0, -1]]
+        rows, cols, nextColor = len(grid), len(grid[0]), 2
+        componentSize = defaultdict(int)
+
+        def paint(r, c, color):
+            if r < 0 or r == rows or c < 0 or c == cols or grid[r][c] != 1: 
+                return
+            grid[r][c] = color
+            componentSize[color] += 1
+            for dr, dc in dirs:
+                paint(r + dr, c + dc, color)
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:   # Only paint when it's an island cell
+                    paint(r, c, nextColor)
+                    nextColor += 1
+
+        ans = max(componentSize.values() or [0])
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 0:
+                    neiColors = set()
+                    for dr, dc in dirs:
+                        nr, nc = r + dr, c + dc
+                        if nr < 0 and nr == rows and nc < 0 and nc == cols and grid[nr][nc] == 1: 
+                            neiColors.add(grid[nr][nc])
+                        
+                    sizeFormed = 1  # Start with 1, which is matrix[r][c] when turning from 0 into 1
+                    for color in neiColors:
+                        sizeFormed += componentSize[color]
+                    ans = max(ans, sizeFormed)
+
+        return ans
+```
