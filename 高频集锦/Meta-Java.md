@@ -1620,7 +1620,7 @@ class Solution {
                 if (insertVal >= cur.val || insertVal <= cur.next.val) { // case 2
                     break;
                 }
-            }
+            }1,2,
             cur = cur.next;
         }
         insertNode.next = cur.next;

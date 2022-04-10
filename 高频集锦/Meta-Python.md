@@ -2997,6 +2997,8 @@ emails_accounts_map of email to account ID
 2. DFS每个account，把所有有相同的连起来
 3. sort并导出
 
+https://leetcode.com/problems/accounts-merge/discuss/109161/Python-Simple-DFS-with-explanation!!! 
+
 ```python
 class Solution(object):
     def accountsMerge(self, accounts):
@@ -3027,4 +3029,114 @@ class Solution(object):
             res.append([name] + sorted(emails))
         return res
 
+```
+
+[498. Diagonal Traverse](https://leetcode.com/problems/diagonal-traverse/)
+
+对角线的点有相同的sum(idx)，用dict存相同sum对应的所有值: {diag:[3,5,7]}；最后反向添加：[res.append(x) for x in eles[::-1]]；正向添加：[res.append(x) for x in eles]
+
+时间：O(N*M)
+空间：O(N*M)
+
+```python
+class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
+        d = {}
+        rows, cols = len(mat), len(mat[0])
+        
+        # 把对角线的点都放进来
+        for r in range(rows):
+            for c in range(cols):
+                if r + c not in d:
+                    d[r + c] = [mat[r][c]]
+                else:
+                    d[r + c].append(mat[r][c])
+        
+        res = []
+        
+        for idx, eles in d.items():
+            # 当是偶数的时候，就要reverse
+            if idx % 2 == 0:
+                [res.append(x) for x in eles[::-1]]
+            else:
+                [res.append(x) for x in eles]
+        
+        return res
+```
+
+
+[317. Shortest Distance from All Buildings](https://leetcode.com/problems/shortest-distance-from-all-buildings/)
+
+```python
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        dirs = [[1,0],[-1,0],[0,1],[0,-1]]
+        
+        # 全为0的大小是rows*cols的矩阵，存的是所有房子到每个点的距离
+        total_sum = [[0] * cols for _ in range(rows)]
+        
+        def bfs(row, col, curr_count):
+            min_distance = math.inf
+            queue = deque()
+            queue.append([row, col, 0])
+            while queue:
+                r, c, curr_step = queue.popleft()
+                for dr, dc in dirs:
+                    nei_r, nei_c = r + dr, c + dc
+                    
+                    if 0 <= nei_r < rows and 0 <= nei_c < cols and grid[nei_r][nei_c] == -curr_count:
+                        total_sum[nei_r][nei_c] += curr_step + 1
+                        min_distance = min(min_distance, total_sum[nei_r][nei_c])
+                        grid[nei_r][nei_c] -= 1
+                        queue.append([nei_r, nei_c, curr_step + 1])
+            return min_distance
+                
+        count = 0
+        for row in range(rows):
+            for col in range(cols):
+                # 从每一个房子出发
+                if grid[row][col] == 1:
+                    min_distance = bfs(row, col, count)
+                    count += 1
+                    if min_distance == math.inf:
+                        return -1
+        
+        return min_distance
+
+```
+
+[708. Insert into a Sorted Circular Linked List](https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/)
+
+用两个指针pre和cur遍历。分2种情况，一个是新Node在二者之前，另一个是新Node在两个之外，找到break的点然后break，最后插入就行了；注意一开始的head空情况；遍历终止条件是pre.next != head
+
+时间：O(N)
+空间：O(1)
+
+```python
+class Solution:
+    def insert(self, head: 'Optional[Node]', insertVal: int) -> 'Node':
+        node = Node(insertVal)
+        
+        if not head:
+            node.next = node
+            return node
+        
+        pre, cur = head, head.next
+        
+        while pre.next != head:
+            # [1,2,4] insert 3
+            if pre.val <= node.val <= cur.val:
+                break
+            # [3,5,7] insert 2, 8
+            # pre.val = 7, cur.val = 3
+            if pre.val > cur.val and (node.val > pre.val or node.val < cur.val):
+                break
+            
+            pre = pre.next
+            cur = cur.next
+        
+        node.next = cur
+        pre.next = node
+        return head
 ```
