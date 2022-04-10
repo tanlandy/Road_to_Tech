@@ -2975,3 +2975,56 @@ class Solution:
     
         
 ```
+
+
+16. [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+Here N is the number of accounts and K is the maximum length of an account.
+时间：O(NKlogNK) 所有email都是同一个人的名下
+空间：O(NK) adjList O(NK) visited O(NK) DFS O(NK)
+
+1. 建adjList，对每个email，建立对应account_id的邻接表
+
+emails_accounts_map of email to account ID
+{
+  "johnsmith@mail.com": [0, 2],
+  "john00@mail.com": [0],
+  "johnnybravo@mail.com": [1],
+  "john_newyork@mail.com": [2],
+  "mary@mail.com": [3]
+}
+
+2. DFS每个account，把所有有相同的连起来
+3. sort并导出
+
+```python
+class Solution(object):
+    def accountsMerge(self, accounts):
+        visited_accounts = [False] * len(accounts)
+        emails_accounts_map = collections.defaultdict(list)
+        res = []
+        # Build up the graph.
+        for i, account in enumerate(accounts):
+            for j in range(1, len(account)):
+                email = account[j]
+                emails_accounts_map[email].append(i)
+        # DFS code for traversing accounts.
+        def dfs(i, emails):
+            if visited_accounts[i]:
+                return
+            visited_accounts[i] = True
+            for j in range(1, len(accounts[i])):
+                email = accounts[i][j]
+                emails.add(email)
+                for neighbor in emails_accounts_map[email]:
+                    dfs(neighbor, emails)
+        # Perform DFS for accounts and add to results.
+        for i, account in enumerate(accounts):
+            if visited_accounts[i]:
+                continue
+            name, emails = account[0], set()
+            dfs(i, emails)
+            res.append([name] + sorted(emails))
+        return res
+
+```
