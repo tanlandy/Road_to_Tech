@@ -3140,3 +3140,112 @@ class Solution:
         pre.next = node
         return head
 ```
+
+[986. Interval List Intersections](https://leetcode.com/problems/interval-list-intersections/)
+
+交叉的起点是max(Astart, Bstart，终点是min(Aend, Bend);指针移动是根据终点大小
+
+时间：O(N)
+空间：O(1)
+
+```python
+class Solution:
+    def intervalIntersection(self, firstList: List[List[int]], secondList: List[List[int]]) -> List[List[int]]:
+        res = []
+        i = j = 0
+        
+        while i < len(firstList) and j < len(secondList):
+            start_1, end_1 = firstList[i][0], firstList[i][1]
+            start_2, end_2 = secondList[j][0], secondList[j][1]
+ 
+            start = max(start_1, start_2)
+            end = min(end_1, end_2)
+            
+            if start <= end:
+                res.append([start, end])
+            
+            if end_1 < end_2:
+                i += 1
+            else:
+                j += 1
+        
+        return res
+
+```
+
+
+[1539. Kth Missing Positive Number](https://leetcode.com/problems/kth-missing-positive-number/)
+
+
+arr[idx]的应该是1+idx，所以missing个数是arr[idx] - 1 - idx； 找到missing个数在k左的：missing of arr[idx] < k < missing of arr[idx+1]；然后往右加差的数字：arr[idx] + k - missing of arr[idx] => arr[idx] + k - arr[idx] + 1 + idx=> k + 1 + idx
+[2,3,4,7,11], k = 5
+点11: missing = 11 - 1 - 4 =  6
+点7：missing = 7 - 1 - 3 = 3
+要返回的点7 + 5 - 3 = 9
+二分查找找到7，返回7+k-3
+
+时间：O(logN)
+空间：O(1)
+
+```python
+class Solution:
+    def findKthPositive(self, arr: List[int], k: int) -> int:
+        #arr[idx]'s missing value is arr[idx] - 1 - idx
+        # find the left most one that missing of arr[idx] < k < missing of arr[idx+1]
+        # return arr[idx] + k - missing of arr[idx] => arr[idx] + k - arr[idx] + 1 + idx
+        # return k + 1 + idx
+        l, r = 0, len(arr) - 1
+        
+        while l <= r:
+            mid = l + (r - l) // 2
+            if (arr[mid] - 1 - mid < k):
+                l = mid + 1
+            else:
+                r = mid - 1
+        
+        return k + 1 + r   
+```
+
+[1868. Product of Two Run-Length Encoded Arrays](https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/)
+
+双指针；每次算出来min(f1, f2)然后把f1,f2剪掉，指针移动的条件是f==0；res更新要么+=freq，要么搞一个新的
+
+时间：O(N+M)
+空间：O(N+M)
+
+```python
+class Solution:
+    def findRLEArray(self, encoded1: List[List[int]], encoded2: List[List[int]]) -> List[List[int]]:
+        res = []
+
+        i = 0
+        j = 0
+
+        while i < len(encoded1) and j < len(encoded2):
+            # 取出来对应的value和frequency
+            v1, f1 = encoded1[i]
+            v2, f2 = encoded2[j]
+
+            # 计算当前的值，和对应的frequency
+            product_val = v1 * v2
+            product_freq = min(f1, f2)
+
+            # 把用掉的frequency给减掉
+            encoded1[i][1] -= product_freq
+            encoded2[j][1] -= product_freq
+
+            # 指针移动的条件是freq==0
+            if encoded1[i][1] == 0:
+                i += 1
+
+            if encoded2[j][1] == 0:
+                j += 1
+
+            # res更新product的方法
+            if res and res[-1][0] == product_val:
+                res[-1][1] += product_freq
+            else:
+                res.append([product_val, product_freq])
+
+        return res
+```

@@ -1887,7 +1887,7 @@ Explanation: The missing positive integers are [1,5,6,8,9,10,12,13,...]. The 5th
 
 思路：
 arr[idx]的missing个数是arr[idx] - 1 - idx
-找到missing个数包括k的，然后往右加差的树
+找到missing个数包括k的，然后往右加差的数字
 [2,3,4,7,11], k = 5
 点11: missing = 11 - 1 - 4 =  6
 点7：missing = 7 - 1 - 3 = 3
