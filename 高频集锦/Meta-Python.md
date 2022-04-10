@@ -2894,6 +2894,84 @@ class Solution:
                 r = mid
             else:
                 l = mid + 1
-        return l
+        return l     
+```
+
+[636. Exclusive Time of Functions](https://leetcode.com/problems/exclusive-time-of-functions/)
+
+用stack，如果是start，如果stack非空，就更新之前的res，然后把值放进来；如果end：取出来最后的值，更新res。如果这时候stack非空，就把这个值的[1]跳过到最新；stack存([fun_id, fun_time])
+
+时间：O(N)
+空间：O(D) D is function calls
+
+  [0,1,2,3,4,5,6]
+0  - -         -
+1      - - - -
+[3,4]
+```python
+class Solution:
+    def exclusiveTime(self, n: int, logs: List[str]) -> List[int]:
+        stack = []
+        res = [0] * n
+        
+        for log in logs:
+            fun_id, event, fun_time = log.split(":")
+            fun_id, fun_time = int(fun_id), int(fun_time)
+
+            # 如果是start            
+            if event == "start":
+                # 如果非空，就要计算之前Fun的长度
+                if stack:
+                    res[stack[-1][0]] += fun_time - stack[-1][1]
+                # 放进来
+                stack.append([fun_id, fun_time])
+            
+            # 如果是end
+            else:
+                # 计算该Fun长度，需要+1
+                last_id, last_time = stack.pop()
+                res[last_id] += fun_time - last_time + 1
+                if stack:
+                    stack[-1][1] = fun_time + 1
+        
+        return  res
+```
+
+
+[301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)
+
+```python
+class Solution:
+    def removeInvalidParentheses(self, s: str) -> List[str]:
+        # initialize a set with one element
+        # set is used here in order to avoid duplicate element
+        
+        def isValid(s):
+            count = 0
+            for c in s:
+                if c == '(':
+                    count += 1
+                elif c == ')':
+                    count -= 1
+                    if count < 0:
+                        return False
+            return count == 0
+        
+        level = {s}
+        while True:
+            valid = []
+            for elem in level:
+                if isValid(elem):
+                    valid.append(elem)
+            if valid:
+                return valid
+            # initialize an empty set
+            new_level = set()
+            # BFS
+            for elem in level:
+                for i in range(len(elem)):
+                    new_level.add(elem[:i] + elem[i + 1:])
+            level = new_level
+    
         
 ```
