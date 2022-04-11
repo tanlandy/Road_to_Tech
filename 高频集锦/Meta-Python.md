@@ -321,25 +321,10 @@ class Solution:
 
 [605. Can Place Flowers](https://leetcode.com/problems/can-place-flowers/)
 
-思路：
-首位加[0]，然后检查bed[i], bed[i-1], bed[i+1]是否相等且为0，如果是就n-=1，然后把bed[i]=1
+首尾加0，用一个count来记录连续的0，如果count==3那就n-=1同时count=1; list.insert()
 
-```python
-class Solution:
-    def canPlaceFlowers(self, flowerbed: List[int], n: int) -> bool:
-        s = len(flowerbed)
-        bed = [0] + flowerbed + [0]
-        for i in range(1, s + 1):
-            if bed[i] == bed[i-1] == bed[i+1] == 0:
-                bed[i] = 1
-                n -= 1
-            if n <= 0:
-                return True
-        return False
-```
-
-思路二：
-也是首尾加0，用一个count来记录连续的0，如果count==3那就n-=1同时count=1
+时间：O(N)
+空间：O(1)
 
 ```python
     def canPlaceFlowers(self, flowerbed, n):
@@ -3476,3 +3461,445 @@ class Solution:
         return "".join(res)
 
 ```
+
+
+[1382. Balance a Binary Search Tree](https://leetcode.com/problems/balance-a-binary-search-tree/)
+
+inorder traverse to an array, then convert the array to a BST；array里面存的是node；built_tree的时候用i,j双指针，如果i>j就返回。build_tree返回的是root
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def balanceBST(self, root: TreeNode) -> TreeNode:
+        nodes = []
+        
+        def inorder(node):
+            if node is None:
+                return
+            inorder(node.left)
+            nodes.append(node)
+            inorder(node.right)
+        
+        inorder(root)
+
+        def build_tree(i, j):
+            if i > j:
+                return None
+            mid = (i + j) // 2
+            root = nodes[mid]
+            root.left = build_tree(i, mid -1)
+            root.right = build_tree(mid + 1, j)
+            return root
+        
+        return build_tree(0, len(nodes) - 1)
+
+```
+
+[273. Integer to English Words](https://leetcode.com/problems/integer-to-english-words/)
+
+分成三部分：小于20， 小于100：二十到九十， 大于100:千，百万，十亿；如果数字是20以下，就直接返回to19数组的数；如果是100以下，就是[tens[num//10]+word(num%10)；如果1000以下，就是word(num//100)+["hundred"]+word(num%100)；如果是1000000（6个0）以下，就是word(num/1000)+["thousand"]+word(num%1000);换句话说，//和%后面的数是百、千、百万、十亿；num<1000的数是下一个位置的百、千、百万、十亿；最后" ".join(word(num))
+
+时间：O(N)
+空间：O(1)
+
+```python
+class Solution:
+    def numberToWords(self, num: int) -> str:
+        to19 = 'One Two Three Four Five Six Seven Eight Nine Ten Eleven Twelve ' \
+           'Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen'.split()
+        tens = 'Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety'.split()
+        
+        def word(num):
+            if num == 0:
+                return []
+            if num < 20:
+                return [to19[num-1]]
+            if num < 100:
+                return [tens[num//10-2]] + word(num%10)
+            if num < 1000:
+                return word(num//100) + ['Hundred'] + word(num%100)
+            if num < 1000000:
+                return word(num//1000) + ['Thousand'] + word(num%1000)
+            if num < 1000000000:
+                return word(num//1000000) + ['Million'] + word(num%1000000)
+            else:
+                return word(num//1000000000) + ['Billion'] + word(num%1000000000)
+        
+        return ' '.join(word(num)) or 'Zero'
+```
+
+[1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
+
+l=max(weights), r=sum(weights),最后返回的是最左侧边界l；isValid: r = mid - 1；计算isValid：用一个cur，每次cur+=w，先检查是否cur+w>cap，是的话就days_need+=1, cur = 0
+
+时间：O(logN)
+空间：O(1)
+
+```python
+class Solution:
+    def shipWithinDays(self, weights: List[int], days: int) -> int:
+        # capacity is res, res+1, res+2, ..., 
+        # binary search from max(weights), to sum(weights)
+        # if valid, r = mid - 1
+        l, r = max(weights), sum(weights)
+        
+        def isvalid(cap): # 注意如何计算满足
+            day_need = 1
+            cur = 0
+            for w in weights:
+                if cur + w > cap: # 每次更新有的，直到大于cap
+                    day_need += 1
+                    cur = 0
+                cur += w
+            
+            return day_need <= days
+        
+        while l <= r:
+            mid = l + (r - l) // 2
+            if isvalid(mid):
+                r = mid - 1
+            else:
+                l = mid + 1
+        
+        return l
+        
+```
+
+
+[863. All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/)
+
+建立node和node.parent的关系，之后bfs从target找周围的k个距离的点就行
+
+时间：O(N)
+空间：O(N)
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
+        def set_parent(root, parent):
+            if not root:
+                return None
+            root.parent = parent
+            set_parent(root.left, root)
+            set_parent(root.right, root)
+        
+        set_parent(root, None)
+        
+        queue = collections.deque([(target, 0)])
+        visited = set()
+        
+        res = []
+        while queue:
+            node, dist = queue.popleft()
+            if node in visited:
+                continue
+            visited.add(node)
+            
+            if dist == k:
+                res.append(node.val)
+            
+            elif dist < k:
+                if node.left:
+                    queue.append((node.left, dist+1))
+                if node.right:
+                    queue.append((node.right, dist+1))
+                if node.parent:
+                    queue.append((node.parent, dist+1))
+        
+        return res
+```
+
+
+[398. Random Pick Index](https://leetcode.com/problems/random-pick-index/)
+
+
+reservor sampling，当val == target的时候count+=1，然后从randint(1, count)==1来更新结果
+
+时间：O(N)
+空间：O(1)
+
+```python
+class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.nums = nums
+
+    def pick(self, target: int) -> int:
+        count = 0
+        idx = 0
+        for i, val in enumerate(self.nums):
+            if val == target:
+                count += 1
+                if random.randint(1, count) == count:
+                    idx = i
+        return idx
+```
+
+
+用hashmap
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.numToIdx = collections.defaultdict(list)
+        for i, val in enumerate(nums):
+            self.numToIdx[val].append(i)
+
+    def pick(self, target: int) -> int:
+        size = len(self.numToIdx[target]) - 1
+        idx = random.randint(0, size)
+        res = self.numToIdx[target][idx]
+        
+        return res
+```
+
+
+[1428. Leftmost Column with at Least a One](https://leetcode.com/problems/leftmost-column-with-at-least-a-one/)
+
+每行一个二分查找最左出现，然后更新
+
+时间：O(NlogM) N:row, M:cols
+空间：O(1)
+
+```python
+class Solution:
+    def leftMostColumnWithOne(self, binaryMatrix: 'BinaryMatrix') -> int:
+        rows, cols = binaryMatrix.dimensions()
+        
+        right_most = cols
+        
+        for row in range(rows):
+            l, r = 0, min(cols-1, right_most)
+            while l <= r:
+                mid = l + (r- l) // 2
+                if binaryMatrix.get(row, mid) == 0:
+                    l = mid + 1
+                else:
+                    r = mid - 1
+            if l < cols and binaryMatrix.get(row, l) == 1:
+                right_most = min(right_most, l)
+                
+        return right_most if right_most != cols else -1
+```
+
+
+[536. Construct Binary Tree from String](https://leetcode.com/problems/construct-binary-tree-from-string/)
+
+用i遍历；先找到数字，形成节点，然后如果是(就放左边，然后如果再次出现(就放右边
+时间：O(N)
+空间：O(H)
+
+```python
+class Solution:
+    def str2tree(self, s: str) -> TreeNode:
+        if not s or len(s) == 0:
+            return None
+        
+        def helper(i):
+            start = i
+            while i < len(s) and (s[i] == '-' or s[i].isdigit()): # negative sign or digit
+                i += 1
+            node = TreeNode(int(s[start : i]))
+            if i < len(s) and s[i] == '(':
+                i += 1 # skip '('
+                node.left, i = helper(i)
+                i += 1 # skip ')'
+            if i < len(s) and s[i] == '(': # still has '(', create right tree
+                i += 1 # skip '('
+                node.right, i = helper(i)
+                i += 1 # skip ')'
+            return node, i
+        
+        root, _ = helper(0)
+        return root
+```
+
+[1344. Angle Between Hands of a Clock](https://leetcode.com/problems/angle-between-hands-of-a-clock/)
+
+分针的角度：min * 6; 小时的角度：hour%12 * 30 + angle_min / 60 * 30
+
+时间：O(1)
+空间：O(1)
+
+```python
+class Solution:
+    def angleClock(self, hour: int, minutes: int) -> float:
+        """
+        an_per_min = 360 / 60 = 6
+        an_per_hour = 360 / 12 = 30       
+        """
+        
+        an_min = minutes * 6
+        an_hour = hour%12 * 30 + minutes * 30 / 60
+        
+        diff = abs(an_min - an_hour)
+        return min(diff, 360-diff)
+```
+
+[825. Friends Of Appropriate Ages](https://leetcode.com/problems/friends-of-appropriate-ages/)
+
+排序之后；对于每一个age找到自己的位置，然后找到最小的朋友的位置，之间的差就是可以添加的好友
+
+时间：O(logN)
+空间：O(1)
+
+```python
+class Solution:
+    def numFriendRequests(self, ages: List[int]) -> int:
+        res = 0
+        N = len(ages)
+        ages.sort()
+        for i in range(N):
+            a = ages[i]
+            idx1 = bisect.bisect(ages, a)
+            idx2 = bisect.bisect(ages, 0.5 * a + 7)
+            res += max(0, idx1 - idx2 - 1) 
+        return res
+```
+
+[556. Next Greater Element III](https://leetcode.com/problems/next-greater-element-iii/)
+
+找到最右下降序列的第一位，然后找到左边的那个数，从后面再找比左边那个数大的，交换。之后逆向后面的数，最后输；int变list：nums=list(str(n))
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def nextGreaterElement(self, n):
+        nums = list(str(n))
+        i = len(nums) - 1
+        
+        while i>0 and nums[i-1] >= nums[i]:
+            i -= 1
+        
+        if i == 0:
+            return -1
+        
+        k = i - 1
+        j = len(nums) - 1
+        while nums[j] <= nums[k]:
+            j -= 1
+        nums[j], nums[k] = nums[k], nums[j]
+        
+        l, r = k + 1, len(nums) - 1
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l += 1
+            r -= 1
+            
+        res = int("".join(nums)) 
+        if res >= 2**31:
+            return -1
+        return res
+        
+
+```
+
+[1060. Missing Element in Sorted Array](https://leetcode.com/problems/missing-element-in-sorted-array/)
+
+nums[i]之前的missing个数是nums[i] - nums[0] - i; 找到nums[i] < k < nums[i+1]的missing个数的位置; 返回nums[i] + k - (nums[i] - nums[0] - i) = k + nums[0] + i
+
+时间：O(logN)
+空间：O(1)
+
+```python
+class Solution:
+    def missingElement(self, nums: List[int], k: int) -> int:
+        l, r = 0, len(nums) - 1
+        while l <= r:
+            mid = l + (r - l) // 2
+            if nums[mid] - nums[0] - mid < k:
+                l = mid + 1
+            else:
+                r = mid - 1
+        return k + nums[0] + r
+
+```
+
+
+
+[958. Check Completeness of a Binary Tree](https://leetcode.com/problems/check-completeness-of-a-binary-tree/)
+
+BFS层序遍历，另外用一个boolean记录是否有过空，如果有过2次就说明False
+
+时间：O(logN)
+空间：O(N)
+
+```python
+class Solution:
+    def isCompleteTree(self, root: Optional[TreeNode]) -> bool:
+        if not root:
+            return False
+        queue = collections.deque([root])
+        end = False
+        
+        while queue:
+            for _ in range(len(queue)): # 对于每层
+                node = queue.popleft()
+                if not node:
+                    end = True
+                else:
+                    if end:
+                        return False
+                    queue.append(node.left)
+                    queue.append(node.right) 
+        
+        return True
+```
+
+
+[463. Island Perimeter](https://leetcode.com/problems/island-perimeter/)
+
+每次见到1就+=4，然后如果左边也是就-=2，如果上面也是就-=2
+时间：O(N)
+空间：O(1)
+
+```python
+class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        
+        result = 0
+        
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    result += 4
+                    
+                    if r > 0 and grid[r-1][c] == 1:
+                        result -= 2
+                        
+                    if c > 0 and grid[r][c-1] == 1:
+                        result -= 2
+        
+        return result
+
+```
+
+
+
+
+[1644. Lowest Common Ancestor of a Binary Tree II](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/)
+
+https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/discuss/1011154/Failed-This-Question-In-Two-Mock-Interview-So-Post-This-To-Remind-myself-specifically 

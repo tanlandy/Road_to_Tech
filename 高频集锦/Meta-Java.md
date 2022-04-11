@@ -858,7 +858,6 @@ solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each ind
 
     public Solution(int[] nums) {
         this.nums = nums;
-        this.rand = new Random();
     }
     
     public int pick(int target) {
@@ -2110,10 +2109,8 @@ Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8
 
 ```
 
-13. [825. Friends Of Appropriate Ages](https://leetcode.com/problems/friends-of-appropriate-ages/)
 
-
-14. [297](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+1.  [297](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
 
 ```Java
     // Encodes a tree to a single string.
@@ -2591,18 +2588,8 @@ Input: num1 = "456", num2 = "77"
 Output: "533"
 
 
-2. [346]
 
-
-
-
-4. [146]
-
-
-5. [1331]
-
-
-6. [1868. Product of Two Run-Length Encoded Arrays](https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/)
+1. [1868. Product of Two Run-Length Encoded Arrays](https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/)
 
 ```Java
     public List<List<Integer>> findRLEArray(int[][] encoded1, int[][] encoded2) {
