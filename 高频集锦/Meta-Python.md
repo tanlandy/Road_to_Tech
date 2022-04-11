@@ -402,6 +402,9 @@ class Solution:
 
 思路：
 先把s变成list，用stack存inValid的'(',')'的index; 如何判断inValid：每次看到(就压栈，看到)要么弹要么直接换成""，最后多余在stack里的（直接换成空）。最后把s导出成string：直接换成空：s[idx] = ""， 最后list变成str: "".join(s)
+
+时间：O(N)
+空间：O(N)
 ```python
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
@@ -540,7 +543,7 @@ There are n buildings in a line. You are given an integer array heights of size 
 Input: heights = [4,2,3,1]
 Output: [0,2,3]
 
-从右往左走，每次记录最大值，比较最大值和当前值；当前值更大就更新最大值并且记录index；反过来走for index in reversed(range(len(list));翻转list: res.reverse()
+从右往左走，每次记录最大值，比较最大值和当前值；当前值更大就更新最大值并且记录index；反过来走for index in reversed(range(len(list));翻转list: res.reverse()，什么都不返回；for i in range((len(heights)-1, -1, -1):
 时间： O(n)
 空间： O(1)
 ```python
@@ -549,10 +552,10 @@ class Solution:
         n = len(heights)
         res = []
         curMax = -1
-        for cur in reversed(range(n)):
-            if curMax < heights[cur]:
-                curMax = heights[cur]
-                res.append(cur)
+        for i in range(len(heights)-1, -1, -1):
+            if curMax < heights[i]:
+                curMax = heights[i]
+                res.append(i)
         res.reverse()
         return res
 ```
@@ -655,7 +658,7 @@ class Solution:
 
 [1650. Lowest Common Ancestor of a Binary Tree III](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/)
 
-先求各自深度，再把深的往上走直到当前深度相同，最后一起往上走找parent；注意找深度是while p
+先求各自深度，再把深的往上走直到当前深度相同，最后一起往上走找parent；注意找深度是while p；深度就是层数root的深度是1
 时间：O(H)
 空间：O(1)
 ```python
@@ -689,7 +692,7 @@ class Solution:
 [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/) (前缀和，可以先做一下LC53、523)
 
 
-用list存所有的前缀和。概率是w[i]/total_sum，可以用找到第一个preSum来代替；用random.random()来获得[0,1)
+用list存所有的前缀和。概率是w[i]/total_sum，可以用找到第一个preSum来代替；用random.random()来获得[0,1);w:[1,3]-> pre_sums:[1, 4] -> target in randomly in [0, 4); find the first index in pre_sums s.t. target < pre_sums[idx]
 时间：构造O(N)，找数O(N)
 空间：构造O(N)，找数O(1)
 ```python
@@ -714,7 +717,7 @@ class Solution:
 # param_1 = obj.pickIndex()
 ```
 
-用list存所有的前缀和。概率是w[i]/total_sum，可以用二分查找找到第一个preSum来代替；用random.random()来获得[0,1)
+用list存所有的前缀和。概率是w[i]/total_sum，可以用二分查找找到第一个preSum来代替；用random.random()来获得[0,1); 当右边左右的数都满足的时候，找最左满足的数，最后返回的是l
 时间：构造O(N)，找数O(NlogN)
 空间：构造O(N)，找数O(1)
 ```python 
@@ -948,12 +951,10 @@ class Solution:
         left = self.lowestCommonAncestor(root.left, p, q)
         right = self.lowestCommonAncestor(root.right, p, q)
         
-        if left is None:
-            return right
-        elif right is None:
-            return left
+        if left and right:
+           return root
         else:
-            return root
+            return left or right
 ```
 
 [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
@@ -1006,7 +1007,7 @@ class Solution:
                 stack.append(stack.pop()*num)
             else:
                 stack.append(int(stack.pop()/num))
-        
+            
         idx, num, stack, sign = 0, 0, [], "+"
         while idx < len(s):
             if s[idx].isdigit():
@@ -3898,8 +3899,28 @@ class Solution:
 ```
 
 
+[104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+注意base case之后，求左边和右边的深度；左边是1+max_height(left)；返回的是max(left, right)
+
+时间：O(N)
+空间：O(N)
+
+```python
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        if not root.left and not root.right:
+            return 1
+        left_height = 1 + self.maxDepth(root.left)
+        right_height = 1 + self.maxDepth(root.right)        
+        
+        return max(left_height, right_height)
+```
 
 
 [1644. Lowest Common Ancestor of a Binary Tree II](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/)
 
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/discuss/1011154/Failed-This-Question-In-Two-Mock-Interview-So-Post-This-To-Remind-myself-specifically 
+
