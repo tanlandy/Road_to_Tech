@@ -1,89 +1,9 @@
-
-
-
-
-
-
-
-## 没会的
-
-
-[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
-
-inorder每次返回pre的那个node，传进去当前和pre两个node
-
-```Java
-    public Node treeToDoublyList(Node root) {
-        if (root == null) {
-            return null;
-        }
-        Node dummy = new Node(-1, null, null);
-        Node pre = dummy;
-        pre = inorderDFS(root, pre);
-        pre.right = dummy.right; // 连起来,dummy.right就是head
-        dummy.right.left = pre;
-        return dummy.right;
-    }
-    
-    private Node inorderDFS(Node node, Node pre) {
-        if (node == null) { // 最后为空的时候要返回pre
-            return pre;
-        }
-        pre = inorderDFS(node.left, pre);
-        node.left = pre;
-        pre.right = node;
-        pre = inorderDFS(node.right, node); //这时候node就是pre
-        return pre;
-    }
-```
-
-
-
-[301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)
-
-
-[721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
-
-```python
-class Solution(object):
-    def accountsMerge(self, accounts):
-        from collections import defaultdict
-        visited_accounts = [False] * len(accounts)
-        emails_accounts_map = defaultdict(list)
-        res = []
-        # Build up the graph.
-        for i, account in enumerate(accounts):
-            for j in range(1, len(account)):
-                email = account[j]
-                emails_accounts_map[email].append(i)
-        # DFS code for traversing accounts.
-        def dfs(i, emails):
-            if visited_accounts[i]:
-                return
-            visited_accounts[i] = True
-            for j in range(1, len(accounts[i])):
-                email = accounts[i][j]
-                emails.add(email)
-                for neighbor in emails_accounts_map[email]:
-                    dfs(neighbor, emails)
-        # Perform DFS for accounts and add to results.
-        for i, account in enumerate(accounts):
-            if visited_accounts[i]:
-                continue
-            name, emails = account[0], set()
-            dfs(i, emails)
-            res.append([name] + sorted(emails))
-        return res
-```
-
-
-
-
-## 会的
-
-
 [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)
-思路：用相向two pointer，当不是char时候就比较; s[i].isalnum() 看是否是string或者num; s[i].lower() 返回一个小写
+用相向two pointer，当不是char时候就比较; s[i].isalnum() 看是否是string或者num; s[i].lower() 返回一个小写
+
+时间：O(N)
+空间：O(1)
+
 ```python
 def isPalindrome(s: str) -> bool:
     i, j = 0, len(s) - 1
@@ -125,6 +45,9 @@ print(te.isPalindrome("dafsas"))
 [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/)
 用Stack，如果相同就pop，不同就放进来，最后转换成string
 
+时间：O(N)
+空间：O(N-D) D is len(duplicates)
+
 ```python
 class Solution:
     def removeDuplicates(self, s: str) -> str:
@@ -137,6 +60,12 @@ class Solution:
         return ''.join(stack) # stack导出为string的方法
 ```
 
+[766. Toeplitz Matrix](https://leetcode.com/problems/toeplitz-matrix/)
+
+比较m[i][j]和m[i+1][j+1]即可
+
+时间：O(M*N)
+空间：O(1)
 
 ```python
 class Solution:
@@ -211,6 +140,10 @@ print(param_3)
 [246. Strobogrammatic Number](https://leetcode.com/problems/strobogrammatic-number/)
 思路：
 先确定满足条件的strobogrammatic nums; 然后用hashmap一一对应起来; 用相向two pointers一一比对，注意条件有2个：满足strobogrammatic num并且要pointers指向对应
+
+时间：O(N)
+空间：O(1)
+
 ```python
 class Solution:
     def isStrobogrammatic(self, num: str) -> bool:
@@ -229,6 +162,9 @@ class Solution:
 
 [266. Palindrome Permutation](https://leetcode.com/problems/palindrome-permutation/)
 放进map里{char: count}数个数，如果偶数就可以，奇数的话只能至多一个是奇数; 注意map[item] = map.get(item, 0) + 1的使用方法
+
+时间：O(N)
+空间：O(1) a map of constant size(128) is used
 ```python
 class Solution:
     def canPermutePalindrome(self, s: str) -> bool:
@@ -426,7 +362,11 @@ class Solution:
 
 [415. Add Strings](https://leetcode.com/problems/add-strings/)
 
-two pointers从后往前，用carry存进位的情况，value = (x1 + x2 + carry) % 10, carry = (x1 + x2 + carry) // 10. 走到头carry不为0就再append一下，最后reverse并且转换成string即可；ord(string)返回unicode值, x = ord(string) - ord('0')就把'5'存成5到x里；a // 10 地板除，向下取整; math.ceil(a/10)就是向上取整；res[]存的整数反过来导出成string: ''.join(str(x) for x in res[::-1])
+two pointers从后往前，用carry存进位的情况，value = (x1 + x2 + carry) % 10, carry = (x1 + x2 + carry) // 10. 走到头carry不为0就再append一下，最后reverse并且转换成string即可；ord(string)返回unicode值, x = ord(string) - ord('0')就把'5'存成5到x里；a // 10 地板除，向下取整; math.ceil(a/10)就是向上取整；res[]存的整数反过来导出成string: ''.join(str(x) for x in res[::-1])；要先更新val，再更新carry
+
+时间：O(max(N1, N2)
+空间：O(max(N1, N2))
+
 ```python
 class Solution:
     def addStrings(self, num1: str, num2: str) -> str:
@@ -2241,34 +2181,6 @@ class BSTIterator:
 
 ```
 
-[426. Convert Binary Search Tree to Sorted Doubly Linked List](https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/)
-
-inorder每次返回pre的那个node，传进去当前和pre两个node
-
-```python
-class Solution:
-        def treeToDoublyList(self, root: 'Node') -> 'Node':
-        
-            # inorder traversal sol - recursion
-            if not root:
-                return None
-
-            dummy = Node(-1)
-            prev = dummy
-
-            def inorder(root):
-                nonlocal prev
-                if not root:
-                    return
-                inorder(root.left)
-                prev.right, root.left, prev = root, prev, root
-                inorder(root.right)
-
-            inorder(root)
-            dummy.right.left, prev.right = prev, dummy.right # 看不太懂
-            return dummy.right
-```
-
 
 [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
 
@@ -3248,4 +3160,319 @@ class Solution:
                 res.append([product_val, product_freq])
 
         return res
+```
+
+
+[270. Closest Binary Search Tree Value](https://leetcode.com/problems/closest-binary-search-tree-value/)
+
+inorder遍历；更新res：if abs(node.val - target) < abs(res - target): res = node.val
+
+时间：O(H) 一遍从头到脚
+空间：O(1)
+
+```python
+class Solution:
+    def closestValue(self, root: Optional[TreeNode], target: float) -> int:
+        """inorder traversal"""
+        r = root.val
+        while root:
+            if abs(root.val - target) < abs(r - target):
+                r = root.val
+                
+            if target < root.val:
+                root = root.left
+            else:
+                root = root.right
+                
+        return r      
+```
+solve it recursivly 
+```python
+class Solution:
+    def closestValue(self, root, target):
+        """
+        :type root: TreeNode
+        :type target: float
+        :rtype: int
+        """
+        self.closest = float('inf')
+        
+        def helper(root, value):
+            if not root:
+                return
+            if abs(root.val - target) < abs(self.closest - target):
+                self.closest = root.val
+                
+            # Target should be located on left subtree
+            if target < root.val:
+                helper(root.left, target)
+                
+            # target should be located on right subtree
+            if target > root.val:
+                helper(root.right, target)
+        
+        helper(root, target)
+        return self.closest
+```
+
+
+[1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/)
+
+sliding window，弄清楚移动的条件和结果
+时间：O(N)
+空间：O(1)
+
+```python
+class Solution:
+    def longestOnes(self, nums: List[int], k: int) -> int:
+        """
+        sliding window:
+        move r: 
+            condition: k >= 0
+                consequence: 
+                    if nums[r] == 1:
+                        res += 1
+                    else:
+                        k -= 1
+                        
+        move l:
+            condition: k < 0
+                consequence:
+                    if nums[l] == 1:
+                        res -= 1
+                    else:
+                        res -= 1
+                        k += 1
+        """
+        l = r  = 0
+        res = 0
+        while r < len(nums):
+            if nums[r] == 0:
+                k -= 1
+            r += 1
+            
+            if k < 0:
+                if nums[l] == 0:
+                    k += 1
+                l += 1
+            res = max(res, r - l)
+
+        return res
+
+```
+
+[348. Design Tic-Tac-Toe](https://leetcode.com/problems/design-tic-tac-toe/)
+
+用hori, ver, diag1, diag2来记录对应的次数，如果下在那个位置下了棋，就在该位置+=1或+= -1，如果最后这个位置==n,说明赢了；对角线的位置row+col == n-1
+
+时间：O(1)
+空间：O(n)
+
+```python
+class TicTacToe:
+
+    def __init__(self, n: int):
+        self.n = n
+        self.hori = [0] * n
+        self.ver = [0] * n
+        self.diag1 = 0
+        self.diag2 = 0
+
+    def move(self, row: int, col: int, player: int) -> int:
+        n = self.n
+        move = 1
+        if player == 2:
+            move = -1
+        
+        self.hori[col] += move
+        self.ver[row] += move
+        
+        if row == col:
+            self.diag1 += move
+        if row + col == (n-1):
+            self.diag2 += move
+
+        if abs(self.hori[col]) == n or abs(self.ver[row]) == n or abs(self.diag1) == n or abs(self.diag2) == n:
+            return player
+        
+        return 0
+
+# Your TicTacToe object will be instantiated and called as such:
+# obj = TicTacToe(n)
+# param_1 = obj.move(row,col,player)
+```
+
+[721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+分别建立一个emailToName的dict和emailToEmail的图；然后dfs遍历所有emailToName的email，看图里有没有，有的话就加进来。最后要sorted一下
+
+时间：O(NKlogNK) N是num of accounts, K是len(email)
+空间：O(NKlogNK)
+
+```python
+class Solution:
+    def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+        # 建立emailToName和email-email的图
+        graph = defaultdict(set) 
+        emailToName = {}
+
+        for acct in accounts:
+            name = acct[0]
+
+            # build edge for all emails
+            email1 = acct[1]
+            emailToName[email1] = name
+            for email2 in acct[2:]:
+                graph[email1].add(email2)
+                graph[email2].add(email1)
+                emailToName[email2] = name
+
+        res = []
+        seen = set()
+
+        for email in emailToName:
+            if email not in seen:
+                stack = [email]
+                seen.add(email)
+                emails = []
+
+                while stack:
+                    cur = stack.pop()
+                    emails.append(cur)
+
+                    for nei in graph[cur]:
+                        if nei not in seen:
+                            stack.append(nei)
+                            seen.add(nei)
+
+                res.append([emailToName[email]] + sorted(emails))
+        
+        return res
+        
+```
+
+Union find
+```python
+class Solution:
+    def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+
+        def find(x):
+            if parents[x] != x:
+                parents[x] = find(parents[x])
+
+            return parents
+        
+        def union(x, y):
+            r1 = find(x)
+            r2 = find(y)
+
+            if r1 != r2:
+                parents[r2] = r1
+
+        parents = {}
+        emailToName = {}
+
+        for acct in accounts:
+            name = acct[0]
+            for email in acct[1:]:
+                emailToName[email] = name
+                parent[email] = email
+
+        for acct in accounts:
+            email1 = acct[1]
+            for email2 in acct[2:]:
+                union(email1, email2)
+        
+        groups = defaultdict(list)
+
+        for email in parents:
+            r = find(email)
+            groups[r].append(email)
+        
+        res = []
+
+        for key in groups:
+            res.append([emailToName[key]] + sorted(groups[key]))
+
+        return res
+
+```
+
+
+[515. Find Largest Value in Each Tree Row](https://leetcode.com/problems/find-largest-value-in-each-tree-row/)
+
+level-order遍历，每层track最大值；python的“最小值”: float("-inf")
+
+时间：O(N)
+空间：O(H)
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def largestValues(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+        res = []
+        queue = collections.deque([root])
+        
+        while queue:
+            one_res = float("-inf")
+            
+            for _ in range(len(queue)):
+                node = queue.popleft()
+                one_res = max(one_res, node.val)
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+                
+            res.append(one_res)
+        
+        return res
+```
+
+
+[616. Add Bold Tag in String](https://leetcode.com/problems/add-bold-tag-in-string/)
+
+先遍历整个words，记录下来所有s中能找到的位置，记作bold[i] = True；然后遍历s，如果是要bold，就加进来"<b>"，然后走到不为bold，加进来"</b>"；最后list转为string就可以
+
+时间：O(SWD) s is len(s), w is len(max(word)), d is len(words)
+空间：O(S)
+
+```python
+class Solution:
+    def addBoldTag(self, s: str, words: List[str]) -> str:
+        bold = [False] * len(s)
+        
+        # 对words里面的每个word，如果在s找到就给相应位置的bold标记true
+        for word in words:
+            start = s.find(word)
+            while start != -1: # 找不到的话，s.find()返回-1
+                for i in range(start, len(word)+start):
+                    bold[i] = True
+                # 继续往后找这个word，可能多次
+                start = s.find(word, start + 1)
+        
+        res = []
+        i = 0
+        
+        while i < len(s):
+            if bold[i]:
+                res.append("<b>")
+                # 找到结尾
+                while i < len(s) and bold[i]:
+                    res.append(s[i])
+                    i += 1
+                res.append("</b>")
+            else:
+                res.append(s[i])
+                i += 1
+        
+        return "".join(res)
+
 ```

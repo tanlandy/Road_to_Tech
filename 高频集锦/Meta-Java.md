@@ -1787,17 +1787,8 @@ class Solution {
     }
 }
 ```
-2. [1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) 复习了sliding window之后再看
 
-Given a binary array nums and an integer k, return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
-
-Input: nums = [1,1,1,0,0,0,1,1,1,1,0], k = 2
-Output: 6
-Explanation: [1,1,1,0,0,1,1,1,1,1,1]
-Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
-
-
-3. [1891. Cutting Ribbons](https://leetcode.com/problems/cutting-ribbons/)
+1. [1891. Cutting Ribbons](https://leetcode.com/problems/cutting-ribbons/)
 
 找最右侧边界。一个一个往右尝试
 时间：O(Nlog(max(Length))) 
@@ -3523,7 +3514,7 @@ public int[] mergeArrays(int[] A, int[] B) {
 
 ```
 
-### Q2
+### Q2 LC1004
 
 You're given a calendar year represented as a char array that contains either H or W where:
 H = Holiday W = Workday
