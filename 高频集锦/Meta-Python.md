@@ -1616,9 +1616,10 @@ class LRUCache:
 
     def put(self, key: int, value: int) -> None:
         if key in self.cache:
-            self.remove(self.cache[key])
-        self.cache[key] = Node(key, value)
-        self.insert(self.cache[key])
+            self.remove(self.cache[key]
+        node = Node(key, value)
+        self.cache[key] = node
+        self.insert(node)
 
         if len(self.cache) > self.cap:
             # remove from the list and delete the LRU from the hashmap
@@ -3432,7 +3433,7 @@ class TicTacToe:
 
 [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
 
-分别建立一个emailToName的dict和emailToEmail的图；然后dfs遍历所有emailToName的email，看图里有没有，有的话就加进来。最后要sorted一下
+分别建立一个emailToName的dict和emailToEmail的图；然后dfs遍历所有emailToName的email，看图里有没有，有的话就加进来。最后要sorted一下；graph = defaultdict(set) 避免重复；seen=set()记录见过的email
 
 时间：O(NKlogNK) N是num of accounts, K是len(email)
 空间：O(NKlogNK)
@@ -4061,8 +4062,35 @@ class Solution:
         return max(left_height, right_height)
 ```
 
+[24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
+
+```python
+# swap nodes in pairs: [1,2,3,4] -> [2,1,4,3]
+class Solution:
+    def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head:
+            return None
+        
+        dummy = ListNode(-1)
+        dummy.next = head
+        pre = dummy
+        
+        while pre.next != None and pre.next.next != None: # 因为second = pre.next.next
+        # 从[pre,1,2,3]变成[2,1,3]
+            first = pre.next # first = 1
+            second = pre.next.next # second = 2
+            first.next = second.next # 1 -> 3
+            second.next = first # 2 -> 1
+            pre.next = second # pre -> 2 要把2连起来
+            pre = first # pre = 1
+        
+        return dummy.next
+```
+
 
 [1644. Lowest Common Ancestor of a Binary Tree II](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/)
 
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/discuss/1011154/Failed-This-Question-In-Two-Mock-Interview-So-Post-This-To-Remind-myself-specifically 
+
+
 
