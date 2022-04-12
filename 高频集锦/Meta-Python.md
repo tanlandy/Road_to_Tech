@@ -212,6 +212,60 @@ class Solution:
         return True
 ```
 
+[199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
+
+from collections import deque; queue放元素：queue = deque([root])
+
+时间：O(N)
+空间：O(D)
+
+```python
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+        
+        res = []
+        
+        queue = collections.deque([root])
+        
+        while queue:
+            size = len(queue)
+            for i in range(size):
+                node = queue.popleft()
+                
+                if i == size - 1:
+                    res.append(node.val)
+                
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+        
+        return res
+```
+
+Recursively solve it:
+```python
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        def dfs(node, depth):
+            if not node:
+                return
+            
+            if depth == len(res):
+                res.append(node.val)
+            
+            dfs(node.right, depth + 1) # 如果先放进来node.left，就是左边视图
+            dfs(node.left, depth + 1)
+        
+        dfs(root, 0)
+        return res
+
+
+```
+
 
 
 [896. Monotonic Array](https://leetcode.com/problems/monotonic-array/)
@@ -503,7 +557,7 @@ class Solution:
 
 The vertical order traversal of a binary tree is a list of top-to-bottom orderings for each column index starting from the leftmost column and ending on the rightmost column. There may be multiple nodes in the same row and same column. In such a case, sort these nodes by their values.
 
-与上一题唯一不同就是每一层新建一个map，然后排序好之后加到最终的map里
+与上一题唯一不同就是每一层新建一个map，然后排序好之后加到最终的map里；走完一层如何放进来：one_res[col] += sorted(temp[col])
 ```python
 class Solution(object):
     def verticalTraversal(self, root):
@@ -511,28 +565,28 @@ class Solution(object):
         :type root: TreeNode
         :rtype: List[List[int]]
         """    
-        mapping = collections.defaultdict(list) 
+        one_res = collections.defaultdict(list) 
         queue = collections.deque([(root, 0)])
-        x_min, x_max = 0, 0
+        min_col, max_col = 0, 0
         while queue:
             tmp = collections.defaultdict(list)  # 每层之前先另外搞一个map
             for _ in range(len(queue)):
-                node, x = queue.popleft()
-                tmp[x].append(node.val) 
-                x_min = min(x_min, x)
-                x_max = max(x_max, x)
+                node, col = queue.popleft()
+                tmp[col].append(node.val) 
+                min_col = min(min_col, col)
+                max_col = max(max_col, col)
 
                 if node.left:
-                    queue.append((node.left, x-1))
+                    queue.append((node.left, col - 1))
                 if node.right: 
-                    queue.append((node.right, x+1)) 
+                    queue.append((node.right, col + 1)) 
                     
-            for i in tmp: # 走完一层再把map按顺序加进去
-                mapping[i] += sorted(tmp[i])
+            for col in tmp: # 走完一层再把map按顺序加进去
+                one_res[col] += sorted(tmp[col])
 
         res = []
-        for i in range(min_col, max_col + 1): # 左开右闭，需要加一
-            res.append(mapping[i])
+        for col in range(min_col, max_col + 1): # 左开右闭，需要加一
+            res.append(one_res[col])
         return res
 ```
 
@@ -1007,7 +1061,7 @@ class Solution:
                 stack.append(stack.pop()*num)
             else:
                 stack.append(int(stack.pop()/num))
-            
+
         idx, num, stack, sign = 0, 0, [], "+"
         while idx < len(s):
             if s[idx].isdigit():
@@ -1096,7 +1150,7 @@ Output: 1024.00000
 如果n < 0; n % 2 ==1, 返回x * pow(x, n-1); 如果是偶数返回pow(x*x, n/2)
 A = x^n
 n是偶数：x^2n = A * A
-n是奇数：x^2n = A * A * 2
+n是奇数：x^2n = A * A * x
 时间O(logn)
 空间O(logn)
 ```python
@@ -1118,18 +1172,52 @@ def pow(x, n):
 
 [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
     
-Given an integer array nums and an integer k, return the kth largest element in the array.
 
-Note that it is the kth largest element in the sorted order, not the kth distinct element.
+heapify这个array到minHeap：O(N)，然后pop()共n+1-k次=>时间O(N+(n+1-k)logN)
 
-Input: nums = [3,2,1,5,6,4], k = 2
-Output: 5
-
-heapify这个array到maxHeap：O(N)，然后pop()共k次=>时间O(N+KlogN)
-
-思路1: 用maxHeap，size总是k，这样堆顶就是kth largest，然后一个一个pop()共k次，每次pop()时间是logN
+用minHeap，size总是k，这样堆顶就是kth largest，然后一个一个pop()共n+1-k次，每次pop()时间是logN
 时间 O(N+Nlogk) 每次pop数字需要O(logk)，一共n次
 空间 O(K)
+
+```python
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        minHeap = []
+        for n in nums:
+            minHeap.append(n)
+        
+        heapq.heapify(minHeap) # time: O(n)
+        
+        # 第2大，一共6个数字，就是第5小
+        k = len(nums) + 1 - k
+        
+        while k > 1:
+            heapq.heappop(minHeap)
+            k -= 1
+        
+        return minHeap[0]    
+
+```
+
+用maxHeap；注意这个时候用heapq._heapify_max(maxHeap)和heapq._heappop_max(maxHeap)来进行对应的操作
+
+```python
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        maxHeap = []
+        for n in nums:
+            maxHeap.append(n)
+        
+        heapq._heapify_max(maxHeap) # time: O(n)
+        
+        while k > 1:
+            heapq._heappop_max(maxHeap)
+            k -= 1
+        
+        return maxHeap[0]
+        
+```
 
 partition: cut to two halves，左边的数都比右边的小，pivot就选最右的数，这个数字就是左右两边数的分界: p从最左index开始一直往右走，如果这个数比pivot小，那就放进来，然后p+=1，最后把p和pivot互唤，效果就是pivot左边的数都比pivot小
 
@@ -1141,22 +1229,31 @@ class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
         k = len(nums) - k # 把k变成sorted情况下的第k位
 
-        def quickSelect(l, r): # l, r告诉跑quickSelect的范围
+        # return p, p is pth smallest in nums     
+        def partition(l, r):
             pivot, p = nums[r], l
+
+            # nums before < nums[p] < nums after, based on pivot
             for i in range(l, r):
                 if nums[i] <= pivot: # 如果当前这个数<=pivot，就放到左边
                     nums[p], nums[i] = nums[i], nums[p] # python不用一个swap()
                     p += 1
+                    
+            # nums before < nums[r] < nums after
             nums[p], nums[r] = nums[r], nums[p]
+            return p
 
+        def select(l, r): # l, r告诉跑quickSelect的范围
+            p = partition(l, r)
+            
             if k < p: 
-                return quickSelect(l, p - 1)
+                return select(l, p - 1)
             elif k > p:
-                return quickSelect(p + 1, r)
+                return select(p + 1, r)
             else:
                 return nums[p]
 
-        return quickSelect(0, len(nums) - 1)
+        return select(0, len(nums) - 1)
 
 ```
 
@@ -1186,7 +1283,7 @@ class Solution:
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
 
 
-minHeap，先计算每个点的距离。放进minHeap，然后pop K次; 初始化minHeap.append([dist, x, y]); heap化:heapq.heapify(minHeap)，弹出dist, x, y = heapq.heappop(minHeap_
+minHeap，先计算每个点的距离。放进minHeap，然后pop K次; 初始化minHeap.append([dist, x, y]); heap化:heapq.heapify(minHeap)，弹出dist, x, y = heapq.heappop(minHeap)
 
 时间：O(N + KlogN)
 空间：O(K)
@@ -1207,9 +1304,47 @@ class Solution:
         return res
 ```
 
+Quick select
+```python
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        
+        def get_dist(point):
+            return point[0] ** 2 + point[1] ** 2
+        
+        # return p, p is pth smallest in points
+        def partition(l, r):
+            pivot = points[r]
+            p = l
+            pivot_dist = get_dist(pivot)
+            
+            for i in range(l, r):
+                if get_dist(points[i]) <= pivot_dist:
+                    points[i], points[p] = points[p], points[i]
+                    p += 1
+            
+            # before < get_dist(points[r]) < after
+            points[r], points[p] = points[p], points[r]
+            return p
+        
+        def select(l, r):
+            if l > r:
+                return points
+            p = partition(l, r)
+
+            if k < p:
+                return select(l, p - 1)
+            elif k > p:
+                return select(p + 1, r)
+            else:
+                return points[:k]
+        
+        return select(0, len(points) - 1)
+```
+
 [791. Custom Sort String](https://leetcode.com/problems/custom-sort-string/)
 
-先统计s各个字母出现次数，然后根据order的顺序放进res里，最后把不在order里但在s里的放进去 ：统计次数：count = collections.Counter(s), count[c]就会返回char在s出现的次数
+先统计s各个字母出现次数，然后根据order的顺序放进res里，最后把不在order里但在s里的放进去 ：统计次数：count = collections.Counter(s), count[c]就会返回char在s出现的次数；res.append(c * counter(c))
 
 时间：O(len(s)+len(order))
 空间：O(len(s))
@@ -1232,7 +1367,7 @@ class Solution:
 [65. Valid Number](https://leetcode.com/problems/valid-number/)
 
 
-要处理的东西 1. digits; 2. sign('+', '-')：必须出现在开头，或者紧跟在'e', 'E'后面; 3. exponent：必须第一次见，而且见过digit；合理的expo之后要把seenDigit改为没见过; 4. dot：必须第一次见，而且不能在exponent后面; 5. other
+要处理的东西 1. digits; 2. sign('+', '-')：必须出现在开头，或者紧跟在'e', 'E'后面; 3. exponent：必须前后都有digit，同时只出现一次； 4. dot：前面没有过expo，同时只出现一次；5. other
 
 时间：O(N)
 空间：O(1)
@@ -1240,7 +1375,7 @@ class Solution:
 class Solution:
     def isNumber(self, s: str) -> bool:
         seenDigit = seenExpo = seenDot = False
-        for i, c in enumerate(s):
+        for i, c in enumerate(s): # 因为要只要before的情况，所以需要idx
             if c.isdigit():
                 seenDigit = True
             elif c in "+-":
@@ -1562,25 +1697,30 @@ class Solution:
 ```
 [249. Group Shifted Strings](https://leetcode.com/problems/group-shifted-strings/)
 
-用map来存{(diff):[oneRes]}:diff是字母之间的区别比如:{(1,1):["abc", "efg"]}，最后直接导出list(map.values())就可以；key用元组：key = ()，添加的时候是key += (diff % 26,)；取得字母之间的区别：diff = ord(s[i+1]) - ord(s[i])；更新map: map[key] = map.get(key, []) + [s]
+用map来存{(diff):[oneRes]}:diff是字母之间的区别比如:{(1,1):["abc", "efg"]}，最后直接导出list(map.values())就可以；key用元组：key = ()，添加的时候是key += (diff % 26,)；取得字母之间的区别：diff = ord(s[i+1]) - ord(s[i])；
 
-时间：O(N*K)
-空间：O(N*K)
+时间：O(N*K), N is len(strings), K is max(len(one s))
+空间：O(N*K), N is len(strings), K is max(len(one s))
 
 ```python
 
 def groupStrings(self, strings: List[str]) -> List[List[str]]:
-	hashmap = {}
-    # 对于每一个s：每一个字母串abd；或者dfs
-	for s in strings:
-		key = ()
-        # 算出来这个字母串的key，然后添加到对应的map里
-		for i in range(len(s) - 1):
-			circular_difference = ord(s[i+1]) - ord(s[i])
-			key += (circular_difference % 26,)
-		hashmap[key] = hashmap.get(key, []) + [s]
-	return list(hashmap.values())
+    """
+    diff_res={diff:one_res}
+    "abc", "bcd" -> diff = (1,1)
+    """   
+    diff_res = collections.defaultdict(list)
 
+    # 对于每一个s：每一个字母串abd；或者dcg
+    for s in strings:
+        key = ()
+        # 算出来这个字母串的key，然后添加到对应的map里
+        for i in range(len(s) - 1):
+            diff = ord(s[i+1]) - ord(s[i])
+            key += (diff % 26,)
+        diff_res[key].append(s)
+    
+    return list(diff_res.values())
 ```
 
 
@@ -1618,7 +1758,7 @@ class Solution:
 
 [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
 
-Two Passes: 第一遍只复制node，不管指针，形成一个map{old : new}；第二遍把node的指针连起来；注意连的map里没考虑最后是None的情况，所以一开始map={ None : None}
+Two Passes: 第一遍只复制node，不管指针，形成一个map{old : new}；第二遍把node的指针连起来；注意连的map里没考虑最后是None的情况，所以一开始map={ None : None}；遍历是while cur
 
 时间：O(N)
 空间：O(N)
@@ -2082,19 +2222,20 @@ class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
         res = [0]
 
-        def dfs(root):
+        def height(root):
             if not root:
-                return -1 # return height
+                return -1 # return height of an empty tree
             
-            left_hei = dfs(root.left) # 找到左子树的高
-            right_hei = dfs(root.right)
+            left_hei = height(root.left) # 找到左子树的高
+            right_hei = height(root.right)
             
+            # the "2+" accounts for the edge on the left plus the edge on the right. 
             diameter = 2 + left_hei + right_hei
             res[0] = max(res[0], diameter)
 
             return 1 + max(left_hei, right_hei)
         
-        dfs(root)
+        height(root)
         return res[0]
 
 
@@ -2102,7 +2243,7 @@ class Solution:
 
 [523. Continuous Subarray Sum](https://leetcode.com/problems/continuous-subarray-sum/)
 
-map:{remainder:end_index} remainder是前缀和的mod的结果，最开始map={0:-1}这样第一个数如果能整除但不会返回true；对于每个数，计算前缀和的mode结果，如果不在map里就加进来，如果在的话：只有距离大于一才是真的满足
+map:{remainder:end_index} remainder是前缀和的mod的结果，最开始map={0:-1}这样第一个数如果能整除但不会返回true；对于每个数，计算前缀和的mod结果，如果不在map里就加进来，如果在的话：只有距离大于1才是真的满足
 
 时间：O(N)
 空间：O(N)
@@ -2111,11 +2252,11 @@ map:{remainder:end_index} remainder是前缀和的mod的结果，最开始map={0
 class Solution:
     def checkSubarraySum(self, nums: List[int], k: int) -> bool:
         remainder = {0: -1} # map remainder -> end index
-        total = 0
+        presum = 0
         
         for i, n in enumerate(nums):
-            total += n
-            r = total % k
+            presum += n
+            r = presum % k
             if r not in remainder:
                 remainder[r] = i
             elif i - remainder[r] > 1: # r在remiander里
@@ -2694,13 +2835,13 @@ class Solution:
 
 先计算每个点对应island的area的值，然后计算所有0的附近左右岛面积的和；计算每个点对应island的值的时候，只覆盖该点的岛屿的idx，然后用map映射岛的大小idx_area{idx:area}。等计算0周围的和的时候，就可以直接用set来看是否是不同的岛，然后用idx_area[idx]来相加;res = max(idx_area.values() or [0])
 
-时间：O(M*N)
-空间：O(M*N)
+时间：O(N*N)
+空间：O(N*N)
 
 ```python 
 class Solution:
     def largestIsland(self, grid: List[List[int]]) -> int:
-        rows, cols = len(grid), len(grid[0])
+        N = len(grid) # size of N*N
         idx = 2
         # idx_area -> {idx : area}
         idx_area = collections.defaultdict(int)
@@ -2708,29 +2849,29 @@ class Solution:
 
         # dfs把每个位置都变成了该小岛的idx
         def dfs(r, c, idx):
-            if r < 0 or r == rows or c <  0 or c == cols or grid[r][c] != 1:
+            if r < 0 or r == N or c <  0 or c == N or grid[r][c] != 1:
                 return
             grid[r][c] = idx
             idx_area[idx] += 1
             for dr, dc in dirs:
                 dfs(r + dr, c + dc, idx)
         
-        for r in range(rows):
-            for c in range(cols):
+        for r in range(N):
+            for c in range(N):
                 if grid[r][c] == 1:
                     dfs(r, c, idx)
                     idx += 1
         
         res = max(idx_area.values() or [0])
         # 对于所有的“0”，把四周小岛加起来
-        for r in range(rows):
-            for c in range(cols):
+        for r in range(N):
+            for c in range(N):
                 if grid[r][c] == 0:
                     # 用set()，避免重复加同一个岛，set()里面放所有的idx                    
                     nei_idx = set()
                     for dr, dc in dirs:
                         nei_r, nei_c = r + dr, c + dc
-                        if nei_r in range(rows) and nei_c in range(cols) and grid[nei_r][nei_c] != 0:
+                        if nei_r in range(N) and nei_c in range(N) and grid[nei_r][nei_c] != 0:
                             nei_idx.add(grid[nei_r][nei_c])
                     
                     one_res = 1
@@ -2875,7 +3016,7 @@ class Solution:
 ```
 
 
-16. [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+1.  [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
 
 Here N is the number of accounts and K is the maximum length of an account.
 时间：O(NKlogNK) 所有email都是同一个人的名下
@@ -2939,16 +3080,17 @@ class Solution(object):
 ```python
 class Solution:
     def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
-        d = {}
+        """
+        same_diag: r + c are the same
+        d: {same_diag:[vals]}
+        """
+        d = collections.defaultdict(list)
         rows, cols = len(mat), len(mat[0])
         
         # 把对角线的点都放进来
         for r in range(rows):
             for c in range(cols):
-                if r + c not in d:
-                    d[r + c] = [mat[r][c]]
-                else:
-                    d[r + c].append(mat[r][c])
+                d[r + c].append(mat[r][c])
         
         res = []
         
