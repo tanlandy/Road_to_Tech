@@ -597,7 +597,7 @@ There are n buildings in a line. You are given an integer array heights of size 
 Input: heights = [4,2,3,1]
 Output: [0,2,3]
 
-从右往左走，每次记录最大值，比较最大值和当前值；当前值更大就更新最大值并且记录index；反过来走for index in reversed(range(len(list));翻转list: res.reverse()，什么都不返回；for i in range((len(heights)-1, -1, -1):
+从右往左走，每次记录最大值，比较最大值和当前值；当前值更大就更新最大值并且记录index；翻转list: res.reverse()，什么都不返回；反过来走：for i in range((len(heights)-1, -1, -1):
 时间： O(n)
 空间： O(1)
 ```python
@@ -657,7 +657,7 @@ class SparseVector:
 ```
 
 方法三：
-同向双指针，存成pairs[(index, num)]只存不是0的index和num，当同时都没到终点，只用pairs中的index相同就res+=，否则根据index大小移动指针；
+同向双指针，存成pairs[(index, num)]只存不是0的index和num，当同时都没到终点，只有当pairs中的index相同才res+=，否则根据index大小移动指针；pairs添加数据：pairs.append([i, n])
 时间：建立pairsO(N)，计算dot O(L1+L2)；其中L1, L2是非0个数
 空间：建立pairsO(L)，计算dot O(1)
 ```python
@@ -695,19 +695,20 @@ Given the root node of a binary search tree and two integers low and high, retur
 ```python
 class Solution:
     def rangeSumBST(self, root: Optional[TreeNode], L: int, R: int) -> int:
-        if root is None:
+        if not root:
             return 0
-        self.res = 0
+        res = 0
         def dfs(node):
+            nonlocal res
             if node:
                 if L <= node.val <= R:
-                    self.res += node.val
+                    res += node.val
                 if L < node.val:
                     dfs(node.left)
                 if node.val < R:
                     dfs(node.right)
         dfs(root)
-        return self.res
+        return res
 ```
 
 [1650. Lowest Common Ancestor of a Binary Tree III](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/)
@@ -772,7 +773,7 @@ class Solution:
 ```
 
 用list存所有的前缀和。概率是w[i]/total_sum，可以用二分查找找到第一个preSum来代替；用random.random()来获得[0,1); 当右边左右的数都满足的时候，找最左满足的数，最后返回的是l
-时间：构造O(N)，找数O(NlogN)
+时间：构造O(N)，找数O(logN)
 空间：构造O(N)，找数O(1)
 ```python 
 class Solution:
@@ -786,14 +787,14 @@ class Solution:
 
     def pickIndex(self) -> int:
         target = self.total_sum * random.random()
-        low, high = 0, len(self.prefix_sums) - 1
-        while low <= high:
-            mid = low + (high - low) // 2 # 要地板除
+        l, r = 0, len(self.prefix_sums) - 1
+        while l <= r:
+            mid = l + (r - l) // 2 # 要地板除
             if (target > self.prefix_sums[mid]):
-                low = mid + 1
+                l = mid + 1
             else: 
-                high = mid - 1
-        return low
+                r = mid - 1
+        return l
 
 # Your Solution object will be instantiated and called as such:
 # obj = Solution(w)
@@ -887,41 +888,31 @@ class Solution:
         return dp[0]
 ```
 
-[140. Word Break II](https://leetcode.com/problems/word-break-ii/) 可以先看139
+[140. Word Break II](https://leetcode.com/problems/word-break-ii/) 
 
 
 ```python
 class Solution(object):
     def wordBreak(self, s, wordDict):
-        """
-        :type s: str
-        :type wordDict: Set[str]
-        :rtype: List[str]
-        """
-        return self.helper(s, wordDict, {})
-
-    def helper(self, s, wordDict, memo):
-        if s in memo: return memo[s]
-        if not s: return []
-
+        def backtrack(res, one_res, s):
+            if len(s) == 0:
+                res.append(" ".join(one_res))
+                return
+            
+            for w in wordDict:
+                if s.startswith(w):
+                    one_res.append(w)
+                    backtrack(res, one_res, s[len(w):])
+                    one_res.pop()
+                    
         res = []
-        for word in wordDict:
-            if not s.startswith(word):
-                continue
-            if len(word) == len(s):
-                res.append(word)
-            else:
-                resultOfTheRest = self.helper(s[len(word):], wordDict, memo)
-                for item in resultOfTheRest:
-                    item = word + ' ' + item
-                    res.append(item)
-        memo[s] = res
+        backtrack(res, [], s)
         return res
 ```
 
 [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
 
-dfs()在左右子树不分分叉的情况下，返回左子树path最大值和右子树path最大值:return node.val + max(leftMax, rightMax); basecase是走到null的0，同时更新res[0], res[0]=max(res[0], node.val+leftMax+rightMax)
+dfs()在左右子树不分分叉的情况下，返回子树path最大值:return node.val + max(leftMax, rightMax); basecase是走到null的0，同时更新res[0], res[0]=max(res[0], node.val+leftMax+rightMax)
 时间: O(N) n is num of nodes
 空间: O(H) if balanced tree
 
@@ -935,18 +926,23 @@ dfs()在左右子树不分分叉的情况下，返回左子树path最大值和�
 
 class Solution:
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
-        res = [root.val]
+        res = float("-inf")
         
         # 子树本身，返回不分叉时候的最大值
-        def dfs(node) -> int:
+        def dfs(node):
+            nonlocal res
+            
             if not node:
                 return 0
+            
             leftMax = max(dfs(node.left), 0)
             rightMax = max(dfs(node.right), 0)
-            res[0] = max(res[0], node.val + leftMax + rightMax)
+            res = max(res, node.val + leftMax + rightMax)
+
             return node.val + max(leftMax, rightMax)
+        
         dfs(root)
-        return res[0]
+        return res
 ```
 
 [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/) 之后要看看heap的方法
