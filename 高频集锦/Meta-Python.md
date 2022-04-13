@@ -190,22 +190,22 @@ class Solution:
 ```python
 class Solution:
     def isAlienSorted(self, words: List[str], order: str) -> bool:
-        order_map = {}
+        letter_order = {}
         
         for idx, val in enumerate(order):
-            order_map[val] = idx
+            letter_order[val] = idx
         
         # 两两比较
         for i in range(len(words) - 1):
             w1, w2 = words[i], words[i+1]
-            minLen = min(len(w1), len(w2))
+            min_len = min(len(w1), len(w2))
             # edge case：两个前缀一样，但是第一个更长
-            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
+            if len(w1) > len(w2) and w1[:min_len] == w2[:min_len]:
                 return False
             # 正常比较
-            for j in range(minLen):
+            for j in range(min_len):
                 if w1[j] != w2[j]:
-                    if order_map[w1[j]] > order_map[w2[j]]:
+                    if letter_order[w1[j]] > letter_order[w2[j]]:
                         return False
                     break
                     
@@ -887,7 +887,7 @@ class Solution:
         return dp[0]
 ```
 
-[140. Word Break II](https://leetcode.com/problems/word-break-ii/)
+[140. Word Break II](https://leetcode.com/problems/word-break-ii/) 可以先看139
 
 
 ```python
@@ -960,11 +960,11 @@ values       [100]     [1,2]
 ```python
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        count = {}
+        # count: {each num:freq}
+        count = collections.Counter(nums)
+        # freq: [freq:[nums have same freq]]
         freq = [[] for i in range(len(nums) + 1)] # 大小是len(nums) + 1，注意如何构建values是list的list
 
-        for n in nums:
-            count[n] = count.get(n, 0) + 1
         for n, count in count.items():
             freq[count].append(n)
 
@@ -978,6 +978,24 @@ class Solution:
 
 heap
 O(KlogN)
+```python
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # count: {each num:freq}
+        count = collections.Counter(nums)
+        
+        maxHeap = []
+        
+        for key in count:
+            heapq.heappush(maxHeap, (-count[key], key))
+        
+        res = []
+        while k > 0:
+            value, key = heapq.heappop(maxHeap)
+            res.append(key)
+            k -= 1
+        return res
+```
 
 
 
@@ -2057,28 +2075,27 @@ Dijkstra's：用一个minHeap存Front-tier:(Height, r, c)，再用一个visit来
 ```python
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
-        rows = cols = len(grid)
+        N = len(grid)
         visit = set()
         minH = [[grid[0][0], 0, 0]]  # (max_height, r, c)
         visit.add((0,0))
         dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
 
         while minH:
-            height, r, c = heapq.heappop(minH)
+            height, r, c = heapq.heappop(minH) # 总是弹出来当前的最小值的点
 
-            if r == rows - 1 and c == cols - 1:
+            if r == N - 1 and c == N - 1:
                 return height
             
             for dr, dc in dirs:
                 neiR, neiC = r + dr, c + dc
-                if (neiR < 0 or neiR == rows or neiC < 0 or neiC == cols or (neiR, neiC) in visit):
-                    continue
-                visit.add((neiR, neiC))
-                heapq.heappush(minH, [max(height, grid[neiR][neiC]), neiR, neiC])
+                if neiR in range(N) and neiC in range(N) and (neiR, neiC) not in visit:  
+                    visit.add((neiR, neiC))
+                    heapq.heappush(minH, [max(height, grid[neiR][neiC]), neiR, neiC])
         
 ```
 
-[269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
+[269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) 先做LC953
 
 先建adj{ch:set()}：两两word比较，得到两两letter的顺序；之后用postDFS放进来，DFS需要一个visit{ch:T/F}，每次看是否在里面，在的话就返回visit[c]，然后在dfs内部看ch的nei，如果dfs(nei)返回true就说明这条路不通，最后把res加进去；从adj的任意一个ch走dfs，最后reverse这个结果
 
@@ -2103,7 +2120,7 @@ class Solution:
                     adj[w1[j]].add(w2[j])
                     break
         
-        # DFS来遍历，根据排好的顺序来画图
+        # DFS来遍历postorder，根据排好的顺序来画图
         # 用visit来看是否有loop->
         # visit{character: False/True} 给每个字母一个映射
         # False说明已经visit过了
@@ -2221,23 +2238,24 @@ class Solution:
 #         self.right = right
 class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
-        res = [0]
+        res = 0
 
-        def height(root):
-            if not root:
+        def height(node):
+            nonlocal res
+            if not node:
                 return -1 # return height of an empty tree
             
-            left_hei = height(root.left) # 找到左子树的高
-            right_hei = height(root.right)
+            left_hei = height(node.left) # 找到左子树的高
+            right_hei = height(node.right)
             
             # the "2+" accounts for the edge on the left plus the edge on the right. 
             diameter = 2 + left_hei + right_hei
-            res[0] = max(res[0], diameter)
+            res[0] = max(res, diameter)
 
             return 1 + max(left_hei, right_hei)
         
         height(root)
-        return res[0]
+        return res
 
 
 ```
@@ -2394,7 +2412,10 @@ class Solution:
             if not cur.left and not cur.right:
                 return num
             
-            return dfs(cur.left, num) + dfs(cur.right, num)
+            left = dfs(node.left, num)
+            right = dfs(node.right, num)
+            
+            return left + right
         
         return dfs(root, 0)
 
@@ -3324,24 +3345,27 @@ class Solution:
         :type target: float
         :rtype: int
         """
-        self.closest = float('inf')
+        res = float("inf")
         
-        def helper(root, value):
+        def dfs(root):
+            nonlocal res
+
             if not root:
                 return
-            if abs(root.val - target) < abs(self.closest - target):
-                self.closest = root.val
+
+            if abs(root.val - target) < abs(res - target):
+                res = root.val
                 
             # Target should be located on left subtree
             if target < root.val:
-                helper(root.left, target)
+                dfs(root.left)
                 
             # target should be located on right subtree
             if target > root.val:
-                helper(root.right, target)
+                dfs(root.right)
         
-        helper(root, target)
-        return self.closest
+        dfs(root)
+        return res
 ```
 
 
@@ -3566,9 +3590,32 @@ class Solution:
 ```
 
 
+dfs方法
+
+```python
+class Solution:
+    def largestValues(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        
+        def dfs(node, level):
+            if not node:
+                return
+            
+            if len(res) - 1 < level:
+                res.append(node.val)
+            else:
+                res[level] = max(node.val, res[level])
+            dfs(node.left, level + 1)
+            dfs(node.right, level + 1)
+        
+        dfs(root, 0)
+        return res
+```
+
+
 [616. Add Bold Tag in String](https://leetcode.com/problems/add-bold-tag-in-string/)
 
-先遍历整个words，记录下来所有s中能找到的位置，记作bold[i] = True；然后遍历s，如果是要bold，就加进来"<b>"，然后走到不为bold，加进来"</b>"；最后list转为string就可以
+先遍历整个words，记录下来所有s中能找到的位置，记作bold[i] = True；然后遍历s，如果是要bold，就加进来"<b>"，然后走到不为bold，加进来"</b>"；最后list转为string就可以；在s找到word之后，接下来继续从start+1找：start = s.find(word, start+1)
 
 时间：O(SWD) s is len(s), w is len(max(word)), d is len(words)
 空间：O(S)

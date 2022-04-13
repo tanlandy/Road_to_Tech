@@ -35,7 +35,6 @@ int binary_search(int[] nums, int target) {
     return -1;
 }
 
-// 本算法缺陷是不能找到边界的那个数
 // 比如说给你有序数组nums = [1,2,2,2,3]，target为 2，此算法返回的索引是 2，没错。但是如果我想得到target的左侧边界，即索引 1，或者我想得到target的右侧边界，即索引 3
 ```
 3. 寻找左侧边界
