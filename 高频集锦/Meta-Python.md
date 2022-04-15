@@ -1233,7 +1233,7 @@ class Solution:
         
 ```
 
-partition: cut to two halves，左边的数都比右边的小，pivot就选最右的数，这个数字就是左右两边数的分界: p从最左index开始一直往右走，如果这个数比pivot小，那就放进来，然后p+=1，最后把p和pivot互唤，效果就是pivot左边的数都比pivot小
+partition: cut to two halves，左边的数都比右边的小，pivot就选最右的数，这个数字就是左右两边数的分界: p从最左index开始一直往右走，如果这个数比pivot小，那就放进来，然后p+=1，最后把p和pivot互换，效果就是pivot左边的数都比pivot小
 
 Quickselect
 时间 O(N)；如果每次的pivot都刚好是最大值，那每次都需要走一遍，所以那就是O(N^2)
@@ -1389,7 +1389,7 @@ class Solution:
 class Solution:
     def isNumber(self, s: str) -> bool:
         seenDigit = seenExpo = seenDot = False
-        for i, c in enumerate(s): # 因为要只要before的情况，所以需要idx
+        for i, c in enumerate(s): # 因为需要知道before的情况，所以需要idx
             if c.isdigit():
                 seenDigit = True
             elif c in "+-":
@@ -2246,7 +2246,7 @@ class Solution:
             
             # the "2+" accounts for the edge on the left plus the edge on the right. 
             diameter = 2 + left_hei + right_hei
-            res[0] = max(res, diameter)
+            res = max(res, diameter)
 
             return 1 + max(left_hei, right_hei)
         
@@ -4136,4 +4136,12 @@ class Solution:
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/discuss/1011154/Failed-This-Question-In-Two-Mock-Interview-So-Post-This-To-Remind-myself-specifically 
 
 
+
+
+
+
+# my own: OA1
+[735. Asteroid Collision](https://leetcode.com/problems/asteroid-collision/)
+
+# OA2
 
