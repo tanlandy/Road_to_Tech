@@ -71,9 +71,6 @@ Output:
 
 ```
 
-
-
-
 3. [46. Permutations](https://leetcode.com/problems/permutations/) 排列（元素无重不可复选）
 
 Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
@@ -146,8 +143,6 @@ class Solution {
         }
     }
 }
-
-
 ```
 
 5. [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
