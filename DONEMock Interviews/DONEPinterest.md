@@ -1,4 +1,4 @@
-# NG Software Engieer Mar.7.22
+# NG Software Engieer 03.07.22
 ## intro
 interview introduction
 interviewee introduction

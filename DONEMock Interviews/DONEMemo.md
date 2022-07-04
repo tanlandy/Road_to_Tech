@@ -12,15 +12,15 @@
 5. 确认coding路线
 6. Coding开始，假设不管正负数， nullpointer, int.min
 7. follow up
-还有什么能改进的吗？ 这是考察面试者的知识面， 也看你是不是耐心。 很多时候， 很多面试者做出题目高兴的得意忘形， 到这里就开始语无伦次的乱说
+还有什么能改进的吗？ 这是考察面试者的知识面， 也看你是不是耐心。很多时候， 很多面试者做出题目高兴的得意忘形， 到这里就开始语无伦次的乱说
 
 1. 开场：不卑不亢。你就假装其实你已经有了另一个FLAGUAP的Offer了，就不会太患得患失的，你的气场会感染面试官的。见过太小心的面试者，第一印象不好。
 
 ## questions
 1. What is your daily work flow?
 2. When evaluation an engineer during performance review, what do you care the most?
-3. What do you expect from a new hire of my level in the fist half year?
-4. How many people are currently in your team? Whatis the distribution between senior and junior engineers?
+3. What do you expect from a new hire of my level in the first half year?
+4. How many people are currently in your team? What is the distribution between senior and junior engineers?
 
 问founder
 1. What are some risk factors for the company?

@@ -2,7 +2,6 @@
 前缀和本质上是在一个list当中，用O（N）的时间提前算好从第0个数字到第i个数字之和，在后续使用中可以在O（1）时间内计算出第i到第j个数字之和
 
 ## Templates
-```Java
 1. [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
 
 Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.

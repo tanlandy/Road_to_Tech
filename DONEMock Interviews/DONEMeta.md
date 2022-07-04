@@ -25,7 +25,7 @@ values:
 
 
 
-# Research Scientist Intern Mar.2.2022
+# Research Scientist Intern 03/02/2022
 ## Steps
 1. Introduce your self: 1.5min - 2min
 
@@ -78,7 +78,7 @@ num of islands
 
 
 
-# SDE Oct.24.2021
+# SDE 10/24/2021
 ## 本次题目
 meeting rooms2
 

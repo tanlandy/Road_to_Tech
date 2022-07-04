@@ -34,7 +34,7 @@ The question is, given a small stack of randomly drawm dominoes, what is the lon
 (0, 1), (0, 0), (1, 2) (1, 3) -> 3
 
 
-# Question3 Jan.11.2022
+# 01/11/2022
 ## Question:
 Whether the binary tree are identical
 Example:
